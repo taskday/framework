@@ -1,0 +1,55 @@
+{
+    "name": "taskday/framework",
+    "description": "",
+    "license": "MIT",
+    "type": "library",
+    "require": {
+        "php": "^7.4|^8.0",
+        "fruitcake/laravel-cors": "^2.0",
+        "illuminate/support": "^7.0|^8.0|^9.0",
+        "inertiajs/inertia-laravel": "^0.5.4",
+        "laravel-notification-channels/webpush": "^6.0",
+        "laravel/fortify": "^1.10",
+        "laravel/sanctum": "^2.14",
+        "laravel/scout": "^9.4",
+        "spatie/laravel-activitylog": "^4.4",
+        "spatie/laravel-medialibrary": "^10.0",
+        "spatie/laravel-package-tools": "^1.11"
+    },
+    "require-dev": {
+        "laravel/jetstream": "^2.6",
+        "orchestra/testbench": "^7.0",
+        "pestphp/pest-plugin-laravel": "^1.2",
+        "phpunit/phpunit": "^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Taskday\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests",
+            "Database\\Factories\\Taskday\\Models\\": "database/factories"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "test-coverage": "vendor/bin/phpunit --coverage-html coverage"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": {
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Taskday\\TaskdayServiceProvider"
+            ]
+        }
+    }
+}

@@ -1,0 +1,50 @@
+@layer base {
+  *:focus {
+    outline: none !important;
+    outline-style: none !important;
+  }
+
+  /* stroke-width: 2 is a browser default and can be overridden with class="stroke-1" etc. */
+  svg {
+    stroke-width: 1;
+  }
+
+  path,
+  circle,
+  ellipse,
+  line,
+  polygon,
+  polyline,
+  rect {
+    stroke-width: inherit;
+  }
+
+  .dark *,
+  .dark *::before,
+  .dark *::after {
+    box-sizing: border-box; /* 1 */
+    border-width: 0; /* 2 */
+    border-style: solid; /* 2 */
+    border-color: theme('colors.gray.600'); /* 2 */
+  }
+}
+
+::-webkit-scrollbar {
+  @apply w-2 h-2;
+}
+
+::-webkit-scrollbar-corner {
+  @apply bg-gray-600 bg-opacity-30;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-transparent p-0;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-600 bg-opacity-30 rounded-sm border-4 border-transparent box-content;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-600 bg-opacity-90;
+}
