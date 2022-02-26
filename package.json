@@ -2,7 +2,7 @@
     "name": "taskday",
     "private": true,
     "scripts": {
-        "dev": "vite",
+        "dev": "vite --config vendor/taskday/framework/vite.config.ts",
         "build": "vite build",
         "serve": "vite preview"
     },

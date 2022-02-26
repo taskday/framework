@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Taskday\Models;
 
 use Taskday\Models\Field;
 use Illuminate\Database\Eloquent\Factories\Factory;

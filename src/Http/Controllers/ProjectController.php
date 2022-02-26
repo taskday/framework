@@ -110,7 +110,7 @@ class ProjectController extends Controller
             'workspace' => $project->load(['fields', 'workspace.projects', 'members'])->workspace,
             'project' => $project->load(['fields', 'cards', 'workspace', 'members']),
             'fields' => Field::all(),
-            'users' => user()->whereNotIn('id', $project->members->pluck('id'))->get()
+            'users' => Auth::user()->whereNotIn('id', $project->members->pluck('id'))->get()
         ]);
     }
 

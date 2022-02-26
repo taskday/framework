@@ -55,7 +55,7 @@ class Project extends Model
      */
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logOnly(['title', 'description']);
+        return LogOptions::defaults()->useLogName('project')->logOnly(['title', 'description']);
     }
 
 

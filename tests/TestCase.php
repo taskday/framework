@@ -7,6 +7,8 @@ use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\JetstreamServiceProvider;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
+use Spatie\Activitylog\ActivitylogServiceProvider;
+use Taskday\Taskday;
 use Taskday\TaskdayServiceProvider;
 
 class TestCase extends Orchestra
@@ -14,6 +16,7 @@ class TestCase extends Orchestra
     protected function getPackageProviders($app): array
     {
         return [
+            ActivitylogServiceProvider::class,
             FortifyServiceProvider::class,
             JetstreamServiceProvider::class,
             SanctumServiceProvider::class,
@@ -31,6 +34,9 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app)
     {
         config()->set('database.default', 'testing');
+
+        config()->set('taskday.user.model', \Taskday\Models\User::class);
+        config()->set('auth.providers.0.model', \Taskday\Models\User::class);
 
         config()->set('inertia.testing.page_paths', [
             __DIR__.'/../resources/views',

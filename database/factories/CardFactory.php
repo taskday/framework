@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace Database\Factories\Taskday\Models;
 
 use Taskday\Models\Card;
 use Taskday\Models\Project;

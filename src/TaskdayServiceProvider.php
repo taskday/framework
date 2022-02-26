@@ -43,6 +43,9 @@ class TaskdayServiceProvider extends PackageServiceProvider
             Route::prefix($prefix)->middleware('web')->group(function () {
                 require_once __DIR__ . '/../routes/web.php';
             });
+            Route::prefix($prefix . '/api')->middleware('api')->group(function () {
+                require_once __DIR__ . '/../routes/api.php';
+            });
         });
     }
 

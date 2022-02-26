@@ -103,7 +103,7 @@ class WorkspaceController extends Controller
                 ['name' => 'Settings'],
             ],
             'workspace' => $workspace->load(['members', 'projects']),
-            'users' => user()->whereNotIn('id', $workspace->members->pluck('id'))->get()
+            'users' => Auth::user()->whereNotIn('id', $workspace->members->pluck('id'))->get()
         ]);
     }
 
