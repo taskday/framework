@@ -1,6 +1,5 @@
 // @ts-nocheck
-
-import "./bootstrap.ts";
+import "@/bootstrap.ts";
 
 import "@/css/index.css";
 

@@ -2,11 +2,12 @@
 
 namespace Taskday\Http\Controllers;
 
+use Taskday\Facades\Taskday;
 class AssetController extends Controller
 {
     public function scripts($handle)
     {
-        $plugin = taskday()->plugins()->get($handle);
+        $plugin = Taskday::plugins()->get($handle);
 
         $bundle = $plugin->bundle();
 
@@ -23,7 +24,11 @@ class AssetController extends Controller
 
     public function styles($handle)
     {
-        $path = taskday()->styles[$handle] ?? null;
+        $plugin = Taskday::plugins()->get($handle);
+
+        $bundle = $plugin->bundle();
+
+        $path = $bundle->styles()[0];
 
         abort_if(is_null($path), 404);
 

@@ -42,7 +42,7 @@ import VTabsList from "@/components/VTabsList.vue";
 import VTabsPanel from "@/components/VTabsPanel.vue";
 import VTabsPanels from "@/components/VTabsPanels.vue";
 
-import useField from "@/composables/useField";
+import useField from "./composables/useField";
 class Taskday implements TaskdayInterface {
 
   readonly fields = {};

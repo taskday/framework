@@ -33,6 +33,11 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      input: {
+        main: "./resources/main.ts",
+        bootstrap: "./resources/bootstrap.ts",
+        taskday: "./resources/taskday.ts",
+      },
       plugins: [
         resolveExternalsPlugin({
           vue: "Vue",
@@ -49,6 +54,6 @@ export default defineConfig({
       dirs: ["./resources/components"],
       extensions: ["vue"],
       deep: true,
-    })
-  ]
-})
+    }),
+  ],
+});
