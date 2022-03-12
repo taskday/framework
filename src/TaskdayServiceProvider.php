@@ -15,10 +15,10 @@ class TaskdayServiceProvider extends PackageServiceProvider
             ->name('taskday')
             ->hasConfigFile('taskday')
             ->hasMigrations('',
-                '6_create_workspaces_table',
-                '7_create_projects_table',
-                '8_create_cards_table',
-                '9_create_members_table',
+                '06_create_workspaces_table',
+                '07_create_projects_table',
+                '08_create_cards_table',
+                '09_create_members_table',
                 '10_create_fields_table',
                 '11_create_field_project_table',
                 '12_create_card_field_table',
