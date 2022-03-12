@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts">
-import { watch } from 'vue';
+import { watch, ref } from 'vue';
 export default {
   inheritAttrs: false,
   props: {
