@@ -27,18 +27,8 @@ class CardController extends Controller
     {
         $cards = Card::with(['project.workspace', 'comments.creator', 'fields'])->orderBy('updated_at', 'desc');
 
-        match ($request->filter) {
-            'assigned_to_me' => $cards->withFieldFilter(UsersField::class, Filter::CONTAINS, Auth::id()),
-            'backlog' => $cards->withFieldFilter(StatusField::class, Filter::IS_EQUAL, 'gray'),
-            'to_do' => $cards->withFieldFilter(StatusField::class, Filter::IS_EQUAL, 'red'),
-            'in_progress' => $cards->withFieldFilter(StatusField::class, Filter::IS_EQUAL, 'yellow'),
-            'completed' => $cards->withFieldFilter(StatusField::class, Filter::IS_EQUAL, 'green'),
-            default => ''
-        };
-
         return Inertia::render('Cards/Index', [
             'title' => 'Cards',
-            'currentFilter' => $request->filter,
             'breadcrumbs' => [
                 [ 'name' =>  'Dashboard', 'href' => route('dashboard') ],
                 [ 'name' =>  'Cards' ],

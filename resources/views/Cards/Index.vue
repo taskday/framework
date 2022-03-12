@@ -8,42 +8,7 @@
   </VPageHeader>
 
   <VContainer>
-    <div class="grid grid-cols-1 lg:grid-cols-[1fr,4fr] gap-8 py-8">
-      <div class>
-        <div>
-          <div>
-            <VNav class="flex flex-col gap-2">
-              <VNavLink
-                v-for="filter in [{
-                  title: 'Assigned to me',
-                  handle: 'assigned_to_me',
-                }, {
-                  title: 'Backlog',
-                  handle: 'backlog',
-                }, {
-                  title: 'To Do',
-                  handle: 'to_do',
-                }, {
-                  title: 'In Progress',
-                  handle: 'in_progress',
-                }, {
-                  title: 'Completed',
-                  handle: 'completed',
-                }, {
-                  title: 'Reset',
-                  handle: '',
-                }]"
-                class="px-2"
-                :class="{ 'bg-gray-200 dark:bg-gray-700': filter.handle === currentFilter }"
-                @click="applyFilter(filter)"
-                href="#"
-              >
-                {{ filter.title }}
-              </VNavLink>
-            </VNav>
-          </div>
-        </div>
-      </div>
+    <div class="grid grid-cols-1 gap-8 py-8">
       <div class="flex flex-col gap-2">
         <VCard v-for="card in cards.data">
           <VBreadcrumb>
@@ -67,7 +32,8 @@
   </VContainer>
 </template>
 
-<script setup lang="ts">import { Inertia } from '@inertiajs/inertia';
+<script setup lang="ts">
+import { Inertia } from '@inertiajs/inertia';
 import VNavLink from '@/components/VNavLink.vue';
 
 const props = defineProps<{
