@@ -38,22 +38,6 @@
                         class="text-sm text-gray-600 dark:text-gray-400"
                       >updated {{ moment(project.updated_at).fromNow() }}</span>
                     </div>
-                    <div class="mt-4 font-medium">Latest activity:</div>
-                    <ul class="flex flex-col gap-1 mt-2">
-                      <li
-                        v-for="activity in [...project.cards.flatMap(c => c.activities)]"
-                        class="block text-gray-600 dark:text-gray-400 gap-2"
-                      >
-                        <span class="inline-block">
-                          <VAvatar :user="activity.causer" />
-                        </span>
-                        {{ activity.event + ' ' + activity.subject_type.replace('App\\Models\\', '').toLowerCase() }}
-                        <Link
-                          :href="activity.subject.link"
-                          class="text-blue-600 dark:text-blue-300 hover:underline inline break-words"
-                        >{{ activity.subject.title }}</Link>
-                      </li>
-                    </ul>
                   </VCard>
                 </div>
               </div>
