@@ -1,6 +1,3 @@
-// @ts-nocheck
-import "@/bootstrap.ts";
-
 import "@/css/index.css";
 
 import { createApp, h } from "vue";
