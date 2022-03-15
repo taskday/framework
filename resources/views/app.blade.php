@@ -34,17 +34,16 @@
         {
             "imports": {
                 "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
-                "taskday": "http://localhost:3000/resources/taskday.ts"
+                "taskday": "/build/{{ vite()->getManifest()->getEntry('vendor/taskday/framework/resources/taskday.ts')->file }}"
             }
         }
     </script>
 
     @routes
-    @vite('bootstrap')
-    @taskdayScripts
-    @taskdayStyles
-    @vite('main')
-    
+    @tag('vendor/taskday/framework/resources/bootstrap.ts')
+    @taskday
+    @tag('vendor/taskday/framework/resources/main.ts')
+
     <script type="module">
         console.log('vue version:', window.Vue);
     </script>

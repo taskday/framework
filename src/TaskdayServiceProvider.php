@@ -14,7 +14,7 @@ class TaskdayServiceProvider extends PackageServiceProvider
         $package
             ->name('taskday')
             ->hasConfigFile('taskday')
-            ->hasMigrations('',
+            ->hasMigrations(
                 '06_create_workspaces_table',
                 '07_create_projects_table',
                 '08_create_cards_table',
@@ -67,20 +67,11 @@ class TaskdayServiceProvider extends PackageServiceProvider
 
     protected function registerBladeDirectives()
     {
-        Blade::directive('taskdayStyles', function ($expression) {
-            return <<<EOT
-            <?php
-                // foreach(\Taskday\Facades\Taskday::getStyles() as \$style) {
-                //     echo "<link rel='stylesheet' href='/styles/\$style' />";
-                // }
-            ?>
-            EOT;
-        });
-
-        Blade::directive('taskdayScripts', function ($expression) {
+        Blade::directive('taskday', function ($expression) {
             return <<<EOT
             <?php
                 foreach(\Taskday\Facades\Taskday::plugins() as \$plugin) {
+                    echo "<link rel='stylesheet' href='/styles/\$plugin->handle' />";
                     echo "<script type='module' src='/scripts/\$plugin->handle'></script>";
                 }
             ?>
