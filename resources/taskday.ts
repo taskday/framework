@@ -43,7 +43,11 @@ import VTabsPanel from "@/components/VTabsPanel.vue";
 import VTabsPanels from "@/components/VTabsPanels.vue";
 
 import useField from "./composables/useField";
+import useCardForm from "./composables/useCardForm";
+
 class Taskday implements TaskdayInterface {
+
+  version = '0.1.0';
 
   readonly fields = {};
 
@@ -51,9 +55,9 @@ class Taskday implements TaskdayInterface {
 
   readonly options = {};
 
-  readonly views = {};
-
   readonly actions = {};
+
+  public views = [];
 
   public widgets = {};
 
@@ -78,14 +82,14 @@ class Taskday implements TaskdayInterface {
     this.instance.component(`${namespace}-options`, component);
   }
 
-  registerViews(namespace, component) {
-    this.views[namespace] = component;
-    this.instance.component(`${namespace}-view`, component);
-  }
-
   registerAction(namespace, component) {
     this.actions[namespace] = component;
     this.instance.component(`${namespace}-action`, component);
+  }
+
+  registerViews(namespace, views: any[]) {
+    this.views = [ ...this.views, ...views ];
+    views.forEach(view => this.instance.component(`${namespace}-view`, view))
   }
 
   registerWidgets(components) {
@@ -105,8 +109,8 @@ class Taskday implements TaskdayInterface {
     if (components.options) {
       this.registerOptions(namespace, components.options);
     }
-    if (components.view) {
-      this.registerViews(namespace, components.view);
+    if (components.views) {
+      this.registerViews(namespace, components.views);
     }
     if (components.action) {
       this.registerAction(namespace, components.action);
@@ -120,6 +124,7 @@ class Taskday implements TaskdayInterface {
 export {
   Taskday,
   useField,
+  useCardForm,
   VAvatar,
   VBreadcrumb,
   VBreadcrumbItem,

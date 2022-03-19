@@ -28,9 +28,11 @@ class AssetController extends Controller
 
         $bundle = $plugin->bundle();
 
-        $path = $bundle->styles()[0];
+        $path = $bundle->styles()[0] ?? null;
 
-        abort_if(is_null($path), 404);
+        if(is_null($path)) {
+            return response('', 200);
+        }
 
         return response(
             file_get_contents($path),

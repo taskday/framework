@@ -126,14 +126,11 @@ class CardController extends Controller
             'order' => 'nullable'
         ]);
 
-        // $re = '/data-mention.*?data-id="(.*?)"/m';
-        // preg_match_all($re, $data['content'], $matches, PREG_SET_ORDER, 0);
+        $fields = $request->validate(['fields' => 'nullable|array'])['fields'];
 
-        // if (count($matches) > 0 && count($matches[0]) > 1) {
-        //     TaskdayFacade::userClass()::whereName($matches[0][1])->first()->notify(new UserTaggedNotification($card->id));
-        // }
-
-        // $data['title'] = strip_tags($data['title']);
+        foreach ($fields as $key => $value) {
+            $card->setCustom(Field::where('handle', $key)->first(), $value);
+        }
 
         $card->update($data);
 
