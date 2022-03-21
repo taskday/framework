@@ -121,10 +121,10 @@ class CardController extends Controller
      */
     public function update(Request $request,  Card $card)
     {
-        $data = $request->validate([
+        $data = array_filter($request->validate([
             'content' => 'nullable',
             'order' => 'nullable'
-        ]);
+        ]));
 
         $fields = $request->validate(['fields' => 'nullable|array'])['fields'];
 
