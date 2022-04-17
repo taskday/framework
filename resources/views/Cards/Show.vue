@@ -12,30 +12,15 @@
             </VBreadcrumb>
             <div class="flex flex-col items-start justify-start gap-4">
               <div class="flex items-start gap-4 shrink-0">
-                <VPageTitle>{{ title }}</VPageTitle>
+                <VFormEdit v-model="state.title">
+                  <VPageTitle>{{ state.title }}</VPageTitle>
+                </VFormEdit>
                 <div class="text-gray-700 dark:gray-400" v-show="state.recentlySuccessful">Saved.</div>
               </div>
               <VRoom :name="`App.Models.Card.${card.id}`"></VRoom>
             </div>
           </div>
           <div class="flex-col md:flex-row flex items-center gap-2">
-            <!-- <VDropdown>
-              <VDropdownButton
-                :class="{ 'bg-gray-100': state.recentlySuccessful }"
-                class="block items-center rounded py-1 h-8 border border-transparent whitespace-nowrap truncate
-        text-gray-700 dark:text-gray-300 font-medium
-        hover:text-gray-900 hover:bg-gray-100
-        dark:hover:bg-gray-700 dark:hover:text-white
-        focus:border focus:border-blue-600 focus:outline-none"
-              >
-                <DotsVerticalIcon class="h-5 w-5" />
-              </VDropdownButton>
-              <VDropdownItems>
-                <VDropdownItem>
-                  </VDropdownItem>
-              </VDropdownItems>
-            </VDropdown>
-            -->
             <VButton
               variant="primary"
               :disabled="state.isDirty || state.processing"
@@ -89,17 +74,20 @@
 </template>
 
 <script setup lang="ts">
-import { DotsVerticalIcon } from '@heroicons/vue/outline';
 import useCardForm from '@/composables/useCardForm';
 import useCommentForm from '@/composables/useCommentForm';
-import { onMounted } from 'vue';
+import { onMounted, PropType } from 'vue';
 
-const props = defineProps<{ title: string, card: Card }>()
+const props = defineProps({
+ title: String,
+ card: Object as PropType<Card>
+})
 
 const { form: state, update, destroy } = useCardForm();
 const { form: comment, store } = useCommentForm();
 
 onMounted(() => {
+  state.title = props.card.title;
   state.content = props.card.content;
 })
 

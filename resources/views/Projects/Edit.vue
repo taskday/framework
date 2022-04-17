@@ -1,18 +1,16 @@
-<template>
+ <template>
   <div class="py-6 bg-white dark:bg-gray-800 shadow">
     <VContainer>
+      <VBreadcrumb>
+        <VBreadcrumbItem :href="route('workspaces.show', project.workspace)">
+          {{ project.workspace.title }}
+        </VBreadcrumbItem>
+        <VBreadcrumbItem :href="route('projects.show', project)">
+          {{ project.title }}
+        </VBreadcrumbItem>
+      </VBreadcrumb>
       <div class="flex items-end justify-between">
-        <div class="flex flex-col">
-          <VBreadcrumb>
-            <VBreadcrumbItem :href="route('workspaces.show', project.workspace)">
-              {{ project.workspace.title }}
-            </VBreadcrumbItem>
-            <VBreadcrumbItem :href="route('projects.show', project)">
-              {{ project.title }}
-            </VBreadcrumbItem>
-          </VBreadcrumb>
-          <VPageTitle>Settings</VPageTitle>
-        </div>
+        <VPageTitle>Settings</VPageTitle>
       </div>
     </VContainer>
   </div>
@@ -23,8 +21,8 @@
           <template #title>Title</template>
           <template #description></template>
           <template #content>
-            <VFormInput label="Title" v-model="form.title"></VFormInput>
-            <VFormInput label="Description" v-model="form.description"></VFormInput>
+            <VFormInput :errors="form.errors.title" label="Title" v-model="form.title"></VFormInput>
+            <VFormInput :errors="form.errors.description" label="Description" v-model="form.description"></VFormInput>
           </template>
           <template #actions>
             <VButton type="submit">Save</VButton>

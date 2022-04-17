@@ -2,6 +2,11 @@
   <div>
     <VPageHeader class="shadow-none">
       <VContainer>
+        <VBreadcrumb>
+          <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.href">
+            {{ breadcrumb.name }}
+          </VBreadcrumbItem>
+        </VBreadcrumb>
         <div class="flex items-center justify-between">
           <VPageTitle>{{ props.title }}</VPageTitle>
           <div class="flex items-center gap-2">
@@ -34,16 +39,13 @@
                     <VLink variant="secondary" :href="route('projects.show', project)">
                       <span class="text-lg font-medium">{{ project.title }}</span>
                     </VLink>
-                    <span
-                      class="text-sm text-gray-600"
-                    >updated {{ moment(project.updated_at).fromNow() }}</span>
+                    <span class="text-sm text-gray-600">updated {{ moment(project.updated_at).fromNow() }}</span>
                   </div>
                 </VCard>
                 <VCard>
                   <VLink
                     :href="route('workspaces.projects.create', workspace)"
-                    class="flex items-center justify-center"
-                  >
+                    class="flex items-center justify-center">
                     <PlusIcon class="h-6 w-6" />
                   </VLink>
                 </VCard>
@@ -57,24 +59,24 @@
 </template>
 
 <script setup lang="ts">
-import moment from 'moment';
-import { onMounted } from 'vue';
-import { CogIcon, PlusIcon } from '@heroicons/vue/outline';
-import useWorkspaceForm from '@/composables/useWorkspaceForm';
-import useWarnBeforeLeave from '@/composables/useWarnBeforeLeave';
+import moment from "moment";
+import { onMounted } from "vue";
+import { CogIcon, PlusIcon } from "@heroicons/vue/outline";
+import useWorkspaceForm from "@/composables/useWorkspaceForm";
+import useWarnBeforeLeave from "@/composables/useWarnBeforeLeave";
 
 const props = defineProps<{
-  title: String,
+  title: String;
   breadcrumbs: {
-    name: String,
-    href: String,
-  }[]
-  workspace: Workspace
-}>()
+    name: String;
+    href: String;
+  }[];
+  workspace: Workspace;
+}>();
 
 const { form, update } = useWorkspaceForm({
   title: props.workspace.title,
-  description: props.workspace.description
+  description: props.workspace.description,
 });
 
 const { enable, disable } = useWarnBeforeLeave(() => {
@@ -83,13 +85,12 @@ const { enable, disable } = useWarnBeforeLeave(() => {
 
 onMounted(() => {
   enable();
-})
+});
 
 function submit() {
   update(props.workspace, {
     onBefore: () => disable(),
-    onFinish: () => enable()
-  })
+    onFinish: () => enable(),
+  });
 }
-
 </script>
