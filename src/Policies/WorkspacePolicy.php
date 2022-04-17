@@ -1,8 +1,8 @@
 <?php
 
-namespace Performing\Taskday\Policies;
+namespace Taskday\Policies;
 
-use Performing\Taskday\Models\Workspace;
+use Taskday\Models\Workspace;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
 

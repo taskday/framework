@@ -25,7 +25,9 @@ class CardController extends Controller
      */
     public function index(Request $request)
     {
-        $cards = Card::with(['project.workspace', 'comments.creator', 'fields'])->orderBy('updated_at', 'desc');
+        $cards = Card::whereIn('project_id', Auth::user()->sharedProjects->modelKeys())
+            ->with(['project.workspace', 'comments.creator', 'fields'])
+            ->orderBy('updated_at', 'desc');
 
         return Inertia::render('Cards/Index', [
             'title' => 'Cards',
@@ -83,7 +85,8 @@ class CardController extends Controller
      */
     public function show(Card $card)
     {
-        // $this->authorize('view', $card);
+        $this->authorize('view', $card);
+
         $card->load(['comments.creator', 'fields', 'project.workspace.projects', 'project.fields']);
 
         return Inertia::render('Cards/Show', [

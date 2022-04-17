@@ -1,8 +1,8 @@
 <?php
 
-namespace Performing\Taskday\Policies;
+namespace Taskday\Policies;
 
-use Performing\Taskday\Models\Card;
+use Taskday\Models\Card;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
 

@@ -15,21 +15,6 @@ use Taskday\TaskdayFacade;
 class ProjectController extends Controller
 {
     /**
-     * Display the specified resource.
-     */
-    public function index(Request $request)
-    {
-        // $this->authorize('view', $project);
-        return Inertia::render('Projects/Index', [
-            'title' => 'Projects',
-            'breadcrumbs' => [
-                [ 'name' =>  'Dashboard',                'href' => route('dashboard') ],
-                [ 'name' =>  'Projects' ],
-            ],
-        ]);
-    }
-
-    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
@@ -72,7 +57,8 @@ class ProjectController extends Controller
      */
     public function show(Project $project, Request $request)
     {
-        // $this->authorize('view', $project);
+        $this->authorize('view', $project);
+
         return Inertia::render('Projects/Show', [
             'title' => $project->title,
             'breadcrumbs' => [
@@ -100,6 +86,8 @@ class ProjectController extends Controller
      */
     public function edit(Project $project)
     {
+        $this->authorize('update', $project);
+
         return Inertia::render('Projects/Edit', [
             'breadcrumbs' => [
                 [ 'name' =>  'Dashboard',                'href' => route('dashboard') ],

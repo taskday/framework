@@ -3,12 +3,24 @@
 namespace Taskday;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
 class TaskdayServiceProvider extends PackageServiceProvider
 {
+    /**
+     * The policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        Taskday\Models\Project::class => Taskday\Policies\ProjectPolicy::class,
+        Taskday\Models\Workspace::class => Taskday\Policies\WorkspacePolicy::class,
+        Taskday\Models\Card::class => Taskday\Policies\CardPolicy::class,
+    ];
+
     public function configurePackage(Package $package): void
     {
         $package
@@ -26,12 +38,14 @@ class TaskdayServiceProvider extends PackageServiceProvider
                 '14_create_team_user_table',
                 '15_create_team_invitations_table',
                 '16_create_comments_table',
-                '18_create_push_subscriptions_table',
-                '19_create_notifications_table',
-                '20_create_media_table',
-                '21_create_activity_log_table',
-                '22_add_event_column_to_activity_log_table',
-                '23_add_batch_uuid_column_to_activity_log_table',
+                '17_create_push_subscriptions_table',
+                '18_create_notifications_table',
+                '19_create_media_table',
+                '20_create_activity_log_table',
+                '21_add_event_column_to_activity_log_table',
+                '22_add_batch_uuid_column_to_activity_log_table',
+                '22_add_batch_uuid_column_to_activity_log_table',
+                '23_add_team_id_to_projects_and_workspaces_table',
             )
             ->hasViews('taskday');
     }
@@ -62,8 +76,20 @@ class TaskdayServiceProvider extends PackageServiceProvider
     public function bootingPackage()
     {
         $this->registerBladeDirectives();
+        $this->registerPolicies();
     }
 
+    /**
+     * Register the application's policies.
+     *
+     * @return void
+     */
+    public function registerPolicies()
+    {
+        foreach ($this->policies as $model => $policy) {
+            Gate::policy($model, $policy);
+        }
+    }
 
     protected function registerBladeDirectives()
     {

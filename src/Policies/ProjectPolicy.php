@@ -1,10 +1,10 @@
 <?php
 
-namespace Performing\Taskday\Policies;
+namespace Taskday\Policies;
 
-use Performing\Taskday\Models\Project;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
+use Taskday\Models\Project;
 
 class ProjectPolicy
 {
