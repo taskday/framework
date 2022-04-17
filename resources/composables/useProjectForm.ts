@@ -1,7 +1,6 @@
 import { useForm } from "@inertiajs/inertia-vue3";
 
 export default function useProjectForm() {
-
   const form = useForm({
     title: "",
     description: "",

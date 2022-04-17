@@ -1,7 +1,10 @@
 import { useForm } from "@inertiajs/inertia-vue3";
 
-export default function useWorkspaceForm(data = {}) {
-  const form = useForm<Workspace>({ ...data });
+export default function useWorkspaceForm() {
+  const form = useForm({
+    title: "",
+    description: "",
+  });
 
   function destroy(workspace: Workspace) {
     form.delete(route("workspaces.destroy", workspace), {
@@ -14,7 +17,6 @@ export default function useWorkspaceForm(data = {}) {
 
   function update(workspace: Workspace, options = {}) {
     form.put(route("workspaces.update", workspace), {
-      ...options,
       preserveScroll: true,
     });
   }
