@@ -135,12 +135,12 @@ class Card extends Model
      * @param string $value
      * @return self
      */
-    public function setCustom(Field $field, string $value): self
+    public function setCustom(Field $field, ?string $value): self
     {
         $oldValue = $field->cards()->where('card_id', $this->id)->first()?->pivot?->value ?? '';
 
         $field->cards()->syncWithoutDetaching(
-            [$this->id => ['value' => $value]]
+            [$this->id => ['value' => $value ?? '']]
         );
 
         event(new CardFieldUpdatedEvent($oldValue, $value, $field, $this));
