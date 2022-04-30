@@ -11,7 +11,9 @@ use Taskday\Models\Concerns\BelongsToUser;
 use Taskday\Models\Concerns\Linkable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Scout\Searchable;
+use Taskday\Support\Page\Breadcrumb;
 
 class Workspace extends Model
 {
@@ -30,7 +32,7 @@ class Workspace extends Model
      * @var array
      */
     protected $appends = [
-        'label'
+        'breadcrumbs'
     ];
 
 
@@ -72,10 +74,15 @@ class Workspace extends Model
 
     /**
      * Alternative title of the project for search result.
+     *
+     * @return Breadcrumb[]
      */
-    public function getLabelAttribute()
+    public function getBreadcrumbsAttribute(): array
     {
-        return "";
+        return [
+            new Breadcrumb('Dashboard', route('dashboard')),
+            new Breadcrumb('Workspaces', route('workspaces.index')),
+        ];
     }
 
     /**
@@ -84,5 +91,13 @@ class Workspace extends Model
     public function scopeVisibleTo($query, Model $user)
     {
         $query->whereIn('id', $user->workspaces->pluck('id'));
+    }
+
+    /**
+     * Get workspaces only visible to the current user.
+     */
+    public function forCurrentTeam($query)
+    {
+        $query->orWhere('team_id', Auth::user()->current_team_id);
     }
 }

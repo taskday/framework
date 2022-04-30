@@ -17,7 +17,7 @@
             >{{ card.project.workspace.title }}</VBreadcrumbItem>
             <VBreadcrumbItem :href="route('projects.show', card.project)">{{ card.project.title }}</VBreadcrumbItem>
           </VBreadcrumb>
-          <VLink :href="route('cards.show', card)" class="block">{{ card.title }}</VLink>
+          <Link class="text-base hover:underline" :href="route('cards.show', card)">{{ card.title }}</Link>
           <div class="flex items-center gap-3 mt-2">
             <div v-for="field in card.project.fields" :key="card.id + '' +field.handle">
               <VFieldWrapper
@@ -42,7 +42,11 @@ const props = defineProps<{
     name: String,
     href: String,
   }[],
-  currentFilter: String,
+  currentFilter: {
+    type: String,
+    default: null,
+    required: false
+  },
   cards: Pagination<Card>
 }>()
 

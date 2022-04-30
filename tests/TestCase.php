@@ -2,13 +2,13 @@
 
 namespace Tests;
 
+use Illuminate\Support\Facades\Route;
 use Inertia\ServiceProvider as InertiaServiceProvider;
 use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\JetstreamServiceProvider;
 use Laravel\Sanctum\SanctumServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\Activitylog\ActivitylogServiceProvider;
-use Taskday\Taskday;
 use Taskday\TaskdayServiceProvider;
 
 class TestCase extends Orchestra
@@ -30,9 +30,12 @@ class TestCase extends Orchestra
         $app->singleton('Illuminate\Contracts\Http\Kernel', 'Tests\Http\Kernel');
     }
 
-
-    public function getEnvironmentSetUp($app)
+    protected function setUp(): void
     {
+        parent::setUp();
+
+        Route::taskday('');
+
         config()->set('database.default', 'testing');
 
         config()->set('taskday.user.model', \Taskday\Models\User::class);

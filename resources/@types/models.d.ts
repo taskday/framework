@@ -8,11 +8,21 @@ interface User {
   profile_photo_url: string;
 }
 
+
+interface Member<T> {
+  id: string
+  user: User
+  memberable: T
+  updated_at: string
+  created_at: string
+}
+
 interface Workspace {
   id: number;
   title: string;
   description: string;
-  projects: Project[]
+  projects: Project[];
+  members: Member<Workspace>[];
 }
 
 interface Project {
@@ -22,7 +32,8 @@ interface Project {
   workspace: Workspace
   fields: Field[]
   customFields: any
-  cards: Card[]
+  cards: Card[];
+  members: Member<Project>[];
 }
 
 interface Card {
@@ -53,4 +64,9 @@ interface Comment {
 
 interface Pagination<Type> {
   data: Type[];
+}
+
+interface Breadcrumb {
+  title: String;
+  url?: String;
 }

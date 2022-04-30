@@ -3,8 +3,8 @@
     <VPageHeader class="shadow-none">
       <VContainer>
         <VBreadcrumb>
-          <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.href">
-            {{ breadcrumb.name }}
+          <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
+            {{ breadcrumb.title }}
           </VBreadcrumbItem>
         </VBreadcrumb>
         <div class="flex items-end justify-between">
@@ -39,14 +39,10 @@
 
 <script setup lang="ts">
 import { CogIcon } from "@heroicons/vue/outline";
-import VLink from "@/components/VLink.vue";
 
 const props = defineProps<{
   title: String;
-  breadcrumbs: {
-    name: String;
-    href: String;
-  }[];
+  breadcrumbs: Breadcrumb[];
   project: Project;
 }>();
 </script>

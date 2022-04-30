@@ -15,6 +15,7 @@ use Taskday\Facades\Taskday;
 use Illuminate\Support\Str;
 use Performing\Taskday\Status\Fields\StatusField;
 use Performing\Taskday\Users\Fields\UsersField;
+use Taskday\Support\Page\Breadcrumb;
 
 class CardController extends Controller
 {
@@ -32,8 +33,8 @@ class CardController extends Controller
         return Inertia::render('Cards/Index', [
             'title' => 'Cards',
             'breadcrumbs' => [
-                [ 'name' =>  'Dashboard', 'href' => route('dashboard') ],
-                [ 'name' =>  'Cards' ],
+                new Breadcrumb('Dashboard', route('dashboard')),
+                new Breadcrumb('Cards'),
             ],
             'cards' => $cards->paginate(30),
         ]);
@@ -91,12 +92,7 @@ class CardController extends Controller
 
         return Inertia::render('Cards/Show', [
             'title' => Str::of($card->title)->replaceMatches('/.*?\//', '')->title(),
-            'breadcrumbs' => [
-                [ 'name' =>  'Dashboard',                      'href' => route('dashboard') ],
-                [ 'name' =>  $card->project->workspace->title, 'href' => route('workspaces.show', $card->project->workspace) ],
-                [ 'name' =>  $card->project->title,            'href' => route('projects.show', $card->project) ],
-                [ 'name' =>  $card->title ],
-            ],
+            'breadcrumbs' => $card->breadcrumbs,
             'workspace' => $card->project->workspace,
             'project' => $card->project,
             'card' => $card
@@ -125,6 +121,7 @@ class CardController extends Controller
     public function update(Request $request,  Card $card)
     {
         $data = array_filter($request->validate([
+            'title' => 'required',
             'content' => 'nullable',
             'order' => 'nullable'
         ]));

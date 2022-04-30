@@ -30,15 +30,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css" />
 
-    <script type="importmap">
-        {
-            "imports": {
-                "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
-                "taskday": "/build/{{ vite()->getManifest()->getEntry('vendor/taskday/framework/resources/taskday.ts')->file }}"
-            }
-        }
-    </script>
-
     @routes
     @tag('vendor/taskday/framework/resources/bootstrap.ts')
     @taskday
@@ -46,6 +37,7 @@
 
     <script type="module">
         console.log('vue version:', window.Vue);
+        console.log('taskday version:', window.taskday);
     </script>
 </head>
 

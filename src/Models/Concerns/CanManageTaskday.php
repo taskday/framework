@@ -22,10 +22,6 @@ trait CanManageTaskday
 {
     use Searchable;
     use HasPushSubscriptions;
-    use HasApiTokens;
-    use HasProfilePhoto;
-    use TwoFactorAuthenticatable;
-    use HasTeams;
 
     /**
      * @return HasMany

@@ -19,6 +19,7 @@ class TaskdayServiceProvider extends PackageServiceProvider
         Taskday\Models\Project::class => Taskday\Policies\ProjectPolicy::class,
         Taskday\Models\Workspace::class => Taskday\Policies\WorkspacePolicy::class,
         Taskday\Models\Card::class => Taskday\Policies\CardPolicy::class,
+        Taskday\Models\Team::class => Taskday\Policies\TeamPolicy::class,
     ];
 
     public function configurePackage(Package $package): void

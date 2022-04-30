@@ -16,6 +16,7 @@ use Illuminate\Database\Query\Builder;
 use Laravel\Scout\Searchable;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Taskday\Support\Page\Breadcrumb;
 
 /**
  * @property Workspace $workspace
@@ -46,7 +47,7 @@ class Project extends Model
      */
     protected $appends = [
         'customFields',
-        'label'
+        'breadcrumbs'
     ];
 
     /**
@@ -95,6 +96,11 @@ class Project extends Model
             ->withTimestamps();
     }
 
+    public function comments()
+    {
+        return $this->hasManyThrough(Comment::class, Card::class, 'project_id', 'commentable_id')->with(['creator', 'commentable'])->latest();
+    }
+
     public function getCustomFieldsAttribute()
     {
         return $this->fields->mapWithKeys(function ($field) {
@@ -106,10 +112,16 @@ class Project extends Model
 
     /**
      * Alternative title of the project for search result.
+     *
+     * @return Breadcrumb[]
      */
-    public function getLabelAttribute()
+    public function getBreadcrumbsAttribute(): array
     {
-        return "{$this->workspace->title}";
+        return   [
+            new Breadcrumb('Dashboard', route('dashboard')),
+            new Breadcrumb($this->workspace->title, route('workspaces.show', $this->workspace)),
+            new Breadcrumb($this->title, route('projects.show', $this)),
+        ];
     }
 
     /**

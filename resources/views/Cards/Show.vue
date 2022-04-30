@@ -2,16 +2,15 @@
   <div>
     <VPageHeader class="py-6 bg-white dark:bg-gray-800 shadow">
       <VContainer>
-        <div class="flex items-start justify-between">
-          <div>
-            <VBreadcrumb>
-              <VBreadcrumbItem
-                :href="route('workspaces.show', card.project.workspace)"
-              >{{ card.project.workspace.title }}</VBreadcrumbItem>
-              <VBreadcrumbItem :href="route('projects.show', card.project)">{{ card.project.title }}</VBreadcrumbItem>
-            </VBreadcrumb>
-            <div class="flex flex-col items-start justify-start gap-4">
-              <div class="flex items-start gap-4 shrink-0">
+        <VBreadcrumb>
+          <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
+            {{ breadcrumb.title }}
+          </VBreadcrumbItem>
+        </VBreadcrumb>
+        <div class="flex items-start justify-between w-full gap-4">
+          <div class="w-full">
+            <div class="flex flex-col items-start justify-start gap-4 w-full">
+              <div class="flex items-start gap-4 shrink-0 w-full">
                 <VFormEdit v-model="state.title">
                   <VPageTitle>{{ state.title }}</VPageTitle>
                 </VFormEdit>
@@ -21,11 +20,9 @@
             </div>
           </div>
           <div class="flex-col md:flex-row flex items-center gap-2">
-            <VButton
-              variant="primary"
-              :disabled="state.isDirty || state.processing"
-              @click.prevent="() => update(card)"
-            >Save</VButton>
+            <VButton variant="primary" :disabled="state.isDirty || state.processing" @click.prevent="() => update(card)"
+              >Save</VButton
+            >
             <VConfirm class="w-full" title="Are you sure?" :onConfirm="submit">
               <VButton variant="danger" class="w-full">Delete</VButton>
             </VConfirm>
@@ -43,11 +40,7 @@
             </VCard>
           </div>
           <div class="space-y-8">
-            <div
-              class="flex items-center space-x-2"
-              v-for="field in card.project.fields"
-              :key="field.id"
-            >
+            <div class="flex items-center space-x-2" v-for="field in card.project.fields" :key="field.id">
               <h4 class="font-semibold">{{ field.title }}:</h4>
               <VFieldWrapper :card="card" :field="field"></VFieldWrapper>
             </div>
@@ -74,25 +67,25 @@
 </template>
 
 <script setup lang="ts">
-import useCardForm from '@/composables/useCardForm';
-import useCommentForm from '@/composables/useCommentForm';
-import { onMounted, PropType } from 'vue';
-
-const props = defineProps({
- title: String,
- card: Object as PropType<Card>
-})
+import useCardForm from "@/composables/useCardForm";
+import useCommentForm from "@/composables/useCommentForm";
+import { onMounted } from "vue";
 
 const { form: state, update, destroy } = useCardForm();
 const { form: comment, store } = useCommentForm();
 
+const props = defineProps<{
+  title: String;
+  breadcrumbs: Breadcrumb[];
+  card: Card;
+}>();
+
 onMounted(() => {
   state.title = props.card.title;
   state.content = props.card.content;
-})
+});
 
 function submit() {
   destroy(props.card);
 }
-
 </script>

@@ -35,8 +35,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function(){
     Route::resource('workspaces',               Controllers\WorkspaceController::class);
 
     // Members
-    Route::post('workspaces/{workspace}/members', [Controllers\WorkspaceController::class, 'updateMembers'])->name('workspaces.members.store');
-    Route::post('projects/{project}/members',     [Controllers\ProjectController::class, 'updateMembers'])->name('projects.members.store');
+    Route::put('workspaces/{workspace}/members', [Controllers\WorkspaceController::class, 'updateMembers'])->name('workspaces.members.update');
+    Route::put('projects/{project}/members',     [Controllers\ProjectController::class, 'updateMembers'])->name('projects.members.update');
 
     // Fields
     Route::resource('fields',                   Controllers\FieldController::class);

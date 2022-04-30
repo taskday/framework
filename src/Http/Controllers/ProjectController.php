@@ -61,11 +61,7 @@ class ProjectController extends Controller
 
         return Inertia::render('Projects/Show', [
             'title' => $project->title,
-            'breadcrumbs' => [
-                [ 'name' =>  'Dashboard',                'href' => route('dashboard') ],
-                [ 'name' =>  $project->workspace->title, 'href' => route('workspaces.show', $project->workspace) ],
-                [ 'name' =>  $project->title,            'href' => route('projects.show', $project) ],
-            ],
+            'breadcrumbs' => $project->breadcrumb,
             'workspace' => $project->workspace->load('projects'),
             'fields' => $project->fields,
             'project' => $project->load(['cards' => function ($query) use ($request) {

@@ -1,9 +1,8 @@
 <?php
 
-namespace Performing\Taskday\Policies;
+namespace Taskday\Policies;
 
 use Taskday\Models\Team;
-use Taskday\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
 class TeamPolicy
@@ -16,7 +15,7 @@ class TeamPolicy
      * @param  \Taskday\Models\User  $user
      * @return mixed
      */
-    public function viewAny(User $user)
+    public function viewAny($user)
     {
         return true;
     }
@@ -28,7 +27,7 @@ class TeamPolicy
      * @param  \Taskday\Models\Team  $team
      * @return mixed
      */
-    public function view(User $user, Team $team)
+    public function view($user, Team $team)
     {
         return $user->belongsToTeam($team);
     }
@@ -39,7 +38,7 @@ class TeamPolicy
      * @param  \Taskday\Models\User  $user
      * @return mixed
      */
-    public function create(User $user)
+    public function create($user)
     {
         return true;
     }
@@ -51,7 +50,7 @@ class TeamPolicy
      * @param  \Taskday\Models\Team  $team
      * @return mixed
      */
-    public function update(User $user, Team $team)
+    public function update($user, Team $team)
     {
         return $user->ownsTeam($team);
     }
@@ -63,7 +62,7 @@ class TeamPolicy
      * @param  \Taskday\Models\Team  $team
      * @return mixed
      */
-    public function addTeamMember(User $user, Team $team)
+    public function addTeamMember($user, Team $team)
     {
         return $user->ownsTeam($team);
     }
@@ -75,7 +74,7 @@ class TeamPolicy
      * @param  \Taskday\Models\Team  $team
      * @return mixed
      */
-    public function updateTeamMember(User $user, Team $team)
+    public function updateTeamMember($user, Team $team)
     {
         return $user->ownsTeam($team);
     }
@@ -87,7 +86,7 @@ class TeamPolicy
      * @param  \Taskday\Models\Team  $team
      * @return mixed
      */
-    public function removeTeamMember(User $user, Team $team)
+    public function removeTeamMember($user, Team $team)
     {
         return $user->ownsTeam($team);
     }
@@ -99,7 +98,7 @@ class TeamPolicy
      * @param  \Taskday\Models\Team  $team
      * @return mixed
      */
-    public function delete(User $user, Team $team)
+    public function delete($user, Team $team)
     {
         return $user->ownsTeam($team);
     }

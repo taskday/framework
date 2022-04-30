@@ -1,34 +1,16 @@
 <template>
   <form action="#" @submit.prevent="submit">
     <VCardAuth :message="form.errors.message">
-      <VFormInput
-        :errors="form.errors.email"
-        autocomplete="none"
-        v-model="form.email"
-        label="Email"
-        type="email"
-      />
+      <VFormInput :errors="form.errors.email" autocomplete="none" v-model="form.email" label="Email" type="email" />
       <VFormInput
         :errors="form.errors.password"
         autocomplete="none"
         v-model="form.password"
         label="Password"
-        type="password"
-      />
-      <div class="flex items-start justify-between">
-        <VFormCheckbox
-          :errors="form.errors.rememberMe"
-          v-model="form.rememberMe"
-          label="Remember me"
-        />
-        <VLink
-          class="flex-shirnk-0 whitespace-nowrap"
-          :href="route('password.request')"
-        >Forgot password?</VLink>
-        <VLink
-          class="flex-shirnk-0 whitespace-nowrap"
-          :href="route('register')"
-        >Register</VLink>
+        type="password" />
+      <div class="flex flex-col items-start space-y-5 justify-between">
+        <VFormCheckbox :errors="form.errors.rememberMe" v-model="form.rememberMe" label="Remember me" />
+        <VLink class="flex-shirnk-0 whitespace-nowrap" :href="route('password.request')">Forgot password?</VLink>
       </div>
       <VButton type="submit" class="w-full">Sign In</VButton>
     </VCardAuth>
@@ -37,7 +19,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import GuestLayout from '@/layouts/GuestLayout.vue';
+import GuestLayout from "@/layouts/GuestLayout.vue";
 
 export default defineComponent({
   layout: GuestLayout,

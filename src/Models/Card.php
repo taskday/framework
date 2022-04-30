@@ -19,6 +19,7 @@ use Illuminate\Database\Query\Builder;
 use Laravel\Scout\Searchable;
 use Spatie\Activitylog\LogOptions;
 use Spatie\Activitylog\Traits\LogsActivity;
+use Taskday\Support\Page\Breadcrumb;
 
 /**
  * @property Project $project
@@ -52,7 +53,7 @@ class Card extends Model
      */
     protected $appends = [
         'customFields',
-        'label'
+        'breadcrumbs'
     ];
 
     /**
@@ -114,10 +115,16 @@ class Card extends Model
 
     /**
      * Alternative title of the project for search result.
+     *
+     * @return Breadcrumb[]
      */
-    public function getLabelAttribute()
+    public function getBreadcrumbsAttribute(): array
     {
-        return "{$this->project->workspace->title} / {$this->project->title}";
+        return   [
+            new Breadcrumb($this->project->workspace->title, route('workspaces.show', $this->project->workspace)),
+            new Breadcrumb($this->project->title, route('projects.show', $this->project)),
+            new Breadcrumb($this->title),
+        ];
     }
 
     /**

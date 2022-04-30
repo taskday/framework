@@ -24,13 +24,18 @@ class WorkspaceController extends Controller
                 new Breadcrumb('Dashboard', route('dashboard')),
                 new Breadcrumb('Workspaces', route('workspaces.index')),
             ],
-            'workspaces' => Auth::user()->sharedWorkspaces()->with(['projects' => function ($projects) {
-                $projects->whereIn('id', Auth::user()->sharedProjects->modelKeys())->with(['cards' => function ($cards) {
-                    $cards->with(['activities' => function($activities) {
-                        $activities->with(['causer', 'subject'])->latest()->limit(3);
-                    }])->limit(3);
-                }])->latest();
-            }])->latest()->get(),
+            'workspaces' => Workspace::query()
+                ->where('team_id', Auth::user()->current_team_id)
+                ->orWhereIn('id', Auth::user()->sharedWorkspaces->modelKeys())
+                ->with(['projects' => function ($projects) {
+                    $projects
+                        ->whereIn('id', Auth::user()->sharedProjects->modelKeys())
+                        ->with(['comments' => function ($query) {
+                            $query->limit(3);
+                        }]);
+                }])
+                ->latest()
+                ->get(),
         ]);
     }
 
@@ -80,11 +85,12 @@ class WorkspaceController extends Controller
         return Inertia::render('Workspaces/Show', [
             'title' => $workspace->title,
             'fields' => $workspace->projects->flatMap->fields->unique('id')->values(),
-            'breadcrumbs' => [
-                ['name' =>  'Dashboard',          'href' => route('dashboard')],
-                ['name' =>  $workspace->title,    'href' => route('workspaces.show', $workspace)],
-            ],
-            'workspace' => $workspace->load(['projects.activities.causer']),
+            'breadcrumbs' => $workspace->breadcrumbs,
+            'workspace' => $workspace->load(['projects' => function ($projects) {
+                $projects->whereIn('id', Auth::user()->sharedProjects->modelKeys())->with(['comments' => function ($query) {
+                    $query->limit(3);
+                }]);
+            }]),
         ]);
     }
 
@@ -137,7 +143,7 @@ class WorkspaceController extends Controller
     {
         $workspace->delete();
 
-        return redirect()->route('dashboard');
+        return redirect()->route('workspaces.index');
     }
 
     /**

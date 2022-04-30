@@ -8,7 +8,7 @@ class Breadcrumb implements Arrayable
 {
     public function __construct(
         public string $title,
-        public string $url
+        public ?string $url = null
     ) { }
 
     public function toArray()
