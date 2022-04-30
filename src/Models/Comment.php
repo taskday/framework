@@ -6,14 +6,12 @@ namespace Taskday\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Laravel\Scout\Searchable;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 
 class Comment extends Model implements HasMedia
 {
-    use Searchable, InteractsWithMedia, LogsActivity;
+    use Searchable, InteractsWithMedia;
 
     /**
      * The attributes that are not mass assignable.
@@ -21,15 +19,6 @@ class Comment extends Model implements HasMedia
      * @var array
      */
     protected $guarded = ['id', 'created_at', 'updated_at'];
-
-    /**
-     *
-     * @return LogOptions
-     */
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()->logOnly(['title']);
-    }
 
     /**
      * Get the commentable entity that the comment belongs to.

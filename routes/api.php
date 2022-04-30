@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Taskday\Http\Controllers\Api;
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function () {
+Route::prefix('api')->middleware(['api', 'auth:sanctum', 'verified'])->group(function () {
 
     // Verify authentication
     Route::get('me', fn () => Auth::user());

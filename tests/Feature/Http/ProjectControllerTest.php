@@ -6,7 +6,7 @@ use Taskday\Models\Team;
 use Taskday\Models\User;
 use Taskday\Models\Workspace;
 
-it('can list all workspaces', function () {
+it('can show a project', function () {
     // Arrange
     $user = User::factory()->withCurrentTeam()->create();
     $workspace = $user->createWorkspace('My Workspace');
@@ -21,7 +21,7 @@ it('can list all workspaces', function () {
     // Act
     $response = $this
         ->actingAs($user)
-        ->get(route('workspaces.index'));
+        ->get(route('projects.show', $project));
 
     // Assert
     expect($workspace->title)->toBe('My Workspace');
@@ -31,16 +31,11 @@ it('can list all workspaces', function () {
     expect(Team::count())->toBe(2);
 
     $response->assertInertia(fn(AssertableInertia $page) => $page
-        ->component('Workspaces/Index')
-        ->where('title', 'Workspaces')
-        ->has('breadcrumbs', 2)
-        ->where('breadcrumbs.0.title', 'Dashboard')
-        ->where('breadcrumbs.1.title', 'Workspaces')
-        ->count('workspaces', 2)
-        ->where('workspaces.0.title', $workspace->title)
-        ->count('workspaces.0.projects', 1)
-        ->count('workspaces.1.projects', 1)
-        ->where('workspaces.0.projects.0.title', $project->title)
-        ->where('workspaces.1.projects.0.title', $sharedProject->title)
+        ->component('Projects/Show')
+        ->where('title', $project->title)
+        ->has('breadcrumbs', 3)
+        ->where('breadcrumbs.0.title', "Workspaces")
+        ->where('breadcrumbs.1.title', $workspace->title)
+        ->where('breadcrumbs.2.title', $project->title)
     );
 });

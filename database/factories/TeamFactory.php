@@ -2,19 +2,19 @@
 
 namespace Database\Factories\Taskday\Models;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
-use Taskday\Models\Workspace;
-use Taskday\Models\User;
-use Taskday\Models\Team;
 
-class WorkspaceFactory extends Factory
+use Taskday\Models\Team;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Taskday\Models\User;
+
+class TeamFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.
      *
      * @var string
      */
-    protected $model = Workspace::class;
+    protected $model = Team::class;
 
     /**
      * Define the model's default state.
@@ -24,9 +24,9 @@ class WorkspaceFactory extends Factory
     public function definition()
     {
         return [
-            'title' => $this->faker->word,
             'user_id' => User::factory(),
-            'team_id' => Team::factory(),
+            'name' => $this->faker->word,
+            'personal_team' => $this->faker->boolean,
         ];
     }
 }

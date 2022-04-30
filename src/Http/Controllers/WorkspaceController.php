@@ -6,6 +6,7 @@ use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Taskday\Models\Project;
 use Taskday\Models\User;
 use Taskday\Support\Page\Breadcrumb;
 
@@ -29,7 +30,10 @@ class WorkspaceController extends Controller
                 ->orWhereIn('id', Auth::user()->sharedWorkspaces->modelKeys())
                 ->with(['projects' => function ($projects) {
                     $projects
-                        ->whereIn('id', Auth::user()->sharedProjects->modelKeys())
+                        ->whereIn('id', Project::select('id')->whereHas('workspace', function ($query) {
+                            $query->where('team_id', Auth::user()->current_team_id);
+                        }))
+                        ->orWhereIn('id', Auth::user()->sharedProjects->modelKeys())
                         ->with(['comments' => function ($query) {
                             $query->limit(3);
                         }]);

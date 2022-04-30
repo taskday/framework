@@ -51,10 +51,12 @@ class Workspace extends Model
      * @param User $user
      * @return Model
      */
-    public function createProject(string $title, Model $user)
+    public function createProject(array|string $data, Model $user)
     {
-        return $this->projects()->create([
-            'title' => $title,
+        return $this->projects()->create(is_array($data) ? array_merge($data, [
+            'user_id' => $user->id,
+        ]) : [
+            'title' => $data,
             'user_id' => $user->id,
         ]);
     }

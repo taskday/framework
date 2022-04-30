@@ -4,13 +4,9 @@ namespace Taskday\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 
 class CardField extends Pivot
 {
-    use LogsActivity;
-
     /**
      * The relations to eager load on every query.
      *
@@ -27,15 +23,6 @@ class CardField extends Pivot
      * @var string
      */
     protected $table = 'card_field';
-
-    /**
-     *
-     * @return LogOptions
-     */
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()->logOnly(['value']);
-    }
 
     /**
      * @return BelongsTo

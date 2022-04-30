@@ -102,6 +102,7 @@ trait CanManageTaskday
         return tap($this->workspaces()->create([
             'title' => $title,
             'description' => $description,
+            'team_id' => $this->current_team_id,
         ]), function($workspace) {
             $workspace->addMember($this->id);
         });
@@ -114,13 +115,9 @@ trait CanManageTaskday
      * @param Workspace $workspace
      * @return Project|null
      */
-    public function createProject(string $title, Workspace $workspace): ?Project
+    public function createProject(array|string $data, Workspace $workspace): ?Project
     {
-        // if (! $this->can('update', $workspace)) {
-        //     return null;
-        // }
-
-        return tap($workspace->createProject($title, $this), function($project) {
+        return tap($workspace->createProject($data, $this), function($project) {
             $project->addMember($this->id);
         });
     }

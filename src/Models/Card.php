@@ -17,8 +17,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Query\Builder;
 use Laravel\Scout\Searchable;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Taskday\Support\Page\Breadcrumb;
 
 /**
@@ -26,7 +24,7 @@ use Taskday\Support\Page\Breadcrumb;
  */
 class Card extends Model
 {
-    use HasFactory, Searchable, Linkable, Commentable, LogsActivity;
+    use HasFactory, Searchable, Linkable, Commentable;
 
     /**
      * The attributes that aren't mass assignable.
@@ -64,15 +62,6 @@ class Card extends Model
         static::addGlobalScope('order', function (CardBuilder $builder) {
             $builder->orderBy('order', 'desc');
         });
-    }
-
-    /**
-     *
-     * @return LogOptions
-     */
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()->logOnly(['title']);
     }
 
     /**
@@ -170,7 +159,7 @@ class Card extends Model
      */
     public function getFieldsByType(string $type)
     {
-        return $this->fields()->without('activities')->where('type', $type)->get();
+        return $this->fields()->where('type', $type)->get();
     }
 
     /**

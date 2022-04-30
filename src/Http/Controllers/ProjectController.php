@@ -2,7 +2,6 @@
 
 namespace Taskday\Http\Controllers;
 
-use Taskday\Models\Card;
 use Taskday\Models\Field;
 use Taskday\Models\Project;
 use Taskday\Models\User;
@@ -10,7 +9,7 @@ use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Taskday\TaskdayFacade;
+use Taskday\Support\Page\Breadcrumb;
 
 class ProjectController extends Controller
 {
@@ -24,8 +23,8 @@ class ProjectController extends Controller
         return Inertia::render('Projects/Create', [
             'title' => 'New Project in ' . $workspace->title,
             'breadcrumbs' => [
-                [ 'name' =>  'Dashboard',       'href' => route('dashboard') ],
-                [ 'name' =>  $workspace->title, 'href' => route('workspaces.show', $workspace) ],
+                new Breadcrumb('Dashboard', route('dashboard')),
+                new Breadcrumb($workspace->title, route('workspaces.show', $workspace)),
             ],
             'workspace' => $workspace,
         ]);
@@ -47,7 +46,7 @@ class ProjectController extends Controller
 
         /** @var User */
         $user = Auth::user();
-        $project = $user->createProject($data['title'], $workspace, $data);
+        $project = $user->createProject($data, $workspace);
 
         return redirect()->route('projects.show', $project);
     }
@@ -61,8 +60,7 @@ class ProjectController extends Controller
 
         return Inertia::render('Projects/Show', [
             'title' => $project->title,
-            'breadcrumbs' => $project->breadcrumb,
-            'workspace' => $project->workspace->load('projects'),
+            'breadcrumbs' => $project->breadcrumbs,
             'fields' => $project->fields,
             'project' => $project->load(['cards' => function ($query) use ($request) {
                 $query->with('fields', 'project', 'comments.creator');

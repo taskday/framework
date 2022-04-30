@@ -18,7 +18,7 @@ use Taskday\Http\Controllers;
 Route::get('/scripts/{handle}', [Controllers\AssetController::class, 'scripts']);
 Route::get('/styles/{handle}', [Controllers\AssetController::class,  'styles']);
 
-Route::middleware(['auth:sanctum', 'verified'])->group(function(){
+Route::middleware(['web', 'auth:sanctum', 'verified'])->group(function(){
 
     // Push Notifications Subscriptions
     Route::post('subscriptions',               [Controllers\PushSubscriptionController::class, 'update']);

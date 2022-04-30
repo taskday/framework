@@ -4,6 +4,7 @@ namespace Database\Factories\Taskday\Models;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
+use Taskday\Models\Team;
 use Taskday\Models\User;
 
 class UserFactory extends Factory
@@ -41,6 +42,22 @@ class UserFactory extends Factory
         return $this->state(function (array $attributes) {
             return [
                 'email_verified_at' => null,
+            ];
+        });
+    }
+
+    /**
+     * Indicate that the model's email address should be unverified.
+     *
+     * @return \Illuminate\Database\Eloquent\Factories\Factory
+     */
+    public function withCurrentTeam(?Team $team = null)
+    {
+        $team ??= Team::factory()->create();
+
+        return $this->state(function (array $attributes) use ($team) {
+            return [
+                'current_team_id' => $team->id,
             ];
         });
     }

@@ -2,13 +2,15 @@
 
 namespace Taskday;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
-use Spatie\LaravelPackageTools\Package;
-use Spatie\LaravelPackageTools\PackageServiceProvider;
+use Illuminate\Support\ServiceProvider;
+use Laravel\Jetstream\Jetstream;
+use Taskday\Models\Team;
 
-class TaskdayServiceProvider extends PackageServiceProvider
+class TaskdayServiceProvider extends ServiceProvider
 {
     /**
      * The policy mappings for the application.
@@ -22,12 +24,41 @@ class TaskdayServiceProvider extends PackageServiceProvider
         Taskday\Models\Team::class => Taskday\Policies\TeamPolicy::class,
     ];
 
-    public function configurePackage(Package $package): void
+    /**
+     * We register all the services we need.
+     *
+     * @return void
+     */
+    public function register()
     {
-        $package
-            ->name('taskday')
-            ->hasConfigFile('taskday')
-            ->hasMigrations(
+        $this->app->singleton('taskday', function () {
+            return new Taskday();
+        });
+    }
+
+    /**
+     * Register any package services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        $this->registerBladeDirectives();
+        $this->registerPolicies();
+        $this->registerRoutes();
+        $this->registerViews();
+        $this->registerMigrations();
+    }
+
+    public function registerViews(): void
+    {
+        $this->loadViewsFrom(__DIR__.'/../resources/views', 'taskday');
+    }
+
+    public function registerMigrations(): void
+    {
+        if ($this->app->runningInConsole()) {
+            foreach ([
                 '06_create_workspaces_table',
                 '07_create_projects_table',
                 '08_create_cards_table',
@@ -42,57 +73,38 @@ class TaskdayServiceProvider extends PackageServiceProvider
                 '17_create_push_subscriptions_table',
                 '18_create_notifications_table',
                 '19_create_media_table',
-                '20_create_activity_log_table',
-                '21_add_event_column_to_activity_log_table',
-                '22_add_batch_uuid_column_to_activity_log_table',
-                '22_add_batch_uuid_column_to_activity_log_table',
-                '23_add_team_id_to_projects_and_workspaces_table',
-            )
-            ->hasViews('taskday');
+                '20_add_team_id_to_workspaces_table',
+            ] as $value) {
+
+                $migration = __DIR__ . "/../database/migrations/$value.php.stub";
+
+                $published = collect(glob(database_path('migrations/*')))
+                    ->filter(fn ($path) => file_get_contents($path) == file_get_contents($migration))
+                    ->isNotEmpty();
+
+                if (! $published) {
+                    $this->publishes([
+                        __DIR__ . "/../database/migrations/$value.php.stub" => database_path('migrations/' . date('Y_m_d_His', time()) . "$value.php"),
+                    ], 'migrations');
+                }
+            }
+          }
     }
 
-
-    public function packageRegistered()
+    public function registerRoutes(string $prefix = ''): void
     {
-        Route::macro('taskday', function (string $prefix = 'taskday') {
-            Route::prefix($prefix)->middleware('web')->group(function () {
-                require_once __DIR__ . '/../routes/web.php';
-            });
-            Route::prefix($prefix . '/api')->middleware('api')->group(function () {
-                require_once __DIR__ . '/../routes/api.php';
-            });
-        });
+        $this->loadRoutesFrom(__DIR__ . '/../routes/web.php');
+        $this->loadRoutesFrom(__DIR__ . '/../routes/api.php');
     }
 
-
-    public function registeringPackage()
-    {
-        // Register the main class to use with the facade
-        $this->app->singleton('taskday', function () {
-            return new Taskday();
-        });
-    }
-
-
-    public function bootingPackage()
-    {
-        $this->registerBladeDirectives();
-        $this->registerPolicies();
-    }
-
-    /**
-     * Register the application's policies.
-     *
-     * @return void
-     */
-    public function registerPolicies()
+    public function registerPolicies(): void
     {
         foreach ($this->policies as $model => $policy) {
             Gate::policy($model, $policy);
         }
     }
 
-    protected function registerBladeDirectives()
+    protected function registerBladeDirectives(): void
     {
         Blade::directive('taskday', function ($expression) {
             return <<<EOT

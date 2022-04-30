@@ -14,17 +14,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Query\Builder;
 use Laravel\Scout\Searchable;
-use Spatie\Activitylog\LogOptions;
-use Spatie\Activitylog\Traits\LogsActivity;
 use Taskday\Support\Page\Breadcrumb;
 
 /**
  * @property Workspace $workspace
+ * @property Breadcrumb[] $breadcrumbs
  * @package Taskday\Models
  */
 class Project extends Model
 {
-    use HasFactory, Searchable, Linkable, Archivable, Memberable, BelongsToUser, LogsActivity;
+    use HasFactory, Searchable, Linkable, Archivable, Memberable, BelongsToUser;
 
     /**
      * The attributes that aren't mass assignable.
@@ -49,16 +48,6 @@ class Project extends Model
         'customFields',
         'breadcrumbs'
     ];
-
-    /**
-     *
-     * @return LogOptions
-     */
-    public function getActivitylogOptions(): LogOptions
-    {
-        return LogOptions::defaults()->useLogName('project')->logOnly(['title', 'description']);
-    }
-
 
     /**
      * @return BelongsTo
@@ -118,7 +107,7 @@ class Project extends Model
     public function getBreadcrumbsAttribute(): array
     {
         return   [
-            new Breadcrumb('Dashboard', route('dashboard')),
+            new Breadcrumb('Workspaces', route('workspaces.index')),
             new Breadcrumb($this->workspace->title, route('workspaces.show', $this->workspace)),
             new Breadcrumb($this->title, route('projects.show', $this)),
         ];
