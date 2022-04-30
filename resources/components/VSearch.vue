@@ -26,7 +26,7 @@
     <teleport to="body">
       <div
         v-show="state.isOpen"
-        class="fixed h-screen w-screen z-[200] inset-0 flex flex-col bg-gray-900 bg-opacity-20 backdrop-blur-sm p-[10vh]">
+        class="fixed h-screen w-screen z-[200] inset-0 flex flex-col bg-gray-900 bg-opacity-20 backdrop-blur-sm p-10 md:p-[10vh]">
         <div @click="state.isOpen = false" class="absolute inset-0"></div>
         <div class="flex flex-col text-gray-900 bg-white overflow-hidden rounded-md shadow-md dark:bg-gray-800 dark:text-gray-200 dark:border dark:border-gray-700 w-full max-w-2xl mx-auto relative max-h-[calc(100vh-8rem)]">
           <div ref="root" class="px-3 border-b border-gray-300 dark:border-gray-700 md:text-sm">
