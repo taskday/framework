@@ -44,7 +44,7 @@ export default defineComponent({
           this.variant === "danger",
 
         "hover:bg-blue-500 dark:hover:bg-blue-500": this.variant === "primary",
-        "hover:bg-gray-300 dark:hover:bg-gray-600":
+        "hover:bg-gray-200 dark:hover:bg-gray-600":
           this.variant === "secondary",
         "hover:bg-red-500 dark:hover:bg-red-700":
           this.variant === "danger",

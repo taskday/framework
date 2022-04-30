@@ -284,6 +284,9 @@ ul[data-type="taskList"] li {
 }
 ul[data-type="taskList"] li[data-checked="true"] {
   text-decoration: line-through;
+  & input[type="checkbox"] {
+    @apply bg-blue-600 dark:bg-gray-600;
+  }
 }
 ul[data-type="taskList"] li > label {
   @apply flex items-center -translate-x-7 mt-1.5;

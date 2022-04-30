@@ -1,14 +1,14 @@
 <template>
   <label class="block w-full">
-    <div v-if="isEditing">
-      <div class="fixed inset-0 w-full h-full" @click="stopEditing"></div>
+    <template v-if="isEditing">
       <input
-        class="w-full h-9 px-2 placeholder-gray-300 transition rounded dark:border-gray-800 focus:outline-none focus:border-transparent focus:ring-1 focus:ring-offset-blue-400 dark:focus:ring-offset-blue-700 focus:shadow-sm dark:ring-opacity-10 dark:bg-gray-700 dark:text-gray-100"
+        class="w-full relative z-10 h-9 px-2 placeholder-gray-300 transition rounded dark:border-gray-800 focus:outline-none focus:border-transparent focus:ring-1 focus:ring-offset-blue-400 dark:focus:ring-offset-blue-700 focus:shadow-sm dark:ring-opacity-10 dark:bg-gray-700 dark:text-gray-100"
         v-bind="$attrs"
         :value="modelValue"
         @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
       />
-    </div>
+      <div class="fixed inset-0 w-full h-full" @click="stopEditing"></div>
+    </template>
     <span v-else>
       <div @click="startEditing">
         <slot></slot>
