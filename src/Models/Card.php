@@ -111,7 +111,6 @@ class Card extends Model
         return   [
             new Breadcrumb($this->project->workspace->title, route('workspaces.show', $this->project->workspace)),
             new Breadcrumb($this->project->title, route('projects.show', $this->project)),
-            new Breadcrumb($this->title),
         ];
     }
 
