@@ -43,6 +43,8 @@ class TaskdayServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'taskday');
+
         $this->registerBladeDirectives();
         $this->registerPolicies();
         $this->registerRoutes();
@@ -79,7 +81,7 @@ class TaskdayServiceProvider extends ServiceProvider
                 $migration = __DIR__ . "/../database/migrations/$value.php.stub";
 
                 $published = collect(glob(database_path('migrations/*')))
-                    ->filter(fn ($path) => file_get_contents($path) == file_get_contents($migration))
+                    ->filter(fn ($path) => $path == $migration)
                     ->isNotEmpty();
 
                 if (! $published) {

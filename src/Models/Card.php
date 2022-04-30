@@ -41,7 +41,6 @@ class Card extends Model
     protected $with = [
         'user',
         'fields',
-        'activities.causer'
     ];
 
     /**
