@@ -130,12 +130,8 @@ class Card extends Model
 
     /**
      * Set the value of the given custom field.
-     *
-     * @param Field $field
-     * @param string $value
-     * @return self
      */
-    public function setCustom(Field $field, ?string $value): self
+    public function setCustom(Field $field, ?string $value = null): self
     {
         $oldValue = $field->cards()->where('card_id', $this->id)->first()?->pivot?->value ?? '';
 
@@ -143,7 +139,7 @@ class Card extends Model
             [$this->id => ['value' => $value ?? '']]
         );
 
-        event(new CardFieldUpdatedEvent($oldValue, $value, $field, $this));
+        event(new CardFieldUpdatedEvent($oldValue, $value ?? '', $field, $this));
 
         return $this;
     }
