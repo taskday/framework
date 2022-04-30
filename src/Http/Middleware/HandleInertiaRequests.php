@@ -46,7 +46,7 @@ class HandleInertiaRequests extends Middleware
             'global' => Auth::check() ? [
                 'workspaces' => Workspace::orderBy('title')->get(),
                 'notifications' => Auth::user()->unreadNotifications,
-                'users' => User::all()->transform(function ($user) {
+                'users' => Auth::user()->currentTeam->allUsers()->transform(function ($user) {
                     return UserResource::make($user);
                 }),
             ] : [],
