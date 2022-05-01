@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import useProjectForm from "@/composables/useProjectFieldsForm";
+import useProjectForm from "@/composables/useProjectForm";
 import { onMounted } from "vue";
 
 const props = defineProps<{ project: Project }>();
