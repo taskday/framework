@@ -2,19 +2,14 @@
 
 namespace Taskday\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Inertia\Inertia;;
 use Taskday\Models\Card;
 use Taskday\Models\Field;
 use Taskday\Models\Project;
 use Taskday\Models\Workspace;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Inertia\Inertia;
-use Taskday\Notifications\UserTaggedNotification;
-use Taskday\Fields\Filter;
-use Taskday\Facades\Taskday;
-use Illuminate\Support\Str;
-use Performing\Taskday\Status\Fields\StatusField;
-use Performing\Taskday\Users\Fields\UsersField;
 use Taskday\Support\Page\Breadcrumb;
 
 class CardController extends Controller
@@ -26,7 +21,9 @@ class CardController extends Controller
      */
     public function index(Request $request)
     {
-        $cards = Card::whereIn('project_id', Auth::user()->sharedProjects->modelKeys())
+        $cards = Card::whereHas('project', function ($query) {
+                $query->sharedWithCurrentUser();
+            })
             ->with(['project.workspace', 'comments.creator', 'fields'])
             ->orderBy('updated_at', 'desc');
 
@@ -34,7 +31,6 @@ class CardController extends Controller
             'title' => 'Cards',
             'breadcrumbs' => [
                 new Breadcrumb('Dashboard', route('dashboard')),
-                new Breadcrumb('Cards'),
             ],
             'cards' => $cards->paginate(30),
         ]);

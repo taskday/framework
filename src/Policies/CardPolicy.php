@@ -19,7 +19,7 @@ class CardPolicy
      */
     public function view(Model $user, Card $card)
     {
-        return $card->project->ownerIs($user) || $card->project->hasMember($user);
+        return $card->project->ownerIs($user) || $card->project->hasMember($user) || $card->project->workspace->team_id == $user->current_team_id;
     }
 
     /**
@@ -31,7 +31,7 @@ class CardPolicy
      */
     public function update(Model $user, Card $card)
     {
-        return $card->project->ownerIs($user) || $card->project->hasMember($user);
+        return $card->project->ownerIs($user) || $card->project->hasMember($user) || $card->project->workspace->team_id == $user->current_team_id;
     }
 
     /**

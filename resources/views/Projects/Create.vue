@@ -1,19 +1,16 @@
 <template>
-  <div class="py-6 bg-white dark:bg-gray-800 shadow">
+  <VPageHeader>
     <VContainer>
-      <div class="flex items-end justify-between">
-        <div>
-          <Link
-            v-for="breadcrumb in breadcrumbs"
-            :href="breadcrumb.href"
-          >
-            <h3 class="font-semibold">{{ breadcrumb.title }}</h3>
-          </Link>
-          <VPageTitle>{{ title }}</VPageTitle>
-        </div>
+      <VBreadcrumb>
+        <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
+          {{ breadcrumb.title }}
+        </VBreadcrumbItem>
+      </VBreadcrumb>
+      <div class="flex items-center justify-between">
+        <VPageTitle>{{ title }}</VPageTitle>
       </div>
     </VContainer>
-  </div>
+  </VPageHeader>
   <VContainer>
     <div class="py-6 space-y-8">
       <div class="flex flex-col w-full space-y-16">

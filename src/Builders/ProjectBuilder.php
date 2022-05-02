@@ -3,6 +3,8 @@
 namespace Taskday\Builders;
 
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
+use Taskday\Models\Project;
 
 class ProjectBuilder extends Builder
 {

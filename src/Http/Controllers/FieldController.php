@@ -5,6 +5,7 @@ namespace Taskday\Http\Controllers;
 use Taskday\Models\Field;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Taskday\Support\Page\Breadcrumb;
 
 class FieldController extends Controller
 {
@@ -18,8 +19,7 @@ class FieldController extends Controller
         return Inertia::render('Fields/Index', [
             'title' => 'Fields',
             'breadcrumbs' => [
-                [ 'name' =>  'Dashboard',                'href' => route('dashboard') ],
-                [ 'name' =>  'Fields' ]
+                new Breadcrumb('Dashboard', route('dashboard')),
             ],
             'fields' => Field::all()
         ]);

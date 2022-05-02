@@ -1,6 +1,6 @@
 <template>
   <div>
-    <VPageHeader class="py-6 bg-white dark:bg-gray-800 shadow">
+    <VPageHeader>
       <VContainer>
         <VBreadcrumb>
           <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">

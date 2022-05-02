@@ -6,7 +6,7 @@ namespace Taskday\Models\Concerns;
 use Taskday\Models\User;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-trait BelongsToUser
+trait HasOwner
 {
     /**
      * Determine whether the user is the owner of the project.

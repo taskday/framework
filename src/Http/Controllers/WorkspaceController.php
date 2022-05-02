@@ -26,16 +26,12 @@ class WorkspaceController extends Controller
                 new Breadcrumb('Workspaces', route('workspaces.index')),
             ],
             'workspaces' => Workspace::query()
-                ->where('team_id', Auth::user()->current_team_id)
-                ->orWhereIn('id', Auth::user()->sharedWorkspaces->modelKeys())
+                ->sharedWithCurrentUser()
                 ->with(['projects' => function ($projects) {
                     $projects
-                        ->whereIn('id', Project::select('id')->whereHas('workspace', function ($query) {
-                            $query->where('team_id', Auth::user()->current_team_id);
-                        }))
-                        ->orWhereIn('id', Auth::user()->sharedProjects->modelKeys())
+                        ->sharedWithCurrentUser()
                         ->with(['comments' => function ($query) {
-                            $query->limit(3);
+                            $query->limit(2);
                         }]);
                 }])
                 ->latest()
@@ -91,9 +87,11 @@ class WorkspaceController extends Controller
             'fields' => $workspace->projects->flatMap->fields->unique('id')->values(),
             'breadcrumbs' => $workspace->breadcrumbs,
             'workspace' => $workspace->load(['projects' => function ($projects) {
-                $projects->whereIn('id', Auth::user()->sharedProjects->modelKeys())->with(['comments' => function ($query) {
-                    $query->limit(3);
-                }]);
+                $projects
+                    ->sharedWithCurrentUser()
+                    ->with(['comments' => function ($query) {
+                        $query->limit(3);
+                    }]);
             }]),
         ]);
     }

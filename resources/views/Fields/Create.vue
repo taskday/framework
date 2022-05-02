@@ -1,10 +1,17 @@
 <template>
   <div>
-    <div class="py-6 bg-white dark:bg-gray-800 shadow">
+    <VPageHeader>
       <VContainer>
-        <VPageTitle>{{ title }}</VPageTitle>
+        <VBreadcrumb>
+          <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
+            {{ breadcrumb.title }}
+          </VBreadcrumbItem>
+        </VBreadcrumb>
+        <div class="flex items-center justify-between">
+          <VPageTitle>{{ title }}</VPageTitle>
+        </div>
       </VContainer>
-    </div>
+    </VPageHeader>
     <VContainer>
       <div class="mt-8 space-y-8">
         <VFormSection @submitted="submit">

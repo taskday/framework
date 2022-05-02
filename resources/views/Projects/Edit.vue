@@ -1,19 +1,16 @@
  <template>
-  <div class="py-6 bg-white dark:bg-gray-800 shadow">
+  <VPageHeader>
     <VContainer>
       <VBreadcrumb>
-        <VBreadcrumbItem :href="route('workspaces.show', project.workspace)">
-          {{ project.workspace.title }}
-        </VBreadcrumbItem>
-        <VBreadcrumbItem :href="route('projects.show', project)">
-          {{ project.title }}
+        <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
+          {{ breadcrumb.title }}
         </VBreadcrumbItem>
       </VBreadcrumb>
-      <div class="flex items-end justify-between">
-        <VPageTitle>Settings</VPageTitle>
+      <div class="flex items-center justify-between">
+        <VPageTitle>{{ title }}</VPageTitle>
       </div>
     </VContainer>
-  </div>
+  </VPageHeader>
   <VContainer>
     <div class="py-6 space-y-8">
       <div class="flex flex-col w-full space-y-16">
@@ -39,14 +36,13 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from "vue";
-
 import ProjectUpdateForm from "./Partials/ProjectUpdateForm.vue";
 import ProjectFieldsForm from "./Partials/ProjectFieldsForm.vue";
 import ProjectMembersForm from "./Partials/ProjectMembersForm.vue";
 
 defineProps<{
   title: string,
+  breadcrumbs: Breadcrumb[]
   workspace: Workspace
   project: Project
   fields: Field[]

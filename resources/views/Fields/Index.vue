@@ -1,6 +1,11 @@
 <template>
   <VPageHeader>
     <VContainer>
+      <VBreadcrumb>
+        <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
+          {{ breadcrumb.title }}
+        </VBreadcrumbItem>
+      </VBreadcrumb>
       <div class="flex items-center justify-between">
         <VPageTitle>{{ title }}</VPageTitle>
         <div>
@@ -41,6 +46,7 @@ import { useForm } from "@inertiajs/inertia-vue3";
 
 defineProps<{
   title: string,
+  breadcrumbs: Breadcrumb[]
   fields: Field[]
 }>()
 

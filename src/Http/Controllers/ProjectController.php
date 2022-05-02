@@ -83,13 +83,12 @@ class ProjectController extends Controller
         $this->authorize('update', $project);
 
         return Inertia::render('Projects/Edit', [
+            'title' => 'Project Settings',
             'breadcrumbs' => [
-                [ 'name' =>  'Dashboard',                'href' => route('dashboard') ],
-                [ 'name' =>  $project->workspace->title, 'href' => route('workspaces.show', $project->workspace) ],
-                [ 'name' =>  $project->title,            'href' => route('projects.show', $project) ],
-                [ 'name' =>  'Settings' ],
+                new Breadcrumb('Dashboard', route('dashboard')),
+                new Breadcrumb($project->workspace->title, route('workspaces.show', $project->workspace)),
+                new Breadcrumb($project->title, route('projects.show', $project)),
             ],
-            'workspace' => $project->load(['fields', 'workspace.projects', 'members'])->workspace,
             'project' => $project->load(['fields', 'cards', 'workspace', 'members']),
             'fields' => Field::all(),
             'users' => Auth::user()->whereNotIn('id', $project->members->pluck('id'))->get()

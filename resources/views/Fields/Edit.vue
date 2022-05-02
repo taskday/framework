@@ -1,9 +1,16 @@
 <template>
-  <div class="py-6 bg-white dark:bg-gray-800 shadow">
+  <VPageHeader>
     <VContainer>
-      <VPageTitle>Edit {{ field.title }}</VPageTitle>
+      <VBreadcrumb>
+        <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
+          {{ breadcrumb.title }}
+        </VBreadcrumbItem>
+      </VBreadcrumb>
+      <div class="flex items-center justify-between">
+        <VPageTitle>Edit {{ field.title }}</VPageTitle>
+      </div>
     </VContainer>
-  </div>
+  </VPageHeader>
   <VContainer>
     <div class="mt-8 space-y-8">
       <VFormSection @submitted="submit">
@@ -21,22 +28,22 @@
 </template>
 
 <script setup lang="ts">
-import useFieldForm from '@/composables/useFieldForm';
-import { onMounted } from 'vue';
-import Form from './Form.vue';
+import useFieldForm from "@/composables/useFieldForm";
+import { onMounted } from "vue";
+import Form from "./Form.vue";
 
-const props = defineProps<{ field: Field }>()
+const props = defineProps<{ field: Field; breadcrumbs: Breadcrumb[] }>();
 
-const { form, update } = useFieldForm()
+const { form, update } = useFieldForm();
 
 onMounted(() => {
-  form.title = props.field.title
-  form.handle = props.field.handle
-  form.type = props.field.type
-  form.options = props.field.options
-})
+  form.title = props.field.title;
+  form.handle = props.field.handle;
+  form.type = props.field.type;
+  form.options = props.field.options;
+});
 
 function submit() {
-  update(props.field)
+  update(props.field);
 }
 </script>

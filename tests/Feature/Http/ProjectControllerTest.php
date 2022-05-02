@@ -14,14 +14,17 @@ it('can show a project', function () {
 
     $friend = User::factory()->withCurrentTeam()->create();
     $friendWorkspace = $friend->createWorkspace("Friend's Workspace");
-    $friend->createProject("Friend's Project", $friendWorkspace);
+    $unsharedProject = $friend->createProject("Friend's Project", $friendWorkspace);
     $sharedProject = $friend->createProject("Shared Project", $friendWorkspace);
     $sharedProject->addMember($user);
 
     // Act
-    $response = $this
+    $response1 = $this
         ->actingAs($user)
         ->get(route('projects.show', $project));
+    $response2 = $this
+        ->actingAs($user)
+        ->get(route('projects.show', $unsharedProject));
 
     // Assert
     expect($workspace->title)->toBe('My Workspace');
@@ -30,12 +33,14 @@ it('can show a project', function () {
     expect(Project::all(), 2);
     expect(Team::count())->toBe(2);
 
-    $response->assertInertia(fn(AssertableInertia $page) => $page
+    $response1->assertInertia(fn(AssertableInertia $page) => $page
         ->component('Projects/Show')
         ->where('title', $project->title)
-        ->has('breadcrumbs', 3)
+        ->has('breadcrumbs', 2)
         ->where('breadcrumbs.0.title', "Workspaces")
         ->where('breadcrumbs.1.title', $workspace->title)
-        ->where('breadcrumbs.2.title', $project->title)
+        ->where('project.title', $project->title)
     );
+
+    $response2->assertForbidden();
 });

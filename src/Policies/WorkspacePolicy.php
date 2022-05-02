@@ -19,7 +19,7 @@ class WorkspacePolicy
      */
     public function view(Model $user, Workspace $workspace)
     {
-        return $workspace->ownerIs($user) || $workspace->hasMember($user);
+        return $workspace->ownerIs($user) || $workspace->hasMember($user) || $workspace->team_id == $user->current_team_id;
     }
 
     /**
@@ -31,7 +31,7 @@ class WorkspacePolicy
      */
     public function update(Model $user, Workspace $workspace)
     {
-        return $workspace->ownerIs($user) || $workspace->hasMember($user);
+        return $workspace->ownerIs($user) || $workspace->hasMember($user) || $workspace->team_id == $user->current_team_id;;
     }
 
     /**

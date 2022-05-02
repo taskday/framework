@@ -4,20 +4,26 @@ declare(strict_types=1);
 
 namespace Taskday\Models;
 
+use Illuminate\Contracts\Database\Query\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Taskday\Models\Concerns\Archivable;
-use Taskday\Models\Concerns\Memberable;
-use Taskday\Models\Concerns\BelongsToUser;
-use Taskday\Models\Concerns\Linkable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Scout\Searchable;
+use Taskday\Models\Concerns\Archivable;
+use Taskday\Models\Concerns\HasOwner;
+use Taskday\Models\Concerns\Linkable;
+use Taskday\Models\Concerns\Memberable;
 use Taskday\Support\Page\Breadcrumb;
 
 class Workspace extends Model
 {
-    use HasFactory, Searchable, Linkable, Archivable, Memberable, BelongsToUser;
+    use HasFactory,
+        HasOwner,
+        Memberable,
+        Searchable,
+        Linkable,
+        Archivable;
 
     /**
      * The attributes that aren't mass assignable.
@@ -35,47 +41,8 @@ class Workspace extends Model
         'breadcrumbs'
     ];
 
-
     /**
-     * @return HasMany
-     */
-    public function projects(): HasMany
-    {
-        return $this->hasMany(Project::class);
-    }
-
-    /**
-     * Create a project for the given user.
-     *
-     * @param string $title
-     * @param User $user
-     * @return Model
-     */
-    public function createProject(array|string $data, Model $user)
-    {
-        return $this->projects()->create(is_array($data) ? array_merge($data, [
-            'user_id' => $user->id,
-        ]) : [
-            'title' => $data,
-            'user_id' => $user->id,
-        ]);
-    }
-
-    /**
-     * Get the indexable data array for the model.
-     *
-     * @return array
-     */
-    public function toSearchableArray()
-    {
-        return [
-            'id' => $this->getKey(),
-            'title' => $this->title,
-        ];
-    }
-
-    /**
-     * Alternative title of the project for search result.
+     * Breadcrumbs for the current workspace.
      *
      * @return Breadcrumb[]
      */
@@ -87,19 +54,43 @@ class Workspace extends Model
         ];
     }
 
-    /**
-     * Get workspaces only visible to the current user.
-     */
-    public function scopeVisibleTo($query, Model $user)
+    public function projects(): HasMany
     {
-        $query->whereIn('id', $user->workspaces->pluck('id'));
+        return $this->hasMany(Project::class);
     }
 
     /**
-     * Get workspaces only visible to the current user.
+     * Filter the query by the current user.
      */
-    public function forCurrentTeam($query)
+    public function scopeSharedWithCurrentUser(Builder $query)
     {
-        $query->orWhere('team_id', Auth::user()->current_team_id);
+        return $query
+            ->where('team_id', Auth::user()->current_team_id)
+            ->orWhereIn('id', Auth::user()->sharedWorkspaces->modelKeys());
+    }
+
+    /**
+     * Create a project passing a title or an array of data.
+     */
+    public function createProject(array|string $data, Model $user): Project
+    {
+        return $this->projects()->create(is_array($data) ? array_merge($data, [
+            'user_id' => $user->id,
+        ]) : [
+            'title' => $data,
+            'user_id' => $user->id,
+        ]);
+    }
+
+    /**
+     * Get the indexable data array for the model.
+     */
+    public function toSearchableArray(): array
+    {
+        return [
+            'id' => $this->getKey(),
+            'title' => $this->title,
+            'description' => $this->description,
+        ];
     }
 }

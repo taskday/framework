@@ -19,7 +19,7 @@ class ProjectPolicy
      */
     public function view(Model $user, Project $project)
     {
-        return $project->ownerIs($user) || $project->hasMember($user);
+        return $project->ownerIs($user) || $project->hasMember($user) || $project->workspace->team_id == $user->current_team_id;
     }
 
     /**
@@ -31,7 +31,7 @@ class ProjectPolicy
      */
     public function update(Model $user, Project $project)
     {
-        return $project->ownerIs($user) || $project->hasMember($user);
+        return $project->ownerIs($user) || $project->hasMember($user) || $project->workspace->team_id == $user->current_team_id;
     }
 
     /**

@@ -1,29 +1,33 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Taskday\Models;
 
-use Taskday\Builders\ProjectBuilder;
-use Taskday\Models\Concerns\Archivable;
-use Taskday\Models\Concerns\BelongsToUser;
-use Taskday\Models\Concerns\Linkable;
-use Taskday\Models\Concerns\Memberable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Scout\Searchable;
+use Taskday\Builders\ProjectBuilder;
+use Taskday\Models\Concerns\Archivable;
+use Taskday\Models\Concerns\HasOwner;
+use Taskday\Models\Concerns\Linkable;
+use Taskday\Models\Concerns\Memberable;
 use Taskday\Support\Page\Breadcrumb;
 
-/**
- * @property Workspace $workspace
- * @property Breadcrumb[] $breadcrumbs
- * @package Taskday\Models
- */
 class Project extends Model
 {
-    use HasFactory, Searchable, Linkable, Archivable, Memberable, BelongsToUser;
+    use HasFactory,
+        HasOwner,
+        Memberable,
+        Searchable,
+        Linkable,
+        Archivable;
 
     /**
      * The attributes that aren't mass assignable.
@@ -50,46 +54,8 @@ class Project extends Model
     ];
 
     /**
-     * @return BelongsTo
+     * Get all the custom fields for the project.
      */
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    /**
-     * @return BelongsTo
-     */
-    public function workspace(): BelongsTo
-    {
-        return $this->belongsTo(Workspace::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function cards(): HasMany
-    {
-        return $this->hasMany(Card::class);
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function fields()
-    {
-        return $this->belongsToMany(Field::class)
-            ->withPivot(['order', 'hidden', 'group'])
-            ->using(FieldProject::class)
-            ->orderBy('pivot_order')
-            ->withTimestamps();
-    }
-
-    public function comments()
-    {
-        return $this->hasManyThrough(Comment::class, Card::class, 'project_id', 'commentable_id')->with(['creator', 'commentable'])->latest();
-    }
-
     public function getCustomFieldsAttribute()
     {
         return $this->fields->mapWithKeys(function ($field) {
@@ -109,13 +75,40 @@ class Project extends Model
         return   [
             new Breadcrumb('Workspaces', route('workspaces.index')),
             new Breadcrumb($this->workspace->title, route('workspaces.show', $this->workspace)),
-            new Breadcrumb($this->title, route('projects.show', $this)),
         ];
     }
 
-    /**
-     * @return HasMany
-     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function workspace(): BelongsTo
+    {
+        return $this->belongsTo(Workspace::class);
+    }
+
+    public function cards(): HasMany
+    {
+        return $this->hasMany(Card::class);
+    }
+
+    public function fields(): BelongsToMany
+    {
+        return $this->belongsToMany(Field::class)
+            ->withPivot(['order', 'hidden', 'group'])
+            ->using(FieldProject::class)
+            ->orderBy('pivot_order')
+            ->withTimestamps();
+    }
+
+    public function comments(): HasManyThrough
+    {
+        return $this->hasManyThrough(Comment::class, Card::class, 'project_id', 'commentable_id')
+            ->with(['creator', 'commentable'])
+            ->latest();
+    }
+
     public function sharedUsers(): HasManyThrough
     {
         return $this->hasManyThrough(config('taskday.user.model'), Member::class, 'memberable_id', 'id', 'id', 'user_id')
@@ -123,13 +116,31 @@ class Project extends Model
     }
 
     /**
-     * Create a card for the given user. If the user is
-     * not passed the owner will be used as owner
-     * of the newly created card.
-     *
-     * @param string $title
-     * @param User|null $user
-     * @return Card|null
+     * Get workspaces only visible to the current user.
+     */
+    public function scopeSharedWithCurrentUser($query)
+    {
+        $projects = Project::select('id')
+            ->whereHas('workspace', function ($query) {
+                $query->where('team_id', Auth::user()->current_team_id);
+            })
+            ->pluck('id')
+            ->merge(Auth::user()->sharedProjects->modelKeys())
+            ->unique()
+            ->values();
+
+        $query->whereIn('id', $projects);
+    }
+
+    public function parent()
+    {
+        return $this->workspace;
+    }
+
+    /**
+     * Create a card for the given user. If the user is not
+     * passed the owner will be used as owner of the
+     * newly created card.
      */
     public function createCard(string $title, Model $user = null): ?Card
     {
@@ -153,14 +164,6 @@ class Project extends Model
         }
 
         return $card;
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function parent()
-    {
-        return $this->workspace;
     }
 
     /**
