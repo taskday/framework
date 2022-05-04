@@ -44,7 +44,7 @@ class HandleInertiaRequests extends Middleware
             'csrf_token' => csrf_token(),
             'user' => Auth::check() ? UserResource::make(Auth::user()) : null,
             'global' => Auth::check() ? [
-                'workspaces' => Workspace::orderBy('title')->get(),
+                'workspaces' => Workspace::sharedWithCurrentUser()->get(),
                 'notifications' => Auth::user()->unreadNotifications,
                 'users' => Auth::user()->currentTeam ? Auth::user()->currentTeam->allUsers()->transform(function ($user) {
                     return UserResource::make($user);

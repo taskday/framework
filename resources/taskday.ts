@@ -20,7 +20,8 @@ import VFormHtmlEditor from "@/components/VFormHtmlEditor.vue";
 import VFormInput from "@/components/VFormInput.vue";
 import VFormSection from "@/components/VFormSection.vue";
 import VFormSelect from "@/components/VFormSelect.vue";
-import VFromErrors from "@/components/VFromErrors.vue";
+import VFormErrors from "@/components/VFormErrors.vue";
+import VFormEdit from "@/components/VFormEdit.vue";
 import VIcon from "@/components/VIcon.vue";
 import VLink from "@/components/VLink.vue";
 import VMentionsList from "@/components/VMentionsList.vue";
@@ -147,7 +148,8 @@ export {
   VFormInput,
   VFormSection,
   VFormSelect,
-  VFromErrors,
+  VFormErrors,
+  VFormEdit,
   VIcon,
   VLink,
   VMentionsList,

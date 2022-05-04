@@ -16,9 +16,27 @@ class SearchController extends Controller
         $query = $request->get('query');
 
         $this->results = [
-            ['name' => 'Workspaces', 'items' => Workspace::search($query)->get()],
-            ['name' => 'Projects', 'items' => Project::search($query)->get()],
-            ['name' => 'Cards', 'items' => Card::search($query)->get()],
+            [
+                'name' => 'Workspaces',
+                'items' => Workspace::query()
+                    ->sharedWithCurrentUser()
+                    ->whereIn('id', Workspace::search($query)->get()->pluck('id'))
+                    ->get()
+            ],
+            [
+                'name' => 'Projects',
+                'items' => Project::query()
+                    ->sharedWithCurrentUser()
+                    ->whereIn('id', Project::search($query)->get()->pluck('id'))
+                    ->get()
+            ],
+            [
+                'name' => 'Cards',
+                'items' => Card::query()
+                    ->whereHas('project', fn ($query) => $query->sharedWithCurrentUser())
+                    ->whereIn('id', Card::search($query)->get()->pluck('id'))
+                    ->get()
+            ],
         ];
 
         return response()->json($this->results);
