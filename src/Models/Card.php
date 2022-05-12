@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Query\Builder;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Laravel\Scout\Searchable;
 use Taskday\Support\Page\Breadcrumb;
 
@@ -203,7 +205,7 @@ class Card extends Model
      * @param string $value
      * @return $this|void
      */
-    public function scopeWithFieldFilter(\Illuminate\Database\Eloquent\Builder $query, string $class, string $operator, string $value)
+    public function scopeWithFieldFilter(\Illuminate\Database\Eloquent\Builder $query, string $handle, string $operator, string $value)
     {
         $operator = match ($operator) {
             Filter::IS_EQUAL => new EqualsFilter(),
@@ -219,6 +221,76 @@ class Card extends Model
             return $this;
         }
 
-        $operator->handle($query, $class, $value);
+        $operator->handle($query, $handle, $value);
+    }
+
+    /**
+     *
+     * @param mixed $query
+     * @param string $class The custom field class
+     * @param string $value
+     * @return $this|void
+     */
+    public function scopeWithFieldSorting(\Illuminate\Database\Eloquent\Builder $query, string $handle)
+    {
+        $desc = str_starts_with($handle, '-');
+        $handle = str_replace('-', '', $handle);
+
+        $field = Field::where('handle', $handle)->first();
+
+        // return $field
+        //         ->getFieldSorter()
+        //         ->handle($query, $handle);
+
+        // TODO: move to plugin
+        if ($field->type == 'status') {
+            $options = collect($field->options)
+                ->map(function ($option) {
+                    return "'{$option['color']}'";
+                })
+                ->join(', ');
+
+            $query->addSelect([
+                'handle_value' => Field::select(['card_field.value'])
+                    ->whereColumn('card_field.card_id', 'cards.id')
+                    ->join('card_field', 'card_field.field_id', '=', 'fields.id')
+                    ->where('handle', $handle)
+                    ->take(1),
+            ])
+            ->orderBy(
+                DB::raw("FIELD(`handle_value`, $options)"),
+                $desc ? 'DESC' : 'ASC'
+            );
+        } else {
+            $query->addSelect([
+                'handle_value' => Field::select(['card_field.value'])
+                    ->whereColumn('card_field.card_id', 'cards.id')
+                    ->join('card_field', 'card_field.field_id', '=', 'fields.id')
+                    ->where('handle', $handle)
+                    ->take(1),
+            ])
+            ->orderBy(
+                'handle_value',
+                $desc ? 'DESC' : 'ASC'
+            );
+        }
+    }
+
+    /**
+     * Get workspaces only visible to the current user.
+     */
+    public function scopeSharedWithCurrentUser($query)
+    {
+        $projects = Card::select('id')
+            ->whereHas('project', function ($project) {
+                $project->sharedWithCurrentUser()->whereHas('workspace', function ($query) {
+                    $query->where('team_id', Auth::user()->current_team_id);
+                });
+            })
+            ->pluck('id')
+            ->unique()
+            ->values();
+
+        $query->whereIn('id', $projects);
     }
 }

@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Jetstream\Jetstream;
 use Taskday\Models\Team;
+use Taskday\Observers\CardObserver;
+use Taskday\Models\Card;
 
 class TaskdayServiceProvider extends ServiceProvider
 {
@@ -50,6 +52,12 @@ class TaskdayServiceProvider extends ServiceProvider
         $this->registerRoutes();
         $this->registerViews();
         $this->registerMigrations();
+        $this->registerObservers();
+    }
+
+    public function registerObservers()
+    {
+        Card::observe(CardObserver::class);
     }
 
     public function registerViews(): void

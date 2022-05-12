@@ -3,13 +3,16 @@
 namespace Taskday\Http\Controllers;
 
 use Taskday\Models\Field;
+use Taskday\Models\CardField;
 use Taskday\Models\Project;
 use Taskday\Models\User;
 use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Taskday\Support\Page\Breadcrumb;
+
 
 class ProjectController extends Controller
 {
@@ -64,8 +67,13 @@ class ProjectController extends Controller
             'fields' => $project->fields,
             'project' => $project->load(['cards' => function ($query) use ($request) {
                 $query->with('fields', 'project', 'comments.creator');
+
                 foreach($request->only('filters') as $handle => $filter) {
-                    $query->filter($handle, $filter);
+                    $query->withFieldFilter($handle, $filter);
+                }
+
+                if ($request->has('sort')) {
+                    $query->withFieldSorting($request->get('sort'));
                 }
             }, 'fields', 'workspace']),
         ]);

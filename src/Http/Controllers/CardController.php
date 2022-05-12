@@ -24,15 +24,18 @@ class CardController extends Controller
         $cards = Card::whereHas('project', function ($query) {
                 $query->sharedWithCurrentUser();
             })
-            ->with(['project.workspace', 'comments.creator', 'fields'])
-            ->orderBy('updated_at', 'desc');
+            ->with(['project.workspace', 'comments.creator', 'fields']);
+
+        if ($request->has('sort')) {
+            $cards->withFieldSorting($request->get('sort'));
+        }
 
         return Inertia::render('Cards/Index', [
             'title' => 'Cards',
             'breadcrumbs' => [
                 new Breadcrumb('Dashboard', route('dashboard')),
             ],
-            'cards' => $cards->paginate(30),
+            'cards' => $cards->paginate(100),
         ]);
     }
 
