@@ -44,6 +44,7 @@ import VTabsPanel from "@/components/VTabsPanel.vue";
 import VTabsPanels from "@/components/VTabsPanels.vue";
 
 import useField from "./composables/useField";
+import useSorter from "./composables/useSorter";
 import useCardForm from "./composables/useCardForm";
 
 class Taskday implements TaskdayInterface {
@@ -125,6 +126,7 @@ class Taskday implements TaskdayInterface {
 export {
   Taskday,
   useField,
+  useSorter,
   useCardForm,
   VAvatar,
   VBreadcrumb,
