@@ -49,6 +49,6 @@ class CardCreatedEvent
 
     public function broadcastAs()
     {
-        return 'CardUpdatedEvent';
+        return 'CardCreatedEvent';
     }
 }

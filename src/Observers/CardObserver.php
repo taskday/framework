@@ -6,9 +6,6 @@ namespace Taskday\Observers;
 use Taskday\Events\CardUpdatedEvent;
 use Taskday\Events\CardCreatedEvent;
 use Taskday\Models\Card;
-use Taskday\Models\User;
-use Taskday\Notifications\UserTaggedNotification;
-use Illuminate\Support\Facades\Auth;
 
 class CardObserver
 {
