@@ -46,13 +46,6 @@ class CardController extends Controller
             $cards->withFieldFilter($handle, $operator, $filter['value'] ?? '');
         }
 
-        // $cards
-        //     ->withFieldFilter('status', Filter::IS_EQUAL, 'red')
-        //     ->orWhere(function ($query) {
-        //         $query->withFieldFilter('status', Filter::IS_EQUAL, 'gray');
-        //     })
-        //     ->withFieldFilter('assignee', Filter::CONTAINS, Auth::id());
-
         return Inertia::render('Cards/Index', [
             'title' => 'Cards',
             'breadcrumbs' => [
