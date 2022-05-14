@@ -32,7 +32,7 @@ class CardController extends Controller
             $cards->withFieldSorting($request->get('sort'));
         }
 
-        foreach ($request->get('filters') as $handle => $filter) {
+        foreach ($request->get('filters', []) as $handle => $filter) {
             $operator = match($filter['operator']) {
                 'contains' => Filter::CONTAINS,
                 'is_equal' => Filter::IS_EQUAL,
