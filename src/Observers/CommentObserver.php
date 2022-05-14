@@ -3,9 +3,8 @@
 
 namespace Taskday\Observers;
 
+use Taskday\Events\CommentCreatedEvent;
 use Taskday\Models\Comment;
-use Taskday\Models\User;
-use Taskday\Notifications\AddedCommentNotification;
 
 class CommentObserver
 {
