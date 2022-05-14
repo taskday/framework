@@ -6,10 +6,10 @@ use Illuminate\Database\Eloquent\Builder;
 
 class EqualsFilter extends AbstractFilter
 {
-    public function handle(Builder $query, string $class, string $value)
+    public function handle(Builder $query, string $handle, string $value)
     {
-        $query->whereHas('fields', function ($q) use ($class, $value) {
-            $q->where('type', $class::type())->where('value', $value);
+        $query->whereHas('fields', function ($q) use ($handle, $value) {
+            $q->where('handle', $handle)->where('value', $value);
         });
     }
 }

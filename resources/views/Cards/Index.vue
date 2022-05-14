@@ -13,6 +13,11 @@
   </VPageHeader>
   <VContainer>
     <div class="grid grid-cols-1 gap-8 py-8">
+      <div>
+        <template v-for="filter in taskday().filters" :key="filter.name" >
+          <component :is="filter.component" />
+        </template>
+      </div>
       <div class="flex flex-col gap-2">
         <VCard v-for="card in cards.data">
           <VBreadcrumb>

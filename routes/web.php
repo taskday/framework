@@ -28,9 +28,6 @@ Route::middleware(['web', 'auth:sanctum', 'verified'])->group(function(){
     Route::redirect('/','dashboard');
     Route::get('/dashboard',                   [Controllers\DashboardController::class, 'index'])->name('dashboard');
 
-    // Search
-    Route::get('/search',                   [Controllers\DashboardController::class, 'search'])->name('search');
-
     // Workspaces
     Route::resource('workspaces',               Controllers\WorkspaceController::class);
 

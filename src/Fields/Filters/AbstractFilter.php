@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Builder;
 
 abstract class AbstractFilter
 {
-    abstract function handle(Builder $query, string $class, string $value);
+    abstract function handle(Builder $query, string $handle, string $value);
 }

@@ -5,7 +5,9 @@ namespace Taskday\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
-use Inertia\Inertia;;
+use Inertia\Inertia;
+use Taskday\Base\Filter;
+
 use Taskday\Models\Card;
 use Taskday\Models\Field;
 use Taskday\Models\Project;
@@ -29,6 +31,27 @@ class CardController extends Controller
         if ($request->has('sort')) {
             $cards->withFieldSorting($request->get('sort'));
         }
+
+        foreach ($request->get('filters') as $handle => $filter) {
+            $operator = match($filter['operator']) {
+                'contains' => Filter::CONTAINS,
+                'is_equal' => Filter::IS_EQUAL,
+                'no_equal' => Filter::IS_NOT_EQUAL,
+                'greater_than' => Filter::IS_GREATER_THAN,
+                'less_than' => Filter::IS_LESS_THAN,
+                'not_contains' => Filter::NOT_CONTAINS,
+                default => Filter::IS_EQUAL,
+            };
+
+            $cards->withFieldFilter($handle, $operator, $filter['value'] ?? '');
+        }
+
+        // $cards
+        //     ->withFieldFilter('status', Filter::IS_EQUAL, 'red')
+        //     ->orWhere(function ($query) {
+        //         $query->withFieldFilter('status', Filter::IS_EQUAL, 'gray');
+        //     })
+        //     ->withFieldFilter('assignee', Filter::CONTAINS, Auth::id());
 
         return Inertia::render('Cards/Index', [
             'title' => 'Cards',
@@ -120,7 +143,7 @@ class CardController extends Controller
     public function update(Request $request,  Card $card)
     {
         $data = array_filter($request->validate([
-            'title' => 'required',
+            'title' => 'nullable',
             'content' => 'nullable',
             'order' => 'nullable'
         ]));

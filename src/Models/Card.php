@@ -19,6 +19,7 @@ use Illuminate\Database\Query\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Laravel\Scout\Searchable;
+use Taskday\Facades\Taskday;
 use Taskday\Support\Page\Breadcrumb;
 
 /**
@@ -234,35 +235,14 @@ class Card extends Model
     public function scopeWithFieldSorting(\Illuminate\Database\Eloquent\Builder $query, string $handle)
     {
         $desc = str_starts_with($handle, '-');
-        $handle = str_replace('-', '', $handle);
+        $field = Field::where('handle', str_replace('-', '', $handle))->first();
 
-        $field = Field::where('handle', $handle)->first();
+        Taskday::getFieldByType($field->type);
 
-        // return $field
-        //         ->getFieldSorter()
-        //         ->handle($query, $handle);
+        $sorter = Taskday::getFieldByType($field->type)?->getSorter();
 
-        // TODO: move to plugin
-        if ($field->type == 'status') {
-            $options = collect($field->options)
-                ->map(function ($option) {
-                    return "'{$option['color']}'";
-                })
-                ->join(', ');
-
-            $query->addSelect([
-                'handle_value' => Field::select(['card_field.value'])
-                    ->whereColumn('card_field.card_id', 'cards.id')
-                    ->join('card_field', 'card_field.field_id', '=', 'fields.id')
-                    ->where('handle', $handle)
-                    ->take(1),
-            ])
-            ->orderBy(
-                DB::raw("FIELD(`handle_value`, $options)"),
-                $desc ? 'DESC' : 'ASC'
-            );
-        } else {
-            $query->addSelect([
+        if (is_null($sorter)) {
+            return $query->addSelect([
                 'handle_value' => Field::select(['card_field.value'])
                     ->whereColumn('card_field.card_id', 'cards.id')
                     ->join('card_field', 'card_field.field_id', '=', 'fields.id')
@@ -273,6 +253,8 @@ class Card extends Model
                 'handle_value',
                 $desc ? 'DESC' : 'ASC'
             );
+        } else {
+            return $sorter->handle($query, $field, $desc);
         }
     }
 

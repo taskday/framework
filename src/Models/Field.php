@@ -34,15 +34,6 @@ class Field extends Model
     ];
 
     /**
-     * The attributes to appends.
-     *
-     * @var array
-     */
-    protected $appends = [
-        'custom'
-    ];
-
-    /**
      *
      * @return BelongsToMany
      */
@@ -64,18 +55,8 @@ class Field extends Model
             ->withPivot('value');
     }
 
-    /**
-     * @return CustomField|null
-     */
-    public function getCustomAttribute(): ?CustomField
+    public function scopeHandle($query, string $handle)
     {
-        // $class = TaskdayFacade::getRegisteredField($this->type);
-
-        // if (!class_exists($class)) {
-        //     return null;
-        // }
-
-        // return new $class($this);
-        return null;
+        return $query->where('handle', $handle);
     }
 }

@@ -11,10 +11,6 @@ class CommentObserver
 {
     public function created(Comment $comment)
     {
-        User::all()->map(function ($user) use ($comment) {
-            if (!$comment->ownerIs($user)) {
-                $user->notify(new AddedCommentNotification($comment));
-            }
-        });
+        event(new CommentCreatedEvent($comment->id));
     }
 }

@@ -68,6 +68,19 @@ class Taskday
             ->mapWithKeys(fn ($widget) => [$widget->handle => $widget->toArray()]);
     }
 
+    /**
+     * Return the registed fields that has the given type.
+     *
+     */
+    public function getFieldByType(string $type): ?\Taskday\Base\Field
+    {
+        return collect($this->plugins->flatMap->fields())
+            ->filter(function(\Taskday\Base\Field $field) use ($type) {
+                return $field::type() == $type;
+            })
+            ->toArray()[0] ?? null;
+    }
+
     // /**
     //  * Register action class with corresponding
     //  * key type string.
@@ -140,15 +153,5 @@ class Taskday
     // public function getFields(): Collection
     // {
     //     return collect($this->fields);
-    // }
-
-    // /**
-    //  * Return the registed fields on the core.
-    //  *
-    //  * @return string|null
-    //  */
-    // public function getField(string $type): ?string
-    // {
-    //     return $this->fields[$type] ?? null;
     // }
 }

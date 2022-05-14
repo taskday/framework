@@ -1,4 +1,7 @@
 <template>
+  <Head>
+    <title>{{ $page.props.title }}</title>
+  </Head>
   <div class="flex justify-center w-full md:flex-row antialiased">
     <div
       v-show="$store.state.sidebar.isOpen"
