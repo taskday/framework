@@ -20,7 +20,7 @@
             </div>
           </div>
           <div class="flex-col md:flex-row flex items-center gap-2">
-            <VButton variant="primary" :disabled="state.isDirty || state.processing" @click.prevent="() => update(card)"
+            <VButton variant="primary" v-if="state.isDirty || !state.processing" @click.prevent="() => update(card)"
               >Save</VButton
             >
             <VConfirm class="w-full" title="Are you sure?" :onConfirm="submit">

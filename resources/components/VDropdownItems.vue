@@ -1,6 +1,6 @@
 <template>
   <teleport to="body">
-    <div ref="panel">
+    <div ref="panel" class="z-50">
       <transition
         enter-active-class="transition-transform duration-100 ease-out"
         enter-from-class="transform scale-95 opacity-0"
@@ -10,7 +10,7 @@
         leave-to-class="transform scale-95 opacity-0"
       >
         <MenuItems v-slot="{ active }">
-          <div ref="items" :active="active" class="rounded bg-white shadow dark:bg-gray-700 w-64 px-2 py-2 mt-2 max-h-[400px] overflow-auto">
+          <div ref="items" :active="active" class="rounded bg-white shadow dark:bg-gray-700 w-60 px-1 py-2 mt-2 max-h-[400px] overflow-auto">
             <slot :active="active" />
           </div>
         </MenuItems>

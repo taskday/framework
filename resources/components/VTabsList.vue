@@ -1,9 +1,9 @@
 <template>
-  <VContainer class="bg-white dark:bg-gray-800 shadow z-10">
-    <TabList class="flex">
+  <div class="px-6 bg-white dark:bg-gray-800 shadow z-10">
+    <TabList class="flex gap-4">
       <slot />
     </TabList>
-  </VContainer>
+  </div>
 </template>
 
 <script setup lang="ts">

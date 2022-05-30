@@ -1,5 +1,5 @@
 <template>
-  <VContainer class="py-2 bg-white inset-x-0 z-10 dark:bg-gray-800 border-b md:text-sm">
+  <div class="px-6 py-2 bg-white inset-x-0 z-10 dark:bg-gray-800 border-b md:text-sm">
     <div class="flex w-full space-x-4">
       <!-- logo -->
       <Link :href="route('dashboard')">
@@ -19,15 +19,9 @@
 
       <div class="hidden md:flex items-center justify-start space-x-4 w-full flex-grow">
         <VNav class="flex space-x-2">
-          <VNavLink class="px-2" :href="route('workspaces.index')">
-            Workspaces
-          </VNavLink>
-          <VNavLink class="px-2" :href="route('cards.index')">
-            Cards
-          </VNavLink>
-          <VNavLink class="px-2" :href="route('fields.index')">
-            Fields
-          </VNavLink>
+          <VNavLink class="px-2" :href="route('workspaces.index')"> Workspaces </VNavLink>
+          <VNavLink class="px-2" :href="route('cards.index')"> Cards </VNavLink>
+          <VNavLink class="px-2" :href="route('fields.index')"> Fields </VNavLink>
         </VNav>
       </div>
 
@@ -51,10 +45,10 @@
               </VDropdownButton>
               <VDropdownItems>
                 <VDropdownItem v-for="notification in store.state.notifications.notifications">
-                  <VNotification class="px-2 py-2" :notification="notification" />
+                  <VNotification :notification="notification" />
                 </VDropdownItem>
                 <VDropdownItem v-if="store.state.notifications.notifications.length == 0">
-                  <div class="text-center w-full py-4">
+                  <div class="text-center w-full">
                     <span class="text-sm">No new notifications.</span>
                   </div>
                 </VDropdownItem>
@@ -73,27 +67,27 @@
           <VDropdownItems>
             <!-- Team Management -->
             <template v-if="$page.props.jetstream.hasTeamFeatures">
-              <div class="block py-2 text-xs text-gray-400">Manage Team</div>
+              <VDropdownDivider title="Manage Team" />
 
               <!-- Team Settings -->
               <VDropdownItem>
-                <Link class="flex w-full p-2" :href="route('teams.show', $page.props.user.current_team)"
+                <Link class="flex w-full" :href="route('teams.show', $page.props.user.current_team)"
                   >Team Settings</Link
                 >
               </VDropdownItem>
 
               <VDropdownItem v-if="$page.props.jetstream.canCreateTeams">
-                <Link class="flex w-full p-2" :href="route('teams.create')"> Create New Team </Link>
+                <Link class="flex w-full" :href="route('teams.create')"> Create New Team </Link>
               </VDropdownItem>
 
               <!-- Team Switcher -->
-              <div class="block py-2 text-xs text-gray-400">Switch Teams</div>
+              <VDropdownDivider title="Switch Teams" />
 
               <template v-for="team in $page.props.user.all_teams" :key="team.id">
-                <form @submit.prevent="switchToTeam(team)">
-                  <VDropdownItem>
+                <VDropdownItem>
+                  <form @submit.prevent="switchToTeam(team)">
                     <button>
-                      <div class="flex items-center w-full p-2">
+                      <div class="flex items-center w-full">
                         <svg
                           v-if="team.id == $page.props.user.current_team_id"
                           class="mr-2 h-5 w-5 text-green-400"
@@ -108,21 +102,21 @@
                         <div>{{ team.name }}</div>
                       </div>
                     </button>
-                  </VDropdownItem>
-                </form>
+                  </form>
+                </VDropdownItem>
               </template>
             </template>
 
             <VDropdownDivider />
 
             <VDropdownItem>
-              <Link class="flex w-full p-2" :href="route('profile.show')">Profile</Link>
+              <Link class="flex w-full" :href="route('profile.show')">Profile</Link>
             </VDropdownItem>
 
             <VDropdownDivider />
 
             <VDropdownItem>
-              <Link class="flex w-full p-2" method="post" :href="route('logout')">Logout</Link>
+              <Link class="flex w-full" method="post" :href="route('logout')">Logout</Link>
             </VDropdownItem>
           </VDropdownItems>
         </VDropdown>
@@ -132,7 +126,7 @@
         <MenuIcon class="h-5 w-5" />
       </VButton>
     </div>
-  </VContainer>
+  </div>
 </template>
 
 <script setup lang="ts">

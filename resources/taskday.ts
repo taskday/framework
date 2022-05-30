@@ -47,6 +47,8 @@ import useField from "./composables/useField";
 import useSorter from "./composables/useSorter";
 import useCardForm from "./composables/useCardForm";
 
+import PageCardsShow from "./views/Cards/Show.vue";
+
 class Taskday implements TaskdayInterface {
 
   version = '0.1.0';
@@ -125,6 +127,7 @@ class Taskday implements TaskdayInterface {
 
 export {
   Taskday,
+  PageCardsShow,
   useField,
   useSorter,
   useCardForm,

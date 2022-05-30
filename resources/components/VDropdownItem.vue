@@ -2,8 +2,8 @@
   <MenuItem v-slot="{ active }">
     <span
       :class="[
-        active ? 'text-black bg-gray-100 dark:bg-gray-600 dark:text-gray-100' : 'text-gray-900 dark:text-gray-200',
-        'group flex rounded items-center w-full text-sm cursor-pointer',
+        active ? 'text-black bg-gray-100 dark:bg-gray-600 dark:text-gray-100' : 'text-gray-600 dark:text-gray-200',
+        'group block text-sm rounded cursor-pointer',
       ]"
       v-bind="$attrs"
     >
@@ -24,6 +24,6 @@ export default defineComponent({
 
 <style lang="postcss">
 div[role="menu"] > div > span > * {
-  @apply p-2;
+  @apply p-1.5;
 }
 </style>

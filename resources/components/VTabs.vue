@@ -12,10 +12,10 @@ const selectedTab = ref(0);
 
 function changeTab(index) {
   selectedTab.value = index;
-  localStorage.setItem('selectedTab-' + location.href, index);
+  localStorage.setItem('selectedTab-' + location.pathname, index);
 }
 
 onMounted(() => {
-  selectedTab.value = parseInt(localStorage.getItem('selectedTab-' + location.href) ?? '0');
+  selectedTab.value = parseInt(localStorage.getItem('selectedTab-' + location.pathname) ?? '0');
 })
 </script>

@@ -4,9 +4,9 @@
       <slot name="trigger"></slot>
     </div>
     <teleport to="body">
-      <TransitionRoot appear :show="isOpen" as="template">
+      <TransitionRoot appear :show="isOpen ?? false" as="template">
         <Dialog as="div" static :open="isOpen ?? false" @close="closeModal">
-          <div class="fixed z-50 inset-0 overflow-hidden">
+          <div class="fixed z-40 inset-0 overflow-hidden">
             <div class="absolute inset-0 overflow-hidden">
               <TransitionChild
                 as="template"
@@ -19,7 +19,7 @@
               >
                 <DialogOverlay
                   @click="closeModal"
-                  class="absolute inset-0 bg-gray-500 bg-opacity-75 dark:bg-gray-800 dark:bg-opacity-50 transition-opacity"
+                  class="absolute inset-0 bg-gray-400 bg-opacity-20 dark:bg-gray-800 dark:bg-opacity-50 transition-opacity"
                 />
               </TransitionChild>
               <div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
@@ -32,7 +32,7 @@
                   leave-from="translate-x-0"
                   leave-to="translate-x-full"
                 >
-                  <div class="relative w-screen max-w-2xl md:max-w-3xl xl:max-w-5xl">
+                  <div class="relative w-screen max-w-2xl md:max-w-3xl xl:max-w-4xl">
                     <TransitionChild
                       as="template"
                       enter="ease-in-out duration-500"
@@ -45,7 +45,7 @@
                       <div class="absolute top-0 left-0 -ml-8 pt-4 pr-2 flex sm:-ml-10 sm:pr-4">
                         <button
                           @click="closeModal"
-                          class="rounded-md text-gray-300 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
+                          class="rounded-md text-gray-800 hover:text-gray-600 dark:hover:text-white focus:outline-none focus:ring-1 focus:ring-gray-800 dark:focus:ring-white"
                         >
                           <span class="sr-only">Close panel</span>
                           <!-- Heroicon name: outline/x -->
@@ -69,12 +69,12 @@
                     </TransitionChild>
 
                     <div
-                      class="h-full flex flex-col py-6 bg-white dark:bg-gray-900 shadow-xl overflow-y-scroll"
+                      class="h-full flex flex-col bg-gray-100 dark:bg-gray-900 shadow-xl overflow-y-scroll"
                     >
                       <div v-if="title" class="px-4 sm:px-6">
                         <VPageTitle class="text-lg font-medium" id="slide-over-title">{{ title }}</VPageTitle>
                       </div>
-                      <div class="mt-6 relative flex-1 px-4 sm:px-6 w-full">
+                      <div class="relative flex-1 w-full">
                         <!-- Replace with your content -->
                         <slot></slot>
                         <!-- /End replace -->

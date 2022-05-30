@@ -161,10 +161,8 @@ class CardController extends Controller
      */
     public function destroy(Card $card)
     {
-        $project = $card->project;
-
         $card->delete();
 
-        return redirect()->route('projects.show', [$project]);
+        return redirect()->back();
     }
 }

@@ -3,13 +3,11 @@
 namespace Taskday\Http\Controllers;
 
 use Taskday\Models\Field;
-use Taskday\Models\CardField;
 use Taskday\Models\Project;
 use Taskday\Models\User;
 use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 use Taskday\Support\Page\Breadcrumb;
 
@@ -68,8 +66,10 @@ class ProjectController extends Controller
             'project' => $project->load(['cards' => function ($query) use ($request) {
                 $query->with('fields', 'project', 'comments.creator');
 
-                foreach($request->only('filters') as $handle => $filter) {
-                    $query->withFieldFilter($handle, $filter);
+                foreach($request->get('filters', []) as $handle => $filter) {
+                    if (array_key_exists('value', $filter) && array_key_exists('operator', $filter)) {
+                        $query->withFieldFilter($handle, $filter['operator'], $filter['value']);
+                    }
                 }
 
                 if ($request->has('sort')) {
@@ -90,6 +90,9 @@ class ProjectController extends Controller
     {
         $this->authorize('update', $project);
 
+        /** @var Taskday\Models\User */
+        $user = Auth::user();
+
         return Inertia::render('Projects/Edit', [
             'title' => 'Project Settings',
             'breadcrumbs' => [
@@ -99,7 +102,7 @@ class ProjectController extends Controller
             ],
             'project' => $project->load(['fields', 'cards', 'workspace', 'members']),
             'fields' => Field::all(),
-            'users' => Auth::user()->whereNotIn('id', $project->members->pluck('id'))->get()
+            'users' => $user->whereNotIn('id', $project->members->pluck('id'))->get()
         ]);
     }
 
