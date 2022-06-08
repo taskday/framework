@@ -5,7 +5,7 @@
         'h-8 text-sm leading-5 font-medium text-gray-700 rounded-sm',
         'focus:outline-none ring-blue-500 ring-opacity-60',
         selected
-          ? 'text-blue-600 dark:text-blue-300 border-b-2 border-blue-600 dark:bg-gray-700 rounded'
+          ? 'text-blue-600 dark:text-blue-300 border-b-2 border-blue-600 rounded'
           : 'text-gray-900 dark:text-gray-300',
       ]"
     >

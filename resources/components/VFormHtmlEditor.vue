@@ -187,6 +187,10 @@ export default {
     toolbar: {
       type: Boolean,
       default: true
+    },
+    placeholder: {
+      type: Boolean,
+      default: true
     }
   },
 
@@ -212,7 +216,9 @@ export default {
         BulletList,
         OrderedList,
         CodeBlock,
-        Placeholder,
+        Placeholder.configure({
+            placeholder: props.placeholder ?? 'Write something...',
+        }),
         HardBreak,
         History,
         Table.configure({

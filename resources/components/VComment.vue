@@ -11,13 +11,13 @@
           <span
             class="font-bold text-gray-900 dark:text-gray-100"
           >{{ comment?.creator?.name ?? 'Unknown' }}</span>
-          <div>
+          <div class="text-gray-400 dark:text-gray-400">
             <span>commented</span>
             {{ moment(comment.created_at).from(moment(), true) }}
           </div>
         </div>
       </div>
-      <div class="p-2 prose max-w-none" v-html="comment.body" />
+      <div class="px-4 py-2 ProseMirror max-w-none" v-html="comment.body" />
     </VCard>
   </div>
 </template>
