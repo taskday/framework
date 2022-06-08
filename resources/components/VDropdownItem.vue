@@ -24,6 +24,6 @@ export default defineComponent({
 
 <style lang="postcss">
 div[role="menu"] > div > span > * {
-  @apply p-1.5;
+  @apply p-1.5 block;
 }
 </style>

@@ -43,7 +43,23 @@ class CardController extends Controller
                 default => Filter::IS_EQUAL,
             };
 
-            $cards->withFieldFilter($handle, $operator, $filter['value'] ?? '');
+            if (array_key_exists('type', $filter) && $filter['type'] === 'builtin') {
+                if ($handle == 'project') {
+                    $cards->whereHas('project', function ($query) use ($operator, $filter) {
+                        $query->where('id', $operator, $filter['value'] ?? '');
+                    });
+                }
+
+                if ($handle == 'workspace') {
+                    $cards->whereHas('project', function ($query) use ($operator, $filter) {
+                        $query->whereHas('workspace', function ($query) use ($operator, $filter) {
+                            $query->where('id', $operator, $filter['value'] ?? '');
+                        });
+                    });
+                }
+            } else {
+                $cards->withFieldFilter($handle, $operator, $filter['value'] ?? '');
+            }
         }
 
         return Inertia::render('Cards/Index', [
@@ -51,6 +67,16 @@ class CardController extends Controller
             'breadcrumbs' => [
                 new Breadcrumb('Dashboard', route('dashboard')),
             ],
+            'filters' => request()->get('filters', []),
+            'projects' => Project::select(['id', 'title', 'workspace_id'])
+                ->with('workspace')
+                ->sharedWithCurrentUser()
+                ->get()
+                ->transform(fn ($item) => [
+                    'id' => $item->id,
+                    'title' => $item->title,
+                ]),
+            'workspaces' => Workspace::select(['id', 'title'])->sharedWithCurrentUser()->get(),
             'cards' => $cards->paginate(100),
         ]);
     }
