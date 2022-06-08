@@ -80,6 +80,7 @@
 import _ from "lodash";
 import { PropType, computed } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
+import { Inertia } from "@inertiajs/inertia";
 
 const props = defineProps({
   title: String,
@@ -93,7 +94,7 @@ const props = defineProps({
   },
   filters: {
     type: Object,
-    default: null,
+    default: {},
     required: false,
   },
   projects: {
@@ -121,6 +122,7 @@ function filterBuiltin(handle, model) {
   if (model.id == _.get(form.filters, handle + ".value", null)) {
     delete form.filters[handle];
   } else {
+    form.filters = props.filters || {};
     form.filters[handle] = {};
     form.filters[handle]["value"] = model.id;
     form.filters[handle]["operator"] = "=";
@@ -130,6 +132,6 @@ function filterBuiltin(handle, model) {
 }
 
 function applyFilter() {
-  form.get(route("cards.index"));
+  Inertia.visit(route("cards.index", { filters: form.filters }));
 }
 </script>
