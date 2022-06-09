@@ -91,7 +91,7 @@ const props = defineProps<{
 const { form, update } = useWorkspaceForm();
 
 const { enable, disable } = useWarnBeforeLeave(() => {
-  return form.isDirty;
+  return form.description != props.workspace.description;
 });
 
 onMounted(() => {
