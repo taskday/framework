@@ -10,7 +10,7 @@
         leave-to-class="transform scale-95 opacity-0"
       >
         <MenuItems v-slot="{ active }">
-          <div ref="items" :active="active" class="rounded bg-white shadow dark:bg-gray-700 px-1 py-2 mt-2 w-full overflow-auto">
+          <div ref="items" :active="active" class="rounded bg-white shadow dark:bg-gray-700 px-1 py-2 mt-2 w-full max-h-[400px] overflow-auto">
             <slot :active="active" />
           </div>
         </MenuItems>
