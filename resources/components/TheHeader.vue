@@ -30,32 +30,28 @@
       </div>
 
       <div class="flex items-center justify-end space-x-4 flex-grow">
-        <VNav>
-          <VNavLink>
-            <VDropdown>
-              <VDropdownButton>
-                <div class="flex items-center w-6 justify-center">
-                  <div class="relative">
-                    <BellIcon class="h-5 w-5 text-black dark:text-gray-100" />
-                    <span
-                      v-if="store.state.notifications.notifications.length > 0"
-                      class="rounded-full bg-red-500 text-white font-semibold flex items-center justify-center h-2 w-2 absolute top-0 right-0"></span>
-                  </div>
-                </div>
-              </VDropdownButton>
-              <VDropdownItems>
-                <VDropdownItem v-for="notification in store.state.notifications.notifications">
-                  <VNotification :notification="notification" />
-                </VDropdownItem>
-                <VDropdownItem v-if="store.state.notifications.notifications.length == 0">
-                  <div class="text-center w-full">
-                    <span class="text-sm">No new notifications.</span>
-                  </div>
-                </VDropdownItem>
-              </VDropdownItems>
-            </VDropdown>
-          </VNavLink>
-        </VNav>
+        <VDropdown>
+          <VDropdownButton>
+            <div class="flex items-center w-6 justify-center">
+              <div class="relative">
+                <BellIcon class="h-5 w-5 text-black dark:text-gray-100" />
+                <span
+                  v-if="store.state.notifications.notifications.length > 0"
+                  class="rounded-full bg-red-500 text-white font-semibold flex items-center justify-center h-2 w-2 absolute top-0 right-0"></span>
+              </div>
+            </div>
+          </VDropdownButton>
+          <VDropdownItems class="w-[400px]">
+            <VDropdownItem v-for="notification in store.state.notifications.notifications">
+              <VNotification :notification="notification" />
+            </VDropdownItem>
+            <VDropdownItem v-if="store.state.notifications.notifications.length == 0">
+              <div class="text-center w-full">
+                <span class="text-sm">No new notifications.</span>
+              </div>
+            </VDropdownItem>
+          </VDropdownItems>
+        </VDropdown>
         <VDropdown>
           <VDropdownButton>
             <div class="flex whitespace-nowrap items-center space-x-2">

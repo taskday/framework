@@ -21,7 +21,7 @@ export default function useSorter() {
     return handle.includes("-");
   }
 
-  function sortBy(field: Field) {
+  function shouldSortBy(field: Field, callback: (arg) => void) {
     const urlParams = new URLSearchParams(window.location.search);
 
     let current = urlParams.get("sort") ?? "";
@@ -36,8 +36,14 @@ export default function useSorter() {
       current = field.handle;
     }
 
-    Inertia.get(location.href, { sort: current }, { replace: true });
+    callback(current);
   }
 
-  return { sortBy, isCurrent, isDesc };
+  function sortBy(field: Field) {
+    shouldSortBy(field, current => {
+      Inertia.get(location.href, { sort: current }, { replace: true });
+    })
+  }
+
+  return { sortBy, shouldSortBy, isCurrent, isDesc };
 }

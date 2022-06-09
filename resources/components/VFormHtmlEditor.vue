@@ -189,8 +189,8 @@ export default {
       default: true
     },
     placeholder: {
-      type: Boolean,
-      default: true
+      type: String,
+      default: null
     }
   },
 

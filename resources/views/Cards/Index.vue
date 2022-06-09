@@ -15,9 +15,9 @@
         <div class="flex items-center gap-2">
           <VDropdown>
             <VDropdownButton>
-              <VButton variant="secondary" class="text-sm">{{
-                projects.find((p) => p.id == _.get(form.filters, "project.value", null))?.title ?? "Filter Project"
-              }}</VButton>
+              <VButton variant="secondary" class="text-sm">
+                {{ projects.find((p) => p.id == _.get(form.filters, "project.value", null))?.title ?? "Filter Project" }}
+              </VButton>
             </VDropdownButton>
             <VDropdownItems>
               <VDropdownItem
@@ -45,6 +45,24 @@
                   'bg-gray-100 dark:bg-gray-800': workspace.id == _.get(form.filters, 'workspace.value', null),
                 }">
                 <span>{{ workspace.title }}</span>
+              </VDropdownItem>
+            </VDropdownItems>
+          </VDropdown>
+          <VDropdown>
+            <VDropdownButton>
+              <VButton variant="secondary" class="text-sm">
+                {{ form.sort ?? "Sort by" }}
+              </VButton>
+            </VDropdownButton>
+            <VDropdownItems>
+              <VDropdownItem
+                v-for="field in fields"
+                @click="sortFields(field)"
+                :key="field.handle"
+                :class="{
+                  'bg-gray-100 dark:bg-gray-800': isCurrent(field),
+                }">
+                <span>{{ field.title }}</span>
               </VDropdownItem>
             </VDropdownItems>
           </VDropdown>
@@ -78,9 +96,10 @@
 
 <script setup lang="ts">
 import _ from "lodash";
-import { PropType, computed } from "vue";
+import { PropType, computed, onMounted } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { Inertia } from "@inertiajs/inertia";
+import useSorter from "@/composables/useSorter";
 
 const props = defineProps({
   title: String,
@@ -97,6 +116,15 @@ const props = defineProps({
     default: {},
     required: false,
   },
+  sort: {
+    type: String,
+    default: null,
+    required: false,
+  },
+  fields: {
+    type: Array as PropType<Field[]>,
+    required: true,
+  },
   projects: {
     type: Array as PropType<Project[]>,
     required: true,
@@ -110,12 +138,15 @@ const props = defineProps({
   },
 });
 
-const fieldsFilter = computed(() => {
+const fieldsFilter = computed<TaskdayInterface>(() => {
   return _.pickBy(props.filters, (p) => p.type != "builtin");
 });
 
+const { shouldSortBy, isCurrent, isDesc } = useSorter();
+
 const form = useForm({
   filters: props.filters,
+  sort: props.sort
 });
 
 function filterBuiltin(handle, model) {
@@ -131,7 +162,14 @@ function filterBuiltin(handle, model) {
   applyFilter();
 }
 
+function sortFields(field) {
+  shouldSortBy(field, (arg) => {
+    form.sort = arg;
+    applyFilter()
+  })
+}
+
 function applyFilter() {
-  Inertia.visit(route("cards.index", { filters: form.filters }));
+  Inertia.visit(route("cards.index", { filters: form.filters, sort: form.sort }));
 }
 </script>

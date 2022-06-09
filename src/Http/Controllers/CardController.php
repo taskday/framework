@@ -33,6 +33,10 @@ class CardController extends Controller
         }
 
         foreach ($request->get('filters', []) as $handle => $filter) {
+            if (!array_key_exists('value', $filter) || !array_key_exists('operator', $filter)) {
+                continue;
+            }
+
             $operator = match($filter['operator']) {
                 'contains' => Filter::CONTAINS,
                 'is_equal' => Filter::IS_EQUAL,
@@ -67,7 +71,9 @@ class CardController extends Controller
             'breadcrumbs' => [
                 new Breadcrumb('Dashboard', route('dashboard')),
             ],
+            'sort' => $request->get('sort', null),
             'filters' => request()->get('filters', []),
+            'fields' => Field::select(['id','title', 'handle'])->get(),
             'projects' => Project::select(['id', 'title', 'workspace_id'])
                 ->with('workspace')
                 ->sharedWithCurrentUser()

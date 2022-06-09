@@ -79,6 +79,7 @@ export default {
       //@ts-ignore
       window.Echo.private(`App.Models.User.${page.props.value.user.id}`)
         .notification((notification) => {
+          console.log(notification);
           store.commit('setTotal', store.state.total + 1);
           store.commit('setNotifications', store.state.notifications.unshift(notification));
         })

@@ -39,6 +39,7 @@
 import ProjectUpdateForm from "./Partials/ProjectUpdateForm.vue";
 import ProjectFieldsForm from "./Partials/ProjectFieldsForm.vue";
 import ProjectMembersForm from "./Partials/ProjectMembersForm.vue";
+import useProjectForm from "@/composables/useProjectForm";
 
 defineProps<{
   title: string,
@@ -48,4 +49,6 @@ defineProps<{
   fields: Field[]
   users: User[]
 }>();
+
+const { destroy } = useProjectForm();
 </script>

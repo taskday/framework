@@ -27,11 +27,17 @@ export default {
 <script lang="ts" setup>
 import { ref } from 'vue';
 
-defineProps<{
-  label: String,
-  errors: String,
+defineProps({
+  label: {
+    type: String,
+    default: null
+  },
+  errors: {
+    type: String,
+    default: null
+  },
   modelValue: String,
-}>();
+});
 
 const isEditing = ref(false);
 

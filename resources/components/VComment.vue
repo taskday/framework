@@ -2,7 +2,7 @@
   <div class="w-full">
     <VCard style="padding: 0" class="overflow-hidden">
       <div
-        :class="`h-10 flex ${name === $page.props.user.name
+        :class="`h-10 flex ${comment?.creator?.name === $page.props.user.name
         ? 'bg-blue-50 border-b dark:bg-blue-400 dark:text-blue-400 dark:bg-opacity-20'
         : 'bg-gray-50 border-b dark:bg-gray-700'
         } justify-between items-center p-2 text-sm whitespace-pre`"
@@ -30,10 +30,6 @@ defineProps({
   comment: {
     type: Object,
     required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
+  }
 })
 </script>
