@@ -15,6 +15,30 @@ use Taskday\Support\Page\Breadcrumb;
 class ProjectController extends Controller
 {
     /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        return Inertia::render('Projects/Index', [
+            'title' => 'Projects',
+            'breadcrumbs' => [
+                new Breadcrumb('Dashboard', route('dashboard')),
+            ],
+            'sort' => $request->get('sort', null),
+            'filters' => request()->get('filters', []),
+            'fields' => Field::select(['id','title', 'handle'])->get(),
+            'projects' => Project::query()
+                ->with('workspace', 'cards.fields', 'fields')
+                ->sharedWithCurrentUser()
+                ->filter($request->get('filters', []), $request->get('sort', null))
+                ->get(),
+            'workspaces' => Workspace::select(['id', 'title'])->sharedWithCurrentUser()->get(),
+        ]);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response

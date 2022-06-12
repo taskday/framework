@@ -2,11 +2,13 @@
 
 namespace Taskday\Http\Middleware;
 
+use Closure;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 use Inertia\Middleware;
 use Taskday\Http\Resources\UserResource;
-use Taskday\Models\User;
 use Taskday\Models\Workspace;
 
 class HandleInertiaRequests extends Middleware
@@ -32,6 +34,28 @@ class HandleInertiaRequests extends Middleware
     }
 
     /**
+     * Handle the incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  Closure  $next
+     * @return Response
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        $response = parent::handle($request, $next);
+
+        if ($response instanceof RedirectResponse && (bool) $request->header('X-Inertia-Modal-Redirect-Back')) {
+            return back(303);
+        }
+
+        if (Inertia::getShared('isModal')) {
+            $response->headers->set('X-Inertia-Modal', true);
+        }
+
+        return $response;
+    }
+
+    /**
      * Defines the props that are shared by default.
      *
      * @see https://inertiajs.com/shared-data
@@ -41,6 +65,7 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
+            'isModal' => (bool) $request->header('X-Inertia-Modal'),
             'csrf_token' => csrf_token(),
             'user' => Auth::check() ? UserResource::make(Auth::user()) : null,
             'global' => Auth::check() ? [

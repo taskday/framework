@@ -73,7 +73,7 @@ class CardController extends Controller
             ],
             'sort' => $request->get('sort', null),
             'filters' => request()->get('filters', []),
-            'fields' => Field::select(['id','title', 'handle'])->get(),
+            'fields' => Field::all(),
             'projects' => Project::select(['id', 'title', 'workspace_id'])
                 ->with('workspace')
                 ->sharedWithCurrentUser()

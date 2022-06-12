@@ -20,6 +20,7 @@
       <div class="hidden md:flex items-center justify-start space-x-4 w-full flex-grow">
         <VNav class="flex space-x-2">
           <VNavLink class="px-2" :href="route('workspaces.index')"> Workspaces </VNavLink>
+          <VNavLink class="px-2" :href="route('projects.index')"> Projects </VNavLink>
           <VNavLink class="px-2" :href="route('cards.index')"> Cards </VNavLink>
           <VNavLink class="px-2" :href="route('fields.index')"> Fields </VNavLink>
         </VNav>

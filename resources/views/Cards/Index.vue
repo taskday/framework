@@ -75,20 +75,15 @@
         </div>
       </div>
       <div class="flex flex-col gap-2">
-        <VCard v-for="card in cards.data">
-          <VBreadcrumb>
-            <VBreadcrumbItem :href="route('workspaces.show', card.project.workspace)">{{
-              card.project.workspace.title
-            }}</VBreadcrumbItem>
-            <VBreadcrumbItem :href="route('projects.show', card.project)">{{ card.project.title }}</VBreadcrumbItem>
-          </VBreadcrumb>
-          <Link class="text-base hover:underline" :href="route('cards.show', card)">{{ card.title }}</Link>
-          <div class="flex items-center gap-3 mt-2">
-            <div v-for="field in card.project.fields" :key="card.id + '' + field.handle">
-              <VFieldWrapper :field="{ ...field, ...card.customFields[field.handle] }" :card="card" />
-            </div>
+        <div class="h-full space-y-8" v-for="view in taskday().views" :key="view.name">
+          <div>
+            <component :is="view.component" :project="{
+              id: view.name,
+              cards: cards?.data,
+              fields: fields,
+            }"></component>
           </div>
-        </VCard>
+        </div>
       </div>
     </div>
   </div>

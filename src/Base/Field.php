@@ -3,8 +3,6 @@
 
 namespace Taskday\Base;
 
-use Taskday\Support\CanBeArrayable;
-use Illuminate\Contracts\Support\Arrayable;
 use Illuminate\Support\Facades\Event;
 use ReflectionClass;
 

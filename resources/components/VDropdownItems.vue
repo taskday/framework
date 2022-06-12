@@ -28,7 +28,7 @@ export default {
 <script setup lang="ts">
 import { MenuItems } from '@headlessui/vue'
 import { createPopper } from "@popperjs/core";
-import { inject, ref, Ref, onMounted, watch, HtmlHTMLAttributes } from 'vue';
+import { inject, ref, Ref, watch } from 'vue';
 const dropdown = inject<Ref<HTMLDivElement>>('dropdown');
 const panel = ref<any>(null);
 const popper = ref<any>(null);

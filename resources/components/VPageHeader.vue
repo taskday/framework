@@ -1,5 +1,5 @@
 <template>
-  <div class="py-3 bg-white dark:bg-gray-800 shadow relative">
+  <div class="py-3 px-6 bg-white dark:bg-gray-800 shadow relative">
     <slot/>
   </div>
 </template>

@@ -19,6 +19,7 @@ use Taskday\Models\Concerns\HasOwner;
 use Taskday\Models\Concerns\Linkable;
 use Taskday\Models\Concerns\Memberable;
 use Taskday\Support\Page\Breadcrumb;
+use Taskday\Base\Filter;
 
 class Project extends Model
 {
@@ -135,6 +136,45 @@ class Project extends Model
     public function parent()
     {
         return $this->workspace;
+    }
+
+    public function scopeFilter(ProjectBuilder $query, array $filters, ?string $sortBy = null)
+    {
+        foreach ($filters as $handle => $filter) {
+            if (!array_key_exists('value', $filter) || !array_key_exists('operator', $filter)) {
+                continue;
+            }
+
+            $operator = match($filter['operator']) {
+                'contains' => Filter::CONTAINS,
+                'is_equal' => Filter::IS_EQUAL,
+                'no_equal' => Filter::IS_NOT_EQUAL,
+                'greater_than' => Filter::IS_GREATER_THAN,
+                'less_than' => Filter::IS_LESS_THAN,
+                'not_contains' => Filter::NOT_CONTAINS,
+                default => Filter::IS_EQUAL,
+            };
+
+            if (array_key_exists('type', $filter) && $filter['type'] === 'builtin') {
+                if ($handle == 'project') {
+                    $query->where('id', $operator, $filter['value'] ?? '');
+                }
+
+                if ($handle == 'workspace') {
+                    $query->whereHas('workspace', function ($query) use ($operator, $filter) {
+                        $query->where('id', $operator, $filter['value'] ?? '');
+                    });
+                }
+            } else {
+                $query->whereHas('cards', function ($query) use ($handle, $operator, $filter, $sortBy) {
+                    if (! is_null($sortBy)) {
+                        $query->withFieldSorting($sortBy);
+                    }
+
+                    $query->withFieldFilter($handle, $operator, $filter['value'] ?? '');
+                });
+            }
+        }
     }
 
     /**
