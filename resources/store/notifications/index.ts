@@ -60,8 +60,9 @@ export default {
       if (index > -1) {
         store.commit('setTotal', store.state.total - 1);
         store.commit('setNotifications', store.state.notifications.filter((n) => n.id !== id));
-        axios.patch(`/api/notifications/${id}/read`);
-        store.dispatch('fetch');
+        axios.patch(`/api/notifications/${id}/read`).then(() => {
+          store.dispatch('fetch');
+        });
       }
     },
     /**
