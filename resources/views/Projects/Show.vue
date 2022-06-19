@@ -97,7 +97,7 @@ watch(() => share.value, () => {
 const views = computed(() => {
   return window.taskday.views.filter(v => {
     if (v.needs) {
-      return v.needs.some(n => props.project.fields.map(p => p.handle).includes(n));
+      return v.needs.some(n => props.project.fields.map(p => p.type).includes(n));
     }
     return true;
   })
