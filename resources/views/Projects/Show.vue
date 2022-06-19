@@ -1,6 +1,6 @@
 <template>
   <div class="h-full">
-    <VPageHeader class="shadow-none px-6">
+    <VPageHeader>
       <VBreadcrumb>
         <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
           {{ breadcrumb.title }}
@@ -9,9 +9,9 @@
       <div class="flex items-end justify-between">
         <div>
           <VPageTitle>{{ title }}</VPageTitle>
-          <div class="prose text-sm text-gray-700 dark:text-gray-400">
+          <VText>
             {{ project.description }}
-          </div>
+          </VText>
         </div>
         <div class="flex flex-wrap gap-2">
           <VFormList
@@ -79,8 +79,8 @@
 import { Switch } from '@headlessui/vue';
 import { CogIcon, ViewBoardsIcon, ExternalLinkIcon, ShareIcon, GlobeAltIcon } from "@heroicons/vue/outline";
 import { Inertia } from '@inertiajs/inertia';
-import { ref, watch, computed, onMounted } from "vue";
-import { useStorage } from '@vueuse/core';
+import { ref, watch, onMounted, onUnmounted } from "vue";
+import useViews from './useViews';
 
 let props = defineProps<{
   title: String;
@@ -88,28 +88,27 @@ let props = defineProps<{
   project: Project;
 }>();
 
+onMounted(() => {
+  window.Echo
+    .private(`projects.${props.project.id}`)
+    .listen('.ProjectUpdatedEvent', function (e, data) {
+      Inertia.get(route('projects.show', props.project), { replace: true });
+    });
+})
+
+onUnmounted(() => {
+   window.Echo
+    .private(`projects.${props.project.id}`)
+    .stopListening('.ProjectUpdatedEvent');
+})
+
+const { currentView, views, updateCurrentView } = useViews(props.project);
+
 const share = ref(!!props.project.share_uuid);
 
 watch(() => share.value, () => {
   Inertia.post(route('projects.share.update', props.project), { share: share.value });
 })
 
-const views = computed(() => {
-  return window.taskday.views.filter(v => {
-    if (v.needs) {
-      return v.needs.some(n => props.project.fields.map(p => p.type).includes(n));
-    }
-    return true;
-  })
-});
 
-const currentViewHandle = useStorage(props.project.id + '_current_view', null);
-
-const currentView = computed(() => {
-  return views.value.find(v => v.id == currentViewHandle.value) ?? views.value[0];
-});
-
-function updateCurrentView(view) {
-  currentViewHandle.value = view.id
-}
 </script>

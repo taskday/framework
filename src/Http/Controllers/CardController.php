@@ -181,6 +181,8 @@ class CardController extends Controller
 
         $card->update($data);
 
+        $card->touch();
+
         return redirect()->back();
     }
 

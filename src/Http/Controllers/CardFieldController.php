@@ -23,6 +23,8 @@ class CardFieldController extends Controller
 
         $card->setCustom($field, $data['value']);
 
+        $card->touch();
+
         return redirect()->back();
     }
 }

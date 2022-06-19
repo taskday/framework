@@ -34,11 +34,6 @@
     @tag('vendor/taskday/framework/resources/bootstrap.ts')
     @taskday
     @tag('vendor/taskday/framework/resources/main.ts')
-
-    <script type="module">
-        console.log('vue version:', window.Vue);
-        console.log('taskday version:', window.taskday);
-    </script>
 </head>
 
 <body class="font-sans antialiased text-black bg-gray-100 dark:bg-gray-900 dark:text-gray-100">

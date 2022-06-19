@@ -20,8 +20,6 @@ declare global {
     }): void
   }
 
-  const Taskday: TaskdayInterface;
-
   function route(route?: string, params?: any): string;
   function taskday(): TaskdayInterface;
   function fieldComponent(type: string): ReturnType<typeof defineComponent>;
@@ -30,7 +28,8 @@ declare global {
   function filters(): Record<string, ReturnType<typeof defineComponent>>;
 
   interface Window {
-    Taskday: TaskdayInterface
+    taskday: TaskdayInterface
+    Echo: any
   }
 }
 

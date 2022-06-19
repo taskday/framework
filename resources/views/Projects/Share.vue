@@ -1,30 +1,42 @@
 <template>
   <div class="h-full">
-    <VPageHeader class="shadow-none px-6">
+    <VPageHeader>
       <VBreadcrumb>
         <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
           {{ breadcrumb.title }}
         </VBreadcrumbItem>
       </VBreadcrumb>
-      <VPageTitle>{{ title }}</VPageTitle>
+      <div class="flex items-end justify-between">
+        <div>
+          <VPageTitle>{{ title }}</VPageTitle>
+          <VText>
+            {{ project.description }}
+          </VText>
+        </div>
+        <div>
+          <VFormList
+            :options="views"
+            :selected="views.find(v => v.id == currentView.id)"
+            @change="updateCurrentView"
+          >
+            <template #trigger="{ item }">
+              <ViewBoardsIcon  class="h-5 w-5 mr-1"/>
+              <span>{{ item.title ?? item.name }}</span>
+            </template>
+          </VFormList>
+        </div>
+      </div>
     </VPageHeader>
-    <div class="h-full">
-      <VTabs>
-        <VTabsList>
-          <VTabsItem v-for="view in taskday().views" :key="view.name">{{ view.name }}</VTabsItem>
-        </VTabsList>
-        <VTabsPanels class="h-full">
-          <VTabsPanel class="h-full pt-6" v-for="view in taskday().views" :key="view.name">
-            <component :is="view.component" :project="project" :readonly="true"></component>
-          </VTabsPanel>
-        </VTabsPanels>
-      </VTabs>
+    <div class="h-full py-6" :key="currentView">
+      <component :is="currentView.component" :project="project"></component>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 import GuestLayout from '@/layouts/GuestLayout.vue';
+import useViews from './useViews';
+import { ViewBoardsIcon } from '@heroicons/vue/outline';
 
 export default {
   layout: GuestLayout
@@ -32,9 +44,11 @@ export default {
 </script>
 
 <script setup lang="ts">
-defineProps<{
+let props = defineProps<{
   title: String;
   breadcrumbs: Breadcrumb[];
   project: Project;
 }>();
+
+const { currentView, views, updateCurrentView } = useViews(props.project);
 </script>
