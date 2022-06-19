@@ -84,18 +84,21 @@ class TaskdayServiceProvider extends ServiceProvider
                 '18_create_notifications_table',
                 '19_create_media_table',
                 '20_add_team_id_to_workspaces_table',
+                '21_add_share_uuid_to_projects_table',
             ] as $value) {
 
-                $migration = __DIR__ . "/../database/migrations/$value.php.stub";
-
                 $published = collect(glob(database_path('migrations/*')))
-                    ->filter(fn ($path) => $path == $migration)
+                    ->filter(function ($path) use ($value) {
+                        return str_contains($path, substr($value, 3));
+                    })
                     ->isNotEmpty();
 
                 if (! $published) {
+                    $name = substr($value, 3);
+
                     $this->publishes([
-                        __DIR__ . "/../database/migrations/$value.php.stub" => database_path('migrations/' . date('Y_m_d_His', time()) . "$value.php"),
-                    ], 'migrations');
+                        __DIR__ . "/../database/migrations/$value.php.stub" => database_path('migrations/' . date('Y_m_d_His', time()) . "_$name.php"),
+                    ], 'taskday-migrations');
                 }
             }
           }

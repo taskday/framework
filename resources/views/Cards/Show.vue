@@ -6,22 +6,21 @@
           {{ breadcrumb.title }}
         </VBreadcrumbItem>
       </VBreadcrumb>
-      <div class="flex items-start justify-between w-full gap-4">
-        <div class="w-full">
-          <div class="flex flex-col items-start justify-start gap-4 w-full">
-            <div class="flex items-start gap-4 shrink-0 w-full">
-              <VFormEdit v-model="state.title">
-                <VPageTitle>{{ state.title }}</VPageTitle>
-              </VFormEdit>
-              <div class="text-gray-700 dark:gray-400" v-show="state.recentlySuccessful">Saved.</div>
-            </div>
-            <VRoom :name="`App.Models.Card.${card.id}`"></VRoom>
-          </div>
+      <div class="flex items-end justify-between">
+        <div class="flex items-start">
+          <VFormEdit v-model="state.title">
+            <VPageTitle>{{ state.title }}</VPageTitle>
+          </VFormEdit>
         </div>
         <div class="flex-col md:flex-row flex items-center gap-2">
-          <VButton variant="primary" v-if="state.isDirty || !state.processing" @click.prevent="() => update(card)"
-            >Save</VButton
+          <VRoom :name="`App.Models.Card.${card.id}`"></VRoom>
+          <div class="text-gray-700 dark:gray-400" v-show="state.recentlySuccessful">Saved.</div>
+          <VButton
+            variant="primary"
+            v-if="state.isDirty || !state.processing" @click.prevent="() => update(card)"
           >
+            Save
+          </VButton>
           <VConfirm class="w-full" title="Are you sure?" :onConfirm="submit">
             <VButton variant="danger" class="w-full">Delete</VButton>
           </VConfirm>

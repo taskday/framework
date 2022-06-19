@@ -33,6 +33,7 @@ interface Project {
   fields: Field[]
   customFields: any
   cards: Card[];
+  share_uuid: string | null;
   members: Member<Project>[];
 }
 

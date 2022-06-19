@@ -15,12 +15,12 @@
         <VDropdown>
           <VDropdownButton>
             <VButton variant="secondary" class="text-sm">
-              {{ projects.find((p) => p.id == _.get(form.filters, "project.value", null))?.title ?? "Filter Project" }}
+              {{ projects.data.find((p) => p.id == _.get(form.filters, "project.value", null))?.title ?? "Filter Project" }}
             </VButton>
           </VDropdownButton>
           <VDropdownItems>
             <VDropdownItem
-              v-for="project in projects"
+              v-for="project in projects.data"
               @click="filterBuiltin('project', project)"
               :key="project.id"
               :class="{ 'bg-gray-100 dark:bg-gray-800': project.id == _.get(form.filters, 'project.value', null) }">
@@ -80,7 +80,7 @@
         </VTabsList>
         <VTabsPanels class="h-full">
           <VTabsPanel class="h-full space-y-8" v-for="view in taskday().views" :key="view.name">
-            <div v-for="project in projects">
+            <div v-for="project in projects.data">
               <h3 class="font-bold mb-4 px-6">
                  <VBreadcrumb>
                   <VBreadcrumbItem :href="route('workspaces.show', project.workspace)">
@@ -132,7 +132,7 @@ const props = defineProps({
     required: true,
   },
   projects: {
-    type: Array as PropType<Project[]>,
+    type: Object as PropType<Pagination<Project>>,
     required: true,
   },
   workspaces: {

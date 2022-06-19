@@ -1,5 +1,5 @@
 <template>
-  <div class="px-6 bg-white dark:bg-gray-800 shadow z-10">
+  <div class="">
     <TabList class="flex gap-4">
       <slot />
     </TabList>

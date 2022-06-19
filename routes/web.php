@@ -42,6 +42,10 @@ Route::middleware(['web', 'auth:sanctum', 'verified'])->group(function(){
     // Projects
     Route::resource('workspaces.projects',        Controllers\ProjectController::class)->only(['store', 'create']);
     Route::resource('projects',                   Controllers\ProjectController::class)->only(['index', 'show', 'edit', 'update', 'destroy']);
+    Route::get('projects/{project:share_uuid}/share', [Controllers\ProjectShareController::class, 'show'])
+        ->withoutMiddleware(['auth:sanctum', 'verified'])
+        ->name('projects.share.show');
+    Route::post('projects/{project}/share', [Controllers\ProjectShareController::class, 'update'])->name('projects.share.update');
     Route::get('projects/{project}/import-create', [Controllers\ProjectImportController::class, 'create'])->name('projects.import-create');
     Route::post('projects/{project}/import-store', [Controllers\ProjectImportController::class, 'store'])->name('projects.import-store');
     Route::get('projects/{project}/import-edit',    [Controllers\ProjectImportController::class, 'edit'])->name('projects.import-edit');

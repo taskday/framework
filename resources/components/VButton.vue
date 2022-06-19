@@ -36,11 +36,11 @@ export default defineComponent({
     },
     classes(): object {
       return {
-        "h-9 px-4 bg-blue-600 dark:bg-blue-500 font-medium tracking-wide text-gray-100 dark:text-gray-100":
+        "h-9 px-3 text-sm bg-blue-600 dark:bg-blue-500 font-medium tracking-wide text-gray-100 dark:text-gray-100":
           this.variant === "primary",
-        "h-9 px-4 text-gray-800 dark:text-gray-100 border":
+        "h-9 px-3 text-sm text-gray-800 dark:text-gray-100 border":
           this.variant === "secondary",
-        "h-9 px-4 bg-red-600 dark:bg-red-800 text-red-100 dark:text-red-100":
+        "h-9 px-3 text-sm bg-red-600 dark:bg-red-800 text-red-100 dark:text-red-100":
           this.variant === "danger",
 
         "hover:bg-blue-500 dark:hover:bg-blue-500": this.variant === "primary",
@@ -58,7 +58,7 @@ export default defineComponent({
 
         "disabled:opacity-50": this.disabled,
 
-        "rounded": this.rounded != "full",
+        "rounded-md": this.rounded != "full",
         "rounded-full": this.rounded == "full",
       };
     },

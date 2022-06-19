@@ -21,6 +21,7 @@ import VFormInput from "@/components/VFormInput.vue";
 import VFormSection from "@/components/VFormSection.vue";
 import VFormSelect from "@/components/VFormSelect.vue";
 import VFormErrors from "@/components/VFormErrors.vue";
+import VFormList from "@/components/VFormList.vue";
 import VFormEdit from "@/components/VFormEdit.vue";
 import VIcon from "@/components/VIcon.vue";
 import VLink from "@/components/VLink.vue";
@@ -155,6 +156,7 @@ export {
   VFormSelect,
   VFormErrors,
   VFormEdit,
+  VFormList,
   VIcon,
   VLink,
   VMentionsList,

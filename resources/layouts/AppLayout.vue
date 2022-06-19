@@ -14,12 +14,8 @@
     />
     <div class="flex-1 w-full">
       <TheHeader />
-      <VAlert />
+      <VFlashMessages />
       <slot></slot>
     </div>
   </div>
 </template>
-
-<script lang="ts" setup="ts">
-
-</script>

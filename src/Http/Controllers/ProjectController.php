@@ -9,6 +9,7 @@ use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Taskday\Models\Card;
 use Taskday\Support\Page\Breadcrumb;
 
 
@@ -33,7 +34,7 @@ class ProjectController extends Controller
                 ->with('workspace', 'cards.fields', 'fields')
                 ->sharedWithCurrentUser()
                 ->filter($request->get('filters', []), $request->get('sort', null))
-                ->get(),
+                ->paginate(5),
             'workspaces' => Workspace::select(['id', 'title'])->sharedWithCurrentUser()->get(),
         ]);
     }
@@ -87,8 +88,22 @@ class ProjectController extends Controller
             'title' => $project->title,
             'breadcrumbs' => $project->breadcrumbs,
             'fields' => $project->fields,
+            // 'cards' => Card::query()
+            //     ->where('project_id', $project->id)
+            //     ->with('fields', 'project', 'comments.creator')
+            //     ->when($request->has('filters'), function ($query) use ($request) {
+            //         foreach($request->get('filters', []) as $handle => $filter) {
+            //             if (array_key_exists('value', $filter) && array_key_exists('operator', $filter)) {
+            //                 $query->withFieldFilter($handle, $filter['operator'], $filter['value']);
+            //             }
+            //         }
+            //     })
+            //     ->when($request->has('sort'), function ($query) use ($request) {
+            //         $query->withFieldSorting($request->get('sort'));
+            //     })
+            //     ->paginate(10),
             'project' => $project->load(['cards' => function ($query) use ($request) {
-                $query->with('fields', 'project', 'comments.creator');
+                $query->with('fields', 'project');
 
                 foreach($request->get('filters', []) as $handle => $filter) {
                     if (array_key_exists('value', $filter) && array_key_exists('operator', $filter)) {
