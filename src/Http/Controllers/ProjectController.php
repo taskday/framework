@@ -30,12 +30,16 @@ class ProjectController extends Controller
             'sort' => $request->get('sort', null),
             'filters' => request()->get('filters', []),
             'fields' => Field::select(['id','title', 'handle'])->get(),
-            'projects' => Project::query()
-                ->with('workspace', 'cards.fields', 'fields')
+            'workspaces' => Workspace::query()
+                ->select(['id', 'title'])
                 ->sharedWithCurrentUser()
-                ->filter($request->get('filters', []), $request->get('sort', null))
-                ->paginate(5),
-            'workspaces' => Workspace::select(['id', 'title'])->sharedWithCurrentUser()->get(),
+                ->latest()
+                ->get(),
+            'projects' => Project::query()
+                ->select(['id', 'title'])
+                ->sharedWithCurrentUser()
+                ->latest()
+                ->get(),
         ]);
     }
 

@@ -26,14 +26,13 @@ class WorkspaceController extends Controller
                 new Breadcrumb('Workspaces', route('workspaces.index')),
             ],
             'workspaces' => Workspace::query()
+                ->select(['id', 'title'])
                 ->sharedWithCurrentUser()
-                ->with(['projects' => function ($projects) {
-                    $projects
-                        ->sharedWithCurrentUser()
-                        ->with(['comments' => function ($query) {
-                            $query->limit(2);
-                        }]);
-                }])
+                ->latest()
+                ->get(),
+            'projects' => Project::query()
+                ->select(['id', 'title'])
+                ->sharedWithCurrentUser()
                 ->latest()
                 ->get(),
         ]);

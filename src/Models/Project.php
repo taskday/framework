@@ -73,9 +73,11 @@ class Project extends Model
      */
     public function getBreadcrumbsAttribute(): array
     {
-        return   [
-            new Breadcrumb('Workspaces', route('workspaces.index')),
+        if (! $this->workspace) return [];
+
+        return [
             new Breadcrumb($this->workspace->title, route('workspaces.show', $this->workspace)),
+            new Breadcrumb($this->title, route('projects.show', $this)),
         ];
     }
 

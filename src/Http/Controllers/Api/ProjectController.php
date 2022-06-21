@@ -12,17 +12,28 @@ class ProjectController extends Controller
 {
     public function index(Request $request)
     {
-        $projects = Auth::user()->sharedProjects()->with('cards');
+        $workspaces = Project::query()
+            ->sharedWithCurrentUser()
+            ->with(['cards', 'workspace'])
+            ->when($request->has('filters.workspaces'), function ($query) use ($request) {
+                $query->whereHas('workspace', function ($projects) use ($request) {
+                    $projects->whereIn('id', $request->input('filters.workspaces.*'));
+                });
+            })
+            ->when($request->has('filters.projects'), function ($query) use ($request) {
+                $query->whereIn('id', $request->input('filters.projects.*'));
+            })
+            ->when($request->has('filters.search'), function ($query) use ($request) {
+                $query->where(function ($query) use ($request) {
+                    $query->orWhereHas('workspace', function ($projects) use ($request) {
+                        $projects->whereIn('id', Workspace::search($request->input('filters.search'))->get()->pluck('id'));
+                    })
+                    ->orWhereIn('id', Project::search($request->input('filters.search'))->get()->pluck('id'));
+                });
+            })
+            ->orderBy('title');
 
-        if ($request->get('workspace'))  {
-            $projects->where('workspace_id', Workspace::whereTitle($request->get('workspace'))->firstOrFail()->id);
-        }
-
-        if ($request->get('limit')) {
-            $projects->limit($request->get('limit'));
-        }
-
-        return response()->json( $projects->get() );
+        return response()->json($workspaces->paginate(request('per_page', 10)));
     }
 
     public function show(Request $request, Project $project)

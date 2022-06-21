@@ -2,13 +2,9 @@
 
 namespace Taskday;
 
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Gate;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Laravel\Jetstream\Jetstream;
-use Taskday\Models\Team;
 use Taskday\Observers\CardObserver;
 use Taskday\Models\Card;
 
@@ -85,7 +81,7 @@ class TaskdayServiceProvider extends ServiceProvider
                 '19_create_media_table',
                 '20_add_team_id_to_workspaces_table',
                 '21_add_share_uuid_to_projects_table',
-            ] as $value) {
+            ] as $key => $value) {
 
                 $published = collect(glob(database_path('migrations/*')))
                     ->filter(function ($path) use ($value) {
@@ -97,7 +93,7 @@ class TaskdayServiceProvider extends ServiceProvider
                     $name = substr($value, 3);
 
                     $this->publishes([
-                        __DIR__ . "/../database/migrations/$value.php.stub" => database_path('migrations/' . date('Y_m_d_His', time()) . "_$name.php"),
+                        __DIR__ . "/../database/migrations/$value.php.stub" => database_path('migrations/' . date('Y_m_d_His', time() + $key) . "_$name.php"),
                     ], 'taskday-migrations');
                 }
             }

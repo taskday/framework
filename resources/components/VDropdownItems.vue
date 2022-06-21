@@ -39,7 +39,7 @@ watch(items, () => {
     const button = dropdown.value.querySelector('[data-dropdown-button]');
 
     popper.value = createPopper(button, panel.value, {
-      placement: "bottom-end"
+      placement: "bottom-start"
     });
   } else {
     setTimeout(() => {
