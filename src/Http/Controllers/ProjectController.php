@@ -32,13 +32,13 @@ class ProjectController extends Controller
             'fields' => Field::select(['id','title', 'handle'])->get(),
             'workspaces' => Workspace::query()
                 ->select(['id', 'title'])
+                ->orderBy('title')
                 ->sharedWithCurrentUser()
-                ->latest()
                 ->get(),
             'projects' => Project::query()
                 ->select(['id', 'title'])
+                ->orderBy('title')
                 ->sharedWithCurrentUser()
-                ->latest()
                 ->get(),
         ]);
     }

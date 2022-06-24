@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType, watch, computed, provide } from 'vue'
+import { defineComponent, PropType, computed, provide } from 'vue'
 
 export default defineComponent({
   props: {

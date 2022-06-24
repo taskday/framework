@@ -27,13 +27,13 @@ class WorkspaceController extends Controller
             ],
             'workspaces' => Workspace::query()
                 ->select(['id', 'title'])
+                ->orderBy('title')
                 ->sharedWithCurrentUser()
-                ->latest()
                 ->get(),
             'projects' => Project::query()
                 ->select(['id', 'title'])
+                ->orderBy('title')
                 ->sharedWithCurrentUser()
-                ->latest()
                 ->get(),
         ]);
     }

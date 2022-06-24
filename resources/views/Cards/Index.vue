@@ -1,170 +1,172 @@
-<template>
-  <VPageHeader class="shadow-none px-6">
-    <VBreadcrumb>
-      <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
-        {{ breadcrumb.title }}
-      </VBreadcrumbItem>
-    </VBreadcrumb>
-    <div class="flex items-center justify-between">
-      <VPageTitle>{{ title }}</VPageTitle>
-    </div>
-  </VPageHeader>
-  <div class="h-full px-6">
-    <div class="grid grid-cols-1 gap-8 py-8">
-      <div>
-        <div class="flex items-center gap-2">
-          <VDropdown>
-            <VDropdownButton>
-              <VButton variant="secondary" class="text-sm">
-                {{ projects.find((p) => p.id == _.get(form.filters, "project.value", null))?.title ?? "Filter Project" }}
-              </VButton>
-            </VDropdownButton>
-            <VDropdownItems>
-              <VDropdownItem
-                v-for="project in projects"
-                @click="filterBuiltin('project', project)"
-                :key="project.id"
-                :class="{ 'bg-gray-100 dark:bg-gray-800': project.id == _.get(form.filters, 'project.value', null) }">
-                <span>{{ project.title }}</span>
-              </VDropdownItem>
-            </VDropdownItems>
-          </VDropdown>
-          <VDropdown>
-            <VDropdownButton>
-              <VButton variant="secondary" class="text-sm">{{
-                workspaces.find((p) => p.id == _.get(form.filters, "workspace.value", null))?.title ??
-                "Filter Workspace"
-              }}</VButton>
-            </VDropdownButton>
-            <VDropdownItems>
-              <VDropdownItem
-                v-for="workspace in workspaces"
-                @click="filterBuiltin('workspace', workspace)"
-                :key="workspace.id"
-                :class="{
-                  'bg-gray-100 dark:bg-gray-800': workspace.id == _.get(form.filters, 'workspace.value', null),
-                }">
-                <span>{{ workspace.title }}</span>
-              </VDropdownItem>
-            </VDropdownItems>
-          </VDropdown>
-          <VDropdown>
-            <VDropdownButton>
-              <VButton variant="secondary" class="text-sm">
-                {{ form.sort ?? "Sort by" }}
-              </VButton>
-            </VDropdownButton>
-            <VDropdownItems>
-              <VDropdownItem
-                v-for="field in fields"
-                @click="sortFields(field)"
-                :key="field.handle"
-                :class="{
-                  'bg-gray-100 dark:bg-gray-800': isCurrent(field),
-                }">
-                <span>{{ field.title }}</span>
-              </VDropdownItem>
-            </VDropdownItems>
-          </VDropdown>
-          <div v-for="(filter, handle) in fieldsFilter" class="flex items-center">
-            <div class="text-sm">{{ handle }}: {{ filter }}</div>
-            <div class="flex items-center">
-              <VButton variant="secondary" class="text-sm"> Remove </VButton>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="flex flex-col gap-2">
-        <div class="h-full space-y-8" v-for="view in taskday().views" :key="view.name">
-          <div>
-            <component :is="view.component" :project="{
-              id: view.name,
-              cards: cards?.data,
-              fields: fields,
-            }"></component>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
 
 <script setup lang="ts">
 import _ from "lodash";
-import { PropType, computed, onMounted } from "vue";
-import { useForm } from "@inertiajs/inertia-vue3";
-import { Inertia } from "@inertiajs/inertia";
-import useSorter from "@/composables/useSorter";
+import { PropType, onMounted, watch } from "vue";
+import ProjectView from "../Projects/Partials/ProjectView.vue";
+import { useStorage } from "@vueuse/core";
+import { useAxios } from "@vueuse/integrations/useAxios";
 
 const props = defineProps({
   title: String,
   breadcrumbs: {
-    type: Object as PropType<
-      {
-        name: String;
-        href: String;
-      }[]
-    >,
-  },
-  filters: {
-    type: Object,
-    default: {},
-    required: false,
-  },
-  sort: {
-    type: String,
-    default: null,
-    required: false,
+    type: Object as PropType<Breadcrumb[]>,
   },
   fields: {
     type: Array as PropType<Field[]>,
     required: true,
   },
   projects: {
-    type: Array as PropType<Project[]>,
+    type: Object as PropType<Project[]>,
     required: true,
   },
   workspaces: {
     type: Array as PropType<Workspace[]>,
     required: true,
-  },
-  cards: {
-    type: Object as PropType<Pagination<Card>>,
-  },
-});
-
-const fieldsFilter = computed<TaskdayInterface>(() => {
-  return _.pickBy(props.filters, (p) => p.type != "builtin");
-});
-
-const { shouldSortBy, isCurrent, isDesc } = useSorter();
-
-const form = useForm({
-  filters: props.filters,
-  sort: props.sort
-});
-
-function filterBuiltin(handle, model) {
-  if (model.id == _.get(form.filters, handle + ".value", null)) {
-    delete form.filters[handle];
-  } else {
-    form.filters = props.filters || {};
-    form.filters[handle] = {};
-    form.filters[handle]["value"] = model.id;
-    form.filters[handle]["operator"] = "=";
-    form.filters[handle]["type"] = "builtin";
   }
-  applyFilter();
+});
+
+const filters = useStorage<{
+  workspaces: number[],
+  projects: number[],
+  fields: number[],
+  search: string;
+}>('filters', {
+  workspaces: [],
+  projects: [],
+  fields: [],
+  search: '',
+});
+
+const { data, isLoading, isFinished, execute  } = useAxios();
+
+onMounted(() => {
+    execute(route('api.cards.index', { filters: filters.value }));
+})
+
+watch(filters, _.throttle(function (value) {
+  execute(route('api.cards.index', { filters: value }));
+}), { deep: true })
+
+function toggleFilter(model: any, key: string) {
+  if ( filters.value[key]?.includes(model.id) ) {
+    filters.value[key] = filters.value[key].filter(id => id !== model.id);
+  } else {
+    filters.value[key] = [...filters.value[key], model.id];
+  }
 }
 
-function sortFields(field) {
-  shouldSortBy(field, (arg) => {
-    form.sort = arg;
-    applyFilter()
-  })
-}
+// const fieldsFilter = computed<TaskdayInterface>(() => {
+//   return _.pickBy(props.filters, (p) => p.type != "builtin");
+// });
 
-function applyFilter() {
-  Inertia.visit(route("cards.index", { filters: form.filters, sort: form.sort }));
-}
+// const { shouldSortBy, isCurrent, isDesc } = useSorter();
+
+// const form = useForm({
+//   filters: props.filters,
+//   sort: props.sort
+// });
+
+// function filterBuiltin(handle, model) {
+//   if (model.id == _.get(form.filters, handle + ".value", null)) {
+//     delete form.filters[handle];
+//   } else {
+//     form.filters = props.filters || {};
+//     form.filters[handle] = {};
+//     form.filters[handle]["value"] = model.id;
+//     form.filters[handle]["operator"] = "=";
+//     form.filters[handle]["type"] = "builtin";
+//   }
+//   applyFilter();
+// }
+
+// function sortFields(field) {
+//   shouldSortBy(field, (arg) => {
+//     form.sort = arg;
+//     applyFilter()
+//   })
+// }
+
+// function applyFilter() {
+//   Inertia.visit(route("cards.index", { filters: form.filters, sort: form.sort }));
+// }
 </script>
+
+<template>
+  <VPageHeader class="shadow-none px-6">
+    <VBreadcrumbs :items="breadcrumbs" />
+    <div class="flex items-center justify-between">
+      <VPageTitle>{{ title }}</VPageTitle>
+    </div>
+  </VPageHeader>
+  <div class="h-full">
+    <div class="px-6 flex items-center gap-2 mt-4">
+      <VDropdown >
+        <VDropdownButton>
+          <VButton variant="secondary" class="text-sm">
+            {{ "Filter Project" }}
+          </VButton>
+        </VDropdownButton>
+        <VDropdownItems align="left">
+          <VDropdownItem
+            v-for="project in projects"
+            @click="toggleFilter(project, 'projects')"
+            :key="project.id"
+            :class="{ 'bg-gray-100 dark:bg-gray-800': filters.projects.includes(project.id) }">
+            <span>{{ project.title }}</span>
+          </VDropdownItem>
+        </VDropdownItems>
+      </VDropdown>
+      <VDropdown >
+        <VDropdownButton>
+          <VButton variant="secondary" class="text-sm">{{ "Filter Workspace" }}</VButton>
+        </VDropdownButton>
+        <VDropdownItems align="left">
+          <VDropdownItem
+            v-for="workspace in workspaces"
+            @click="toggleFilter(workspace, 'workspaces')"
+            :key="workspace.id"
+            :class="{
+              'bg-gray-100 dark:bg-gray-800': filters.workspaces.includes(workspace.id),
+            }">
+            <span>{{ workspace.title }}</span>
+          </VDropdownItem>
+        </VDropdownItems>
+      </VDropdown>
+      <VDropdown >
+        <VDropdownButton>
+          <VButton variant="secondary" class="text-sm">{{ "With field" }}</VButton>
+        </VDropdownButton>
+        <VDropdownItems align="left">
+          <VDropdownItem
+            v-for="field in fields"
+            @click="toggleFilter(field, 'fields')"
+            :key="field.id"
+            :class="{
+              'bg-gray-100 dark:bg-gray-800': filters.fields.includes(field.id),
+            }">
+            <span>{{ field.title }}</span>
+          </VDropdownItem>
+        </VDropdownItems>
+      </VDropdown>
+      <VFormInput v-model="filters.search" type="search" placeholder="Search..." />
+    </div>
+    <div class="px-6 flex items-center gap-2 mt-4">
+      <VButton variant="secondary" v-for="workspace in filters.workspaces" @click="toggleFilter(workspaces.find(w => w.id === workspace), 'workspaces')">
+        {{ workspaces.find(w => w.id === workspace)?.title }}
+        &times;
+      </VButton>
+      <VButton variant="secondary" v-for="project in filters.projects" @click="toggleFilter(projects.find(w => w.id === project), 'projects')">
+        {{ projects.find(w => w.id === project)?.title }}
+        &times;
+      </VButton>
+      <VButton variant="secondary" v-for="project in filters.fields" @click="toggleFilter(fields.find(w => w.id === project), 'fields')">
+        {{ fields.find(w => w.id === project)?.title }}
+        &times;
+      </VButton>
+    </div>
+    <div class="grid grid-cols-1 gap-8 py-8">
+      <ProjectView :project="{ fields: fields.filter(f => filters.fields.includes(f.id)), cards: data?.data ?? [] }" />
+    </div>
+  </div>
+</template>
+

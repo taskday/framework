@@ -71,19 +71,19 @@ class CardController extends Controller
             'breadcrumbs' => [
                 new Breadcrumb('Dashboard', route('dashboard')),
             ],
-            'sort' => $request->get('sort', null),
-            'filters' => request()->get('filters', []),
-            'fields' => Field::all(),
-            'projects' => Project::select(['id', 'title', 'workspace_id'])
-                ->with('workspace')
+            'fields' => Field::query()
+                ->orderBy('title')
+                ->get(),
+            'workspaces' => Workspace::query()
+                ->select(['id', 'title'])
+                ->orderBy('title')
                 ->sharedWithCurrentUser()
-                ->get()
-                ->transform(fn ($item) => [
-                    'id' => $item->id,
-                    'title' => $item->title,
-                ]),
-            'workspaces' => Workspace::select(['id', 'title'])->sharedWithCurrentUser()->get(),
-            'cards' => $cards->paginate(100),
+                ->get(),
+            'projects' => Project::query()
+                ->select(['id', 'title'])
+                ->orderBy('title')
+                ->sharedWithCurrentUser()
+                ->get(),
         ]);
     }
 

@@ -2,6 +2,7 @@
 import { Inertia } from "@inertiajs/inertia";
 import { ref, watch, PropType } from "vue";
 import useViews from "../useViews";
+import { Switch } from '@headlessui/vue';
 import {
   GlobeAltIcon,
   ExternalLinkIcon,
@@ -36,7 +37,7 @@ watch(() => share.value, () => {
             <span>{{ item.title ?? item.name }}</span>
           </template>
         </VFormList>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2" v-if="project.id">
           <Link :href="route('projects.edit', project)" class="flex text-sm items-center hover:text-blue-600 dark:hover:text-blue-200 p-1 px-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg">
             <CogIcon class="h-5 w-5 mr-1" ></CogIcon>
             <span>Settings</span>

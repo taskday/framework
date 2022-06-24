@@ -13,9 +13,38 @@ class CardController extends Controller
 {
     public function index(Request $request)
     {
-        $cards = Card::with(['project.workspace', 'comments.creator'])->orderBy('updated_at', 'desc')->paginate(30);
+        $cards = Card::query()
+            ->sharedWithCurrentUser()
+            ->with(['project.workspace', 'fields', 'project.fields'])
+            ->when($request->has('filters.workspaces'), function ($query) use ($request) {
+                $query->whereHas('project', function ($project) use ($request) {
+                    $project->whereHas('workspace', function ($workspace) use ($request) {
+                        $workspace->whereIn('id', $request->input('filters.workspaces.*'));
+                    });
+                });
+            })
+            ->when($request->has('filters.projects'), function ($query) use ($request) {
+                $query->whereHas('project', function ($project) use ($request) {
+                    $project->whereIn('id', $request->input('filters.projects.*'));
+                });
+            })
+            ->when($request->has('filters.search'), function ($query) use ($request) {
+                $query->where(function ($query) use ($request) {
+                    $query->orWhereHas('project', function ($project) use ($request) {
+                        $project->whereIn('id', Project::search($request->input('filters.search'))->get()->pluck('id'));
+                        $project->whereHas('workspace', function ($workspace) use ($request) {
+                            $workspace->whereIn('id', Workspace::search($request->input('filters.search'))->get()->pluck('id'));
+                        });
+                    });
+                });
+            })
+            ->when($request->has('filters.fields'), function ($query) use ($request) {
+                $query->orWhereHas('fields', function ($field) use ($request) {
+                    $field->whereIn('id', $request->input('filters.fields.*'));
+                });
+            });
 
-        return response()->json($cards);
+        return response()->json($cards->paginate(request('per_page', 10)));
     }
 
     public function show(Request $request, Card $card)
