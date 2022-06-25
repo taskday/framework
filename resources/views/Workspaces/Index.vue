@@ -1,45 +1,17 @@
 <script setup lang="ts">
 import moment from "moment";
 import { PlusIcon } from "@heroicons/vue/outline";
-import { useAxios } from '@vueuse/integrations/useAxios'
-import { useStorage } from "@vueuse/core";
-import _ from 'lodash';
-import { onMounted, watch } from "vue";
+import useFilters from '@/composables/useFilters';
 
 const props = defineProps<{
   title: string;
   breadcrumbs: Breadcrumb[];
   workspaces: Workspace[];
   projects: Project[];
+  fields: Field[];
 }>();
 
-const filters = useStorage<{
-  workspaces: number[],
-  projects: number[],
-  search: string;
-}>('filters', {
-  workspaces: [],
-  projects: [],
-  search: '',
-});
-
-const { data, isLoading, isFinished, execute  } = useAxios();
-
-onMounted(() => {
-    execute(route('api.workspaces.index', { filters: filters.value }));
-})
-
-watch(filters, _.throttle(function (value) {
-  execute(route('api.workspaces.index', { filters: value }));
-}), { deep: true })
-
-function toggleFilter(model: any, key: string) {
-  if ( filters.value[key].includes(model.id) ) {
-    filters.value[key] = filters.value[key].filter(id => id !== model.id);
-  } else {
-    filters.value[key] = [...filters.value[key], model.id];
-  }
-}
+const { data, isLoading, isFinished, execute, pagination, filters, toggleFilter } = useFilters('api.workspaces.index');
 </script>
 
 <template>
@@ -57,48 +29,13 @@ function toggleFilter(model: any, key: string) {
       </div>
     </VPageHeader>
 
-    <div class="px-6 flex items-center gap-2 mt-4">
-      <VDropdown>
-        <VDropdownButton>
-          <VButton variant="secondary" class="text-sm">
-            {{ "Filter Project" }}
-          </VButton>
-        </VDropdownButton>
-        <VDropdownItems>
-          <VDropdownItem
-            v-for="project in projects"
-            @click="toggleFilter(project, 'projects')"
-            :key="project.id"
-            :class="{ 'bg-gray-100 dark:bg-gray-800': filters.projects.includes(project.id) }">
-            <span>{{ project.title }}</span>
-          </VDropdownItem>
-        </VDropdownItems>
-      </VDropdown>
-      <VDropdown>
-        <VDropdownButton>
-          <VButton variant="secondary" class="text-sm">{{ "Filter Workspace" }}</VButton>
-        </VDropdownButton>
-        <VDropdownItems>
-          <VDropdownItem
-            v-for="workspace in workspaces"
-            @click="toggleFilter(workspace, 'workspaces')"
-            :key="workspace.id"
-            :class="{
-              'bg-gray-100 dark:bg-gray-800': filters.workspaces.includes(workspace.id),
-            }">
-            <span>{{ workspace.title }}</span>
-          </VDropdownItem>
-        </VDropdownItems>
-      </VDropdown>
-      <VFormInput v-model="filters.search" type="search" placeholder="Search..." />
-    </div>
-
-    <div class="px-6 flex items-center gap-2 mt-4">
-      <VButton variant="secondary" v-for="workspace in filters.workspaces" @click="toggleFilter(workspaces.find(w => w.id === workspace), 'workspaces')">
-        {{ workspaces.find(w => w.id === workspace)?.title }}
-        &times;
-      </VButton>
-    </div>
+    <VFilters
+      :toggleFilter="toggleFilter"
+      :projects="projects"
+      :workspaces="workspaces"
+      :fields="fields"
+      :filters="filters"
+    />
 
     <Transition
       enter-active-class="transition-all duration-75"

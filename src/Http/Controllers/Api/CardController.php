@@ -8,6 +8,8 @@ use Taskday\Models\Project;
 use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
+use Taskday\Base\Filter;
 
 class CardController extends Controller
 {
@@ -29,22 +31,57 @@ class CardController extends Controller
                 });
             })
             ->when($request->has('filters.search'), function ($query) use ($request) {
-                $query->where(function ($query) use ($request) {
-                    $query->orWhereHas('project', function ($project) use ($request) {
-                        $project->whereIn('id', Project::search($request->input('filters.search'))->get()->pluck('id'));
-                        $project->whereHas('workspace', function ($workspace) use ($request) {
-                            $workspace->whereIn('id', Workspace::search($request->input('filters.search'))->get()->pluck('id'));
+
+                $search = $request->input('filters.search');
+
+                $query->where(function ($query) use ($request, &$search) {
+                    $matches = Str::matchAll('/(\w+=\w+)/', $request->input('filters.search'));
+
+                    foreach ($matches as $match) {
+                        if (is_string($match)) {
+                            $search = trim(str_replace($match, "", $search));
+
+                            [$handle, $value] = explode('=', $match);
+
+                            if ($value == 'me') {
+                                $value = Auth::id();
+                            }
+
+                            $query->withFieldFilter(trim($handle), Filter::CONTAINS, trim($value));
+                        }
+                    }
+                });
+
+                if (!empty($search)) {
+                    $query->where(function ($query) use ($request, &$search) {
+
+                        if (Card::search($search)->get()->count() > 0) {
+                            $query->whereIn('id', Card::search($search)->get()->pluck('id'));
+                        }
+
+                        $query->orWhereHas('project', function ($project) use ($search) {
+                            if ( Project::search($search)->get()->count() > 0 ) {
+                                $project->whereIn('id', Project::search($search)->get()->pluck('id'));
+                            }
+                            if ( Workspace::search($search)->get()->count() > 0 ) {
+                                $project->whereHas('workspace', function ($workspace) use ($search) {
+                                    $workspace->whereIn('id', Workspace::search($search)->get()->pluck('id'));
+                                });
+                            }
                         });
                     });
-                });
-            })
-            ->when($request->has('filters.fields'), function ($query) use ($request) {
-                $query->orWhereHas('fields', function ($field) use ($request) {
-                    $field->whereIn('id', $request->input('filters.fields.*'));
-                });
+                }
+            })->when($request->has('filters.fields'), function ($query) use ($request) {
+                foreach($request->input('filters.fields.*') as $filter) {
+                    $query->whereHas('project', function ($query) use ($filter) {
+                        $query->whereHas('fields', function ($field) use ($filter) {
+                            $field->whereIn('id', [$filter]);
+                        });
+                    });
+                }
             });
 
-        return response()->json($cards->paginate(request('per_page', 10)));
+        return response()->json($cards->paginate(request('per_page', 20)));
     }
 
     public function show(Request $request, Card $card)
@@ -57,7 +94,7 @@ class CardController extends Controller
 
         $card->load('fields', 'project.workspace', 'project.fields', 'comments.creator');
 
-        return response()->json( $card );
+        return response()->json($card);
     }
 
     public function update(Request $request, Card $card)
@@ -72,7 +109,7 @@ class CardController extends Controller
 
         $card->update($data);
 
-        return response()->json( $card );
+        return response()->json($card);
     }
 
     /**

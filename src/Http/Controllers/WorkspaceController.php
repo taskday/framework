@@ -6,6 +6,7 @@ use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Taskday\Models\Field;
 use Taskday\Models\Project;
 use Taskday\Models\User;
 use Taskday\Support\Page\Breadcrumb;
@@ -25,6 +26,9 @@ class WorkspaceController extends Controller
                 new Breadcrumb('Dashboard', route('dashboard')),
                 new Breadcrumb('Workspaces', route('workspaces.index')),
             ],
+            'fields' => Field::query()
+                ->orderBy('title')
+                ->get(),
             'workspaces' => Workspace::query()
                 ->select(['id', 'title'])
                 ->orderBy('title')

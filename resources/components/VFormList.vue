@@ -1,7 +1,7 @@
 <template>
   <div>
     <Listbox v-model="selectedPerson">
-      <div class="relative mt-1" ref="button">
+      <div class="relative" ref="button">
         <ListboxButton
           class="flex text-sm items-center pr-12 bg-gray-50 dark:bg-gray-600 hover:text-blue-600 dark:hover:text-blue-200 h-8 px-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
         >

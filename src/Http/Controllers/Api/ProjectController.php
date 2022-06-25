@@ -23,7 +23,7 @@ class ProjectController extends Controller
             ->when($request->has('filters.projects'), function ($query) use ($request) {
                 $query->whereIn('id', $request->input('filters.projects.*'));
             })
-            ->when($request->has('filters.search'), function ($query) use ($request) {
+            ->when($request->has('filters.search') && !empty($request->input('filters.search')), function ($query) use ($request) {
                 $query->where(function ($query) use ($request) {
                     $query->orWhereHas('workspace', function ($projects) use ($request) {
                         $projects->whereIn('id', Workspace::search($request->input('filters.search'))->get()->pluck('id'));

@@ -23,49 +23,6 @@ class CardController extends Controller
      */
     public function index(Request $request)
     {
-        $cards = Card::whereHas('project', function ($query) {
-                $query->sharedWithCurrentUser();
-            })
-            ->with(['project.workspace', 'comments.creator', 'fields']);
-
-        if ($request->has('sort')) {
-            $cards->withFieldSorting($request->get('sort'));
-        }
-
-        foreach ($request->get('filters', []) as $handle => $filter) {
-            if (!array_key_exists('value', $filter) || !array_key_exists('operator', $filter)) {
-                continue;
-            }
-
-            $operator = match($filter['operator']) {
-                'contains' => Filter::CONTAINS,
-                'is_equal' => Filter::IS_EQUAL,
-                'no_equal' => Filter::IS_NOT_EQUAL,
-                'greater_than' => Filter::IS_GREATER_THAN,
-                'less_than' => Filter::IS_LESS_THAN,
-                'not_contains' => Filter::NOT_CONTAINS,
-                default => Filter::IS_EQUAL,
-            };
-
-            if (array_key_exists('type', $filter) && $filter['type'] === 'builtin') {
-                if ($handle == 'project') {
-                    $cards->whereHas('project', function ($query) use ($operator, $filter) {
-                        $query->where('id', $operator, $filter['value'] ?? '');
-                    });
-                }
-
-                if ($handle == 'workspace') {
-                    $cards->whereHas('project', function ($query) use ($operator, $filter) {
-                        $query->whereHas('workspace', function ($query) use ($operator, $filter) {
-                            $query->where('id', $operator, $filter['value'] ?? '');
-                        });
-                    });
-                }
-            } else {
-                $cards->withFieldFilter($handle, $operator, $filter['value'] ?? '');
-            }
-        }
-
         return Inertia::render('Cards/Index', [
             'title' => 'Cards',
             'breadcrumbs' => [

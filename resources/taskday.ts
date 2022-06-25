@@ -1,5 +1,6 @@
 import VAvatar from "@/components/VAvatar.vue";
 import VBreadcrumb from "@/components/VBreadcrumb.vue";
+import VBreadcrumbs from "@/components/VBreadcrumbs.vue";
 import VBreadcrumbItem from "@/components/VBreadcrumbItem.vue";
 import VButton from "@/components/VButton.vue";
 import VCard from "@/components/VCard.vue";
@@ -133,6 +134,7 @@ export {
   useSorter,
   useCardForm,
   VAvatar,
+  VBreadcrumbs,
   VBreadcrumb,
   VBreadcrumbItem,
   VButton,
