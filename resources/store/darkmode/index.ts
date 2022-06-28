@@ -1,20 +1,20 @@
 export default {
   namespaced: true,
   state: () => {
-    if (parseInt(localStorage.getItem('dark') ?? '') === 1) {
+    if ((localStorage.getItem('dark') ?? '') === 'true') {
       document.querySelector('html')?.classList.add('dark');
     } else {
       document.querySelector('html')?.classList.remove('dark');
     }
 
     return {
-      enabled: parseInt(localStorage.getItem('dark') ?? '') === 1,
+      enabled: (localStorage.getItem('dark') ?? '') === 'true',
     }
   },
   mutations: {
     toggle(state: any) {
       state.enabled = !state.enabled;
-      localStorage.setItem('dark', state.enabled ? '1' : '0');
+      localStorage.setItem('dark', state.enabled ? 'true' : 'false');
       document.querySelector('html')?.classList.toggle('dark');
     }
   },

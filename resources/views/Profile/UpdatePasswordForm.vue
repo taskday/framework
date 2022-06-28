@@ -30,6 +30,7 @@
           v-model="form.password"
           ref="password"
           autocomplete="new-password"
+          :errors="form.errors.password"
         />
       </div>
 
@@ -41,16 +42,18 @@
           class="mt-1 block w-full"
           v-model="form.password_confirmation"
           autocomplete="new-password"
+          :errors="form.errors.password_confirmation"
         />
       </div>
     </template>
 
     <template #actions>
-      <span :on="form.recentlySuccessful" class="mr-3">
+      <span v-show="form.recentlySuccessful" class="mr-3">
         Saved.
       </span>
 
       <VButton
+        type="submit"
         :class="{ 'opacity-25': form.processing }"
         :disabled="form.processing"
       >

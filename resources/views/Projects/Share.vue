@@ -27,7 +27,7 @@
         </div>
       </div>
     </VPageHeader>
-    <div class="h-full py-6" :key="currentView">
+    <div :key="currentView">
       <component :is="currentView.component" :project="project"></component>
     </div>
   </div>

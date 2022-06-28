@@ -1,18 +1,10 @@
 <template>
   <VFormSection>
-    <template #title> Active Notifications </template>
+    <template #title> Push Notifications </template>
 
-    <template #description> Here you can enable notifications for common events.</template>
+    <template #description> Here you can enable push notifications.</template>
 
     <template #content>
-      <h3 class="text-lg font-medium" v-if="isPushEnabled">
-        You have enabled push notifications.
-      </h3>
-
-      <h3 class="text-lg font-medium" v-else>
-        You have not enabled push notifications.
-      </h3>
-
       <div class="mt-3 max-w-xl text-sm" v-if="!serviceWrokerActive">
         Something is wrong with your current browser so this feature is not available.
       </div>

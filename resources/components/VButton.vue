@@ -36,30 +36,9 @@ export default defineComponent({
     },
     classes(): object {
       return {
-        "h-8 px-3 text-sm bg-blue-600 dark:bg-blue-500 font-medium tracking-wide text-gray-100 dark:text-gray-100":
-          this.variant === "primary",
-        "h-8 px-3 flex text-sm items-center bg-gray-50 dark:bg-gray-600 rounded-lg":
-          this.variant === "secondary",
-        "h-8 px-3 text-sm bg-red-600 dark:bg-red-800 text-red-100 dark:text-red-100":
-          this.variant === "danger",
-
-        "hover:bg-blue-500 dark:hover:bg-blue-500": this.variant === "primary",
-        "hover:text-blue-600 dark:hover:text-blue-200 hover:bg-gray-100 dark:hover:bg-gray-700":
-          this.variant === "secondary",
-        "hover:bg-red-500 dark:hover:bg-red-700":
-          this.variant === "danger",
-
-        "focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-500":
-          this.variant === "primary",
-        "focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-500 dark:focus:ring-gray-600 dark:focus:ring-offset-gray-400":
-          this.variant === "secondary",
-        "focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-red-500":
-          this.variant === "danger",
-
-        "disabled:opacity-50": this.disabled,
-
-        "rounded-md": this.rounded != "full",
-        "rounded-full": this.rounded == "full",
+        [`button button-primary`]: this.variant === "primary",
+        [`button button-secondary`]: this.variant === "secondary",
+        [`button button-danger`]: this.variant === "danger",
       };
     },
   },

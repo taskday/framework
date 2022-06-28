@@ -1,10 +1,10 @@
 <template>
   <div>
-    <div class="bg-white dark:bg-slate-900 relative pointer-events-auto">
+    <div class="relative pointer-events-auto">
       <button
         type="button"
         @click="open"
-        class="w-full flex items-center text-sm leading-6 text-gray-400 rounded-md ring-1 ring-gray-900/10 shadow-sm py-1 pl-2 pr-3 hover:ring-gray-200 dark:hover:ring-gray-600 dark:bg-gray-700 dark:highlight-white/5">
+        class="flex items-center w-full input">
         <svg width="24" height="24" fill="none" aria-hidden="true" class="mr-3 flex-none hidden sm:block">
           <path
             d="m19 19-3.5-3.5"
@@ -19,8 +19,9 @@
             stroke="currentColor"
             stroke-width="2"
             stroke-linecap="round"
-            stroke-linejoin="round"></circle></svg
-        >Quick search...<span class="ml-auto pl-3 flex-none text-xs font-semibold">⌘K</span>
+            stroke-linejoin="round"></circle>
+        </svg>
+        Quick search...<span class="ml-auto pl-3 flex-none text-xs font-semibold">⌘K</span>
       </button>
     </div>
     <teleport to="body">

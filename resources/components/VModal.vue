@@ -17,7 +17,7 @@
                 leave-from="opacity-100"
                 leave-to="opacity-0"
               >
-                <DialogOverlay @click="closeModal" class="bg-opacity-20 fixed inset-0 bg-black" />
+                <DialogOverlay @click="closeModal" class="bg-opacity-20 fixed inset-0 bg-gray-500/[.50]" />
               </TransitionChild>
               <span class="inline-block h-screen align-middle" aria-hidden="true">&#8203;</span>
               <TransitionChild
@@ -29,18 +29,20 @@
                 leave-from="opacity-100 scale-100"
                 leave-to="opacity-0 scale-95"
               >
-                <div
-                  class="dark:bg-gray-800 inline-block w-full max-w-xl mt-20 overflow-hidden text-left align-top transition-all transform bg-white rounded-md shadow-xl"
-                >
-                  <DialogTitle
-                    v-if="title"
-                    as="h3"
-                    class="dark:text-gray-300 px-4 pt-4 mb-2 text-lg font-medium leading-6 text-gray-900"
-                  >{{ title }}</DialogTitle>
-                  <div class="dark:text-gray-300">
-                    <slot name="content" :openModal="openModal" :closeModal="closeModal"></slot>
+                  <div
+                    class="inline-block w-full max-w-xl mt-20 overflow-hidden text-left align-top transition-all transform"
+                  >
+                <VCard>
+                    <DialogTitle
+                      v-if="title"
+                      as="h3"
+                      class="px-4 pt-4 mb-2 text-lg font-medium leading-6 "
+                    >{{ title }}</DialogTitle>
+                    <div class="dark:text-gray-300">
+                      <slot name="content" :openModal="openModal" :closeModal="closeModal"></slot>
+                    </div>
+                </VCard>
                   </div>
-                </div>
               </TransitionChild>
             </div>
           </div>

@@ -3,13 +3,14 @@
     <Listbox v-model="selectedPerson">
       <div class="relative" ref="button">
         <ListboxButton
-          class="flex text-sm items-center pr-12 bg-gray-50 dark:bg-gray-600 hover:text-blue-600 dark:hover:text-blue-200 h-8 px-3 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg"
+          class="button button-secondary relative pr-10"
         >
-          <slot name="trigger" :item="selectedPerson"></slot>
+          <slot :item="{ title: selectedPerson?.title ?? selectedPerson?.name ?? 'Select...' }"></slot>
+          <slot name="trigger" :item="{ title: selectedPerson?.title ?? selectedPerson?.name ?? 'Select...' }"></slot>
           <span
             class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2"
           >
-            <SelectorIcon class="h-5 w-5 text-gray-400 dark:txet-gray-700" aria-hidden="true" />
+            <SelectorIcon class="h-5 w-5" aria-hidden="true" />
           </span>
         </ListboxButton>
 
@@ -21,7 +22,7 @@
               leave-to-class="opacity-0"
             >
               <ListboxOptions
-                class="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white dark:bg-gray-700 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
+                class="mt-1 max-h-60 w-full overflow-auto rounded-md background-200 py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm"
               >
                 <ListboxOption
                   v-slot="{ active, selected }"
@@ -32,7 +33,8 @@
                 >
                   <li
                     :class="[
-                      active ? 'bg-blue-100 dark:bg-blue-400 text-blue-600 dark:text-blue-400 dark:bg-opacity-20' : 'text-gray-900 dark:text-gray-300',
+                      active ? 'background-100' : '',
+                      selected && !active ? 'background-200' : '',
                       'relative cursor-default select-none py-2 pl-10 pr-4',
                     ]"
                   >
@@ -88,7 +90,7 @@ watch(() => selectedPerson.value, () => {
 onMounted(() => {
   if (button.value != null && panel.value != null) {
     popper.value = createPopper(button.value, panel.value, {
-      placement: "bottom-end"
+      placement: "bottom-start"
     });
   } else {
     setTimeout(() => {

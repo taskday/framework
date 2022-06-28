@@ -1,5 +1,15 @@
 <template>
-  <div class="flex flex-col text-gray-900 bg-white px-4 py-3 rounded-md shadow-md dark:bg-gray-800 dark:text-gray-200 dark:border dark:border-gray-700">
-    <slot></slot>
+  <div class="rounded-lg shadow overflow-hidden background-300">
+    <div v-if="$slots.header">
+      <slot name="header"></slot>
+    </div>
+    <div class="px-4 py-5 sm:p-6">
+      <slot></slot>
+    </div>
+    <div v-if="$slots.footer">
+      <div class="px-4 py-3 sm:px-6">
+        <slot name="footer"></slot>
+      </div>
+    </div>
   </div>
 </template>

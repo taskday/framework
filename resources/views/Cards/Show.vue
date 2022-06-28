@@ -1,35 +1,24 @@
 <template>
-  <div class="h-full">
-    <VPageHeader class="shadow-none px-6">
-      <VBreadcrumb>
-        <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
-          {{ breadcrumb.title }}
-        </VBreadcrumbItem>
-      </VBreadcrumb>
-      <div class="flex items-end justify-between">
-        <div class="flex items-start">
-          <VFormEdit v-model="state.title">
-            <VPageTitle>{{ state.title }}</VPageTitle>
-          </VFormEdit>
-        </div>
-        <div class="flex-col md:flex-row flex items-center gap-2">
-          <VRoom :name="`App.Models.Card.${card.id}`"></VRoom>
-          <div class="text-gray-700 dark:gray-400" v-show="state.recentlySuccessful">Saved.</div>
-          <VButton
-            variant="primary"
-            v-if="state.isDirty || !state.processing" @click.prevent="() => update(card)"
-          >
-            Save
-          </VButton>
-          <VConfirm class="w-full" title="Are you sure?" :onConfirm="submit">
-            <VButton variant="danger" class="w-full">Delete</VButton>
-          </VConfirm>
-        </div>
-      </div>
-    </VPageHeader>
+  <VPageHeader>
+    <template #title>
+      <VFormEdit v-model="state.title">
+        <VPageTitle>{{ state.title }}</VPageTitle>
+      </VFormEdit>
+    </template>
+    <div class="text-gray-700 dark:gray-400" v-show="state.recentlySuccessful">Saved.</div>
+    <VButton variant="primary" v-if="state.isDirty || !state.processing" @click.prevent="() => update(card)">
+      Save
+    </VButton>
+    <VConfirm class="w-full" title="Are you sure?" :onConfirm="submit">
+      <VButton variant="danger" class="w-full">Delete</VButton>
+    </VConfirm>
+  </VPageHeader>
 
+  <VRoom :name="`App.Models.Card.${card.id}`"></VRoom>
+
+  <div class="h-full px-6">
     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,56rem),1fr] gap-8">
-      <div class="w-full p-6 space-y-8 order-1 lg:order-none">
+      <div class="w-full space-y-8 order-1 lg:order-none">
         <div class="w-full order-1 md:order-none">
           <VCard>
             <VFormHtmlEditor v-model="state.content" />
@@ -43,15 +32,13 @@
         </form>
         <VCommentList :comments="card.comments" />
       </div>
-      <div class="space-y-8 p-6">
-        <div class="flex items-center space-x-2" v-for="field in card.project.fields" :key="field.id">
-          <h4 class="font-semibold">{{ field.title }}:</h4>
+      <div class="flex flex-col gap-8">
+        <div class="flex items-center gap-2" v-for="field in card.project.fields" :key="field.id">
+          <h4 class="font-semibold w-24">{{ field.title }}:</h4>
           <VFieldWrapper :card="card" :field="field"></VFieldWrapper>
         </div>
       </div>
     </div>
-
-
   </div>
 </template>
 

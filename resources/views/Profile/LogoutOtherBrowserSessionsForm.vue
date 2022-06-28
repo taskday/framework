@@ -82,13 +82,13 @@
           Logout Other Browser Sessions
         </VButton>
 
-        <span :on="form.recentlySuccessful" class="ml-3">
+        <span v-show="form.recentlySuccessful" class="ml-3">
           Done.
         </span>
       </div>
 
       <!-- Logout Other Devices Confirmation Modal -->
-      <VModal :show="confirmingLogout" @close="closeModal">
+      <VModal :isOpen="confirmingLogout" @close="closeModal">
         <template #title>
           Logout Other Browser Sessions
         </template>
@@ -98,7 +98,7 @@
           other browser sessions across all of your devices.
 
           <div class="mt-4">
-            <VButton
+            <VFormInput
               type="password"
               class="mt-1 block w-3/4"
               placeholder="Password"
@@ -116,6 +116,7 @@
           </VButton>
 
           <VButton
+            type="button"
             class="ml-2"
             @click="logoutOtherBrowserSessions"
             :class="{ 'opacity-25': form.processing }"
@@ -149,15 +150,12 @@ export default defineComponent({
   methods: {
     confirmLogout() {
       this.confirmingLogout = true;
-
-      setTimeout(() => this.$refs.password.focus(), 250);
     },
 
     logoutOtherBrowserSessions() {
       this.form.delete(route("other-browser-sessions.destroy"), {
         preserveScroll: true,
         onSuccess: () => this.closeModal(),
-        onError: () => this.$refs.password.focus(),
         onFinish: () => this.form.reset(),
       });
     },

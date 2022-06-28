@@ -71,9 +71,7 @@ class HandleInertiaRequests extends Middleware
             'global' => Auth::check() ? [
                 'workspaces' => Workspace::sharedWithCurrentUser()->get(),
                 'notifications' => Auth::user()->unreadNotifications,
-                'users' => Auth::user()->currentTeam ? Auth::user()->currentTeam->allUsers()->transform(function ($user) {
-                    return UserResource::make($user);
-                }) : [],
+                'users' => \App\Models\User::all(),
             ] : [],
             'flash' => function () use ($request) {
                 return $request->session()->get('flash');

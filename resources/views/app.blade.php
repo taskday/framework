@@ -36,7 +36,7 @@
     @tag('vendor/taskday/framework/resources/main.ts')
 </head>
 
-<body class="font-sans antialiased text-black bg-gray-100 dark:bg-gray-900 dark:text-gray-100">
+<body class="font-sans antialiased background-500">
     @inertia
 </body>
 

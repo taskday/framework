@@ -1,6 +1,6 @@
 <template>
-  <MenuButton data-dropdown-button>
-    <slot></slot>
+  <MenuButton data-dropdown-button class="button button-secondary">
+      <slot></slot>
   </MenuButton>
 </template>
 

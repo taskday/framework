@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import moment from "moment";
-import { PlusIcon } from "@heroicons/vue/outline";
-import useFilters from '@/composables/useFilters';
+import useFilters from "@/composables/useFilters";
+import ProjectPreview from "@/views/Projects/Partials/ProjectPreview.vue";
 
 const props = defineProps<{
   title: string;
@@ -11,86 +11,93 @@ const props = defineProps<{
   fields: Field[];
 }>();
 
-const { data, isLoading, isFinished, execute, pagination, filters, toggleFilter } = useFilters('api.workspaces.index');
+const { data, isLoading, isFinished, execute, pagination, filters, toggleFilter } = useFilters("api.workspaces.index");
 </script>
 
 <template>
-  <div>
+
     <VPageHeader>
-      <VBreadcrumbs :items="breadcrumbs" />
-      <div class="flex items-center justify-between">
-        <VPageTitle>{{ title }}</VPageTitle>
-        <div class="flex items-center gap-2">
-          <VButton :href="route('workspaces.create')">
-            <PlusIcon class="h-5 w-5" />
-            <span class="ml-2">New Workspace</span>
-          </VButton>
-        </div>
-      </div>
+      <VPopover class="relative">
+        <template #button>Projects</template>
+        <template #content>
+          <div
+            class="px-4 py-1.5 background-200"
+            v-for="project in projects"
+            @click="toggleFilter(project, 'projects')"
+          >
+            <VFormCheckbox label="" :modelValue="filters.projects.includes(project.id)">
+              {{ project.title }}
+            </VFormCheckbox>
+          </div>
+        </template>
+      </VPopover>
+      <VPopover class="relative">
+        <template #button>Workspaces</template>
+        <template #content>
+          <div
+            class="px-4 py-1.5 background-200"
+            v-for="workspace in workspaces"
+            @click="toggleFilter(workspace, 'workspaces')"
+          >
+            <VFormCheckbox label="" :modelValue="filters.workspaces.includes(workspace.id)">
+              {{ workspace.title }}
+            </VFormCheckbox>
+          </div>
+        </template>
+      </VPopover>
+      <VPopover class="relative">
+        <template #button>Fields</template>
+        <template #content>
+          <div
+            class="px-4 py-1.5 background-200"
+            v-for="field in fields"
+            @click="toggleFilter(field, 'fields')"
+          >
+            <VFormCheckbox label="" :modelValue="filters.fields.includes(field.id)">
+              {{ field.title }}
+            </VFormCheckbox>
+          </div>
+        </template>
+      </VPopover>
     </VPageHeader>
+    <div class="px-6 flex items-center mt-8 gap-3">
+      <div>
+        <VFormInput v-model="filters.search" type="search" placeholder="Search..."></VFormInput>
+      </div>
+      <VButton variant="secondary" v-for="workspace in filters.workspaces" @click="toggleFilter(workspaces.find(w => w.id === workspace), 'workspaces')">
+        <span>&times;</span>
+        <span>{{ workspaces.find(w => w.id === workspace)?.title }}</span>
+      </VButton>
+      <VButton variant="secondary" v-for="project in filters.projects" @click="toggleFilter(projects.find(w => w.id === project), 'projects')">
+        <span>&times;</span>
+        <span>{{ projects.find(w => w.id === project)?.title }}</span>
+      </VButton>
+      <VButton v-for="field in filters.fields" variant="secondary" @click="toggleFilter(fields.find(w => w.id === field), 'fields')">
+        <span>&times;</span>
+        <span>{{ fields.find(w => w.id === field)?.title }}</span>
+      </VButton>
+    </div>
+    <span class="text-sm block px-6 mt-2 text-gray-600 dark:text-gray-400">
+      <span v-if="isLoading">Loading...</span>
+      <span v-else>Showing {{ data?.data?.length }} results of {{ data?.total }}</span>
+    </span>
 
-    <VFilters
-      :toggleFilter="toggleFilter"
-      :projects="projects"
-      :workspaces="workspaces"
-      :fields="fields"
-      :filters="filters"
-    />
 
-    <Transition
-      enter-active-class="transition-all duration-75"
-      enter-from-class="opacity-0"
-      enter-to-class="opacity-100"
-      leave-active-class="transition-all duration-150"
-      leave-from-class="opacity-100"
-      leave-to-class="opacity-0"
-    >
-      <div class="py-16 grid grid-cols-1 gap-16">
-        <div v-for="workspace in data" class="flex flex-col">
-          <Link :href="route('workspaces.show', workspace)" class="text-xl font-extrabold sticky hover:underline px-6">
+  <div class="grid grid-cols-1 gap-10 mt-8">
+    <VCarousel v-for="workspace in data">
+      <template #title>
+        <VPageTitle>
+          <Link :href="route('workspaces.show', workspace)" class="px-6">
             {{ workspace.title }}
           </Link>
-          <div class="relative">
-            <div class="overflow-hidden">
-              <div class="overflow-x-auto snap-x snap-mandatory relative">
-                <div class="w-full inline-flex align-top py-8">
-                  <div class="snap-start last:pr-12 last:mr-12 shrink-0" v-for="project in workspace.projects">
-                    <VCard class="my-1 w-96 flex shrink-0 ml-6 last:mr-6">
-                      <div class="flex flex-col items-start justify-between w-full gap-4 overflow-wrap">
-                        <div>
-                          <Link class="text-base" :href="route('projects.show', project)">
-                            {{ project.title }}
-                          </Link>
-                          <div v-if="project.description" class="text-sm text-gray-800">
-                            {{ project.description }}
-                          </div>
-                        </div>
-                        <div v-if="project.comments.length > 0" v-for="comment in project.comments" style="overflow-wrap: anywhere;">
-                          <div class="flex gap-2 items-start flex-shrink-0">
-                            <VAvatar :user="comment.creator"/>
-                            <div>
-                              <p>
-                                <span class="inline-flex gap-2">
-                                  commented on
-                                </span> "<Link class="underline" style="overflow-wrap: anywhere;" :href="route('cards.show', comment.commentable)">{{ comment.commentable.title }}</Link>"
-                              </p>
-                              <div class="prose mt-2 line-clamp-2" v-html="comment.body"></div>
-                            </div>
-                          </div>
-                        </div>
-                        <span class="text-sm text-gray-600 dark:text-gray-400">
-                          updated {{ moment(project.updated_at).fromNow() }}
-                        </span>
-                      </div>
-                    </VCard>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+        </VPageTitle>
+      </template>
+      <div class="flex shrink-0 h-full gap-6 px-6" v-for="project in workspace.projects">
+        <ProjectPreview
+          class="my-1 w-96 flex shrink-0"
+          :project="project"
+          />
       </div>
-    </Transition>
-
+    </VCarousel>
   </div>
 </template>

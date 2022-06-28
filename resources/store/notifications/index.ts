@@ -31,9 +31,11 @@ export default {
      * @param {Number} limit
      */
     fetch(state, limit = 20) {
+      console.log('Fetching notifications...');
       axios
         .get("/api/notifications", { params: { limit } })
         .then(({ data: { total, notifications } }) => {
+          console.log(notifications);
           state.commit('setTotal', total);
           state.commit(
             "setNotifications",

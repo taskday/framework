@@ -91,16 +91,17 @@
     </template>
 
     <template #actions>
-      <span :on="form.recentlySuccessful" class="mr-3">
-        Saved.
-      </span>
-
       <VButton
+        type="submit"
         :class="{ 'opacity-25': form.processing }"
         :disabled="form.processing"
       >
         Save
       </VButton>
+
+      <span v-show="form.recentlySuccessful" class="mr-3">
+        Done.
+      </span>
     </template>
   </VFormSection>
 </template>
@@ -127,7 +128,7 @@ export default defineComponent({
 
   methods: {
     updateProfileInformation() {
-      if (this.$refs.photo) {
+      if (this.$refs.photo && this.$refs.photo.files && this.$refs.photo.files.length > 0) {
         this.form.photo = this.$refs.photo.files[0];
       }
 //@ts-ignore

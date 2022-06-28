@@ -1,5 +1,31 @@
+<script setup lang="ts">
+import { PropType } from 'vue';
+
+defineProps({
+  title: [String],
+  features: {
+    type: Array as PropType<{ title: string, icon: string }[]>,
+    default: []
+  }
+})
+</script>
+
 <template>
-  <div class="py-3 px-6 bg-white dark:bg-gray-800 shadow relative">
-    <slot/>
-  </div>
+  <header>
+    <VContainer class="flex flex-col gap-4 xl:flex-row xl:items-center xl:justify-between">
+      <div class="flex-1 min-w-0">
+        <h1 v-if="!$slots.title" class="text-2xl font-bold leading-7 sm:text-3xl sm:truncate">{{ $page.props.title ?? title }}</h1>
+        <slot name="title"></slot>
+        <div v-if="features.length > 0" class="mt-1 flex flex-col sm:flex-row sm:flex-wrap sm:mt-0 sm:space-x-8">
+          <div v-for="feature in features" class="mt-2 flex items-center text-sm text-gray-500 dark:text-gray-300">
+            <VIcon :name="feature.icon"></VIcon>
+            <span>{{ feature.title }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex xl:mt-0 xl:ml-4 gap-3">
+        <slot></slot>
+      </div>
+    </VContainer>
+  </header>
 </template>

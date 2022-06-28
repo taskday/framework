@@ -7,8 +7,8 @@
           <strong>{{ notification.title }}</strong>.
           <Link v-if="notification.url" class="hover:underline transition text-blue-600 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-200 " :href="notification.url ?? '#'">{{ notification.body }}</Link>
           <span v-else>{{ notification.body }}</span>
-          <small> {{ moment(notification.created).from(moment(), true) }}</small>
         </p>
+        <span> {{ moment(notification.created).from(moment(), true) }}</span>
         <div class="flex items-center text-sm gap-2 mt-2">
           <button
             class="hover:underline flex items-center text-sm text-left transition text-blue-600 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-200"

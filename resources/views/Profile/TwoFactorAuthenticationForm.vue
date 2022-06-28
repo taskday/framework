@@ -9,14 +9,6 @@
     </template>
 
     <template #content>
-      <h3 class="text-lg font-medium" v-if="twoFactorEnabled">
-        You have enabled two factor authentication.
-      </h3>
-
-      <h3 class="text-lg font-medium" v-else>
-        You have not enabled two factor authentication.
-      </h3>
-
       <div class="mt-3 max-w-xl text-sm">
         <p>
           When two factor authentication is enabled, you will be prompted for a

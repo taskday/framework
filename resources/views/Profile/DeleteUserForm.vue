@@ -22,7 +22,7 @@
       </div>
 
       <!-- Delete Account Confirmation Modal -->
-      <VModal :show="confirmingUserDeletion" @close="closeModal">
+      <VModal :isOpen="confirmingUserDeletion" @close="closeModal">
         <template #title>
           Delete Account
         </template>
