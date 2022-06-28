@@ -18,7 +18,7 @@ const { data, isLoading, isFinished, execute, pagination, filters, toggleFilter 
 
     <VPageHeader>
       <VPopover class="relative">
-        <template #button>Projects</template>
+        <VPopoverButton>Projects</VPopoverButton>
         <template #content>
           <div
             class="px-4 py-1.5 background-200"
@@ -32,7 +32,7 @@ const { data, isLoading, isFinished, execute, pagination, filters, toggleFilter 
         </template>
       </VPopover>
       <VPopover class="relative">
-        <template #button>Workspaces</template>
+        <VPopoverButton>Workspaces</VPopoverButton>
         <template #content>
           <div
             class="px-4 py-1.5 background-200"
@@ -46,7 +46,7 @@ const { data, isLoading, isFinished, execute, pagination, filters, toggleFilter 
         </template>
       </VPopover>
       <VPopover class="relative">
-        <template #button>Fields</template>
+        <VPopoverButton>Fields</VPopoverButton>
         <template #content>
           <div
             class="px-4 py-1.5 background-200"

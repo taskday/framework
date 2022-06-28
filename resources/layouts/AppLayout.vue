@@ -106,8 +106,8 @@
         </div>
 
         <div class="hidden lg:ml-4 lg:flex lg:items-center">
-          <VDropdown>
-            <VDropdownButton class="rounded-full w-8 h-8 relative">
+          <VPopover>
+            <VPopoverButton class="rounded-full h-8 w-8">
               <div class="flex items-center w-6 h-6 justify-center">
                 <div class="relative">
                   <VIcon name="bell"></VIcon>
@@ -116,18 +116,18 @@
                     class="rounded-full bg-red-500 text-white font-semibold flex items-center justify-center h-2 w-2 absolute top-0 right-0"></span>
                 </div>
               </div>
-            </VDropdownButton>
-            <VDropdownItems class="w-[400px]">
-              <VDropdownItem v-for="notification in $store.state.notifications.notifications">
+            </VPopoverButton>
+            <template #content>
+              <div v-for="notification in $store.state.notifications.notifications">
                 <VNotification :notification="notification" />
-              </VDropdownItem>
-              <VDropdownItem v-if="$store.state.notifications.notifications.length == 0">
+              </div>
+              <div v-if="$store.state.notifications.notifications.length == 0">
                 <div class="text-center w-full">
                   <span class="text-sm">No new notifications.</span>
                 </div>
-              </VDropdownItem>
-            </VDropdownItems>
-          </VDropdown>
+              </div>
+            </template>
+          </VPopover>
 
           <!-- Profile dropdown -->
           <VDropdown class="ml-4 relative flex-shrink-0">
@@ -140,7 +140,7 @@
 
 
             <VDropdownItems>
-              <VDropdownItem >
+              <VDropdownItem>
                 <Link class="flex w-full" :href="route('profile.show')">Your Profile</Link>
               </VDropdownItem>
 

@@ -1,15 +1,9 @@
 <template>
-  <Popover v-slot="{ open }">
+  <PopoverButton class="button button-secondary">
     <slot></slot>
-
-    <VPopoverPanel>
-      <slot name="content"></slot>
-    </VPopoverPanel>
-  </Popover>
+  </PopoverButton>
 </template>
 
 <script setup lang="ts">
   import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-
-
 </script>
