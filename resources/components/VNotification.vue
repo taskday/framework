@@ -4,7 +4,7 @@
       <VAvatar :user="notification.user" class="mt-2"/>
       <div class="flex flex-col">
         <p>
-          <strong>{{ notification.title }}</strong>.
+          <span>{{ notification.title }}</span>:
           <Link v-if="notification.url" class="hover:underline transition text-blue-600 dark:text-blue-300 hover:text-blue-500 dark:hover:text-blue-200 " :href="notification.url ?? '#'">{{ notification.body }}</Link>
           <span v-else>{{ notification.body }}</span>
         </p>

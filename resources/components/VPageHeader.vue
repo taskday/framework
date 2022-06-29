@@ -23,7 +23,7 @@ defineProps({
           </div>
         </div>
       </div>
-      <div class="flex xl:mt-0 xl:ml-4 gap-3">
+      <div class="flex flex-wrap xl:mt-0 xl:ml-4 gap-3">
         <slot></slot>
       </div>
     </VContainer>

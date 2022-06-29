@@ -29,7 +29,7 @@ watch(() => share.value, () => {
 
 <template>
   <div>
-    <div class="flex flex-col xl:flex-row items-center justify-between gap-4 px-6 mb-4">
+    <div class="flex flex-col items-start xl:flex-row xl:items-center xl:justify-between gap-4 px-6 mb-4">
       <div>
         <slot name="title"></slot>
       </div>

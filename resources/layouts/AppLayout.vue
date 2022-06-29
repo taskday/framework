@@ -86,18 +86,10 @@
                       <div class="text-base font-medium text-gray-800 dark:text-gray-200">{{ $page.props.user.name }}</div>
                       <div class="text-sm font-medium text-gray-500">{{ $page.props.user.email }}</div>
                     </div>
-                    <button type="button" class="ml-auto flex-shrink-0 bg-white p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                      <span class="sr-only">View notifications</span>
-                      <!-- Heroicon name: outline/bell -->
-                      <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" aria-hidden="true">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                      </svg>
-                    </button>
                   </div>
                   <div class="mt-3 px-2 space-y-1">
-                    <a href="#" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200">Your Profile</a>
-                    <a href="#" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200">Settings</a>
-                    <a href="#" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200">Sign out</a>
+                    <Link :onFinish="() => $store.commit('sidebar/close')"  :href="route('profile.show')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200">Your Profile</Link>
+                    <Link :onFinish="() => $store.commit('sidebar/close')" as="button"  method="post" :href="route('logout')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200">Sign out</Link>
                   </div>
                 </div>
               </div>
@@ -118,12 +110,14 @@
               </div>
             </VPopoverButton>
             <template #content>
-              <div v-for="notification in $store.state.notifications.notifications">
-                <VNotification :notification="notification" />
-              </div>
-              <div v-if="$store.state.notifications.notifications.length == 0">
-                <div class="text-center w-full">
-                  <span class="text-sm">No new notifications.</span>
+              <div class="p-2 overflow-x-hidden divide-y">
+                <div v-for="notification in $store.state.notifications.notifications" class="py-4">
+                  <VNotification :notification="notification"/>
+                </div>
+                <div v-if="$store.state.notifications.notifications.length == 0">
+                  <div class="text-center w-full">
+                    <span class="text-sm">No new notifications.</span>
+                  </div>
                 </div>
               </div>
             </template>

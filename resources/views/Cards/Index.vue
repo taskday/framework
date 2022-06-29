@@ -86,8 +86,8 @@ const fakeProject = computed(() => {
     </VPopover>
   </VPageHeader>
 
-  <div class="px-6 flex items-center mt-8 gap-3">
-    <div>
+  <div class="px-6 flex flex-wrap items-center mt-8 gap-3">
+    <div >
       <VFormInput v-model="filters.search" type="search" placeholder="Search..."></VFormInput>
     </div>
     <VButton variant="secondary" v-for="workspace in filters.workspaces" @click="toggleFilter(workspaces.find(w => w.id === workspace), 'workspaces')">

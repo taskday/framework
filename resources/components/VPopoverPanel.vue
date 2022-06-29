@@ -1,7 +1,7 @@
 <template>
   <div ref="panel">
     <teleport to="body">
-      <div ref="content">
+      <div ref="content" class="z-50">
         <transition
           enter-active-class="transition-transform duration-100 ease-out"
           enter-from-class="transform scale-95 opacity-0"
@@ -26,7 +26,13 @@ import { PopoverPanel } from "@headlessui/vue";
 import { onMounted, ref, watch } from "vue";
 import { createPopper, Instance } from "@popperjs/core";
 
-const props = defineProps({ open: Boolean });
+const props = defineProps({
+  open: Boolean,
+  align: {
+    type: String,
+    default: 'bottom-end'
+  }
+});
 const content = ref(null);
 const panel = ref(null);
 const popper = ref<Instance | null>(null);
@@ -35,7 +41,7 @@ onMounted(() => {
   if (content.value && panel.value && !popper.value) {
     console.log(panel);
     popper.value = createPopper(panel.value, content.value, {
-      placement: "bottom-end",
+      placement: props.align,
     });
   } else {
     setTimeout(() => {
