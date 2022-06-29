@@ -1,6 +1,6 @@
 <template>
-  <div>
+  <main class="py-10">
     <VFlashMessages />
     <slot></slot>
-  </div>
+  </main>
 </template>
