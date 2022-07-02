@@ -14,6 +14,8 @@
             <Link :href="route('workspaces.index')" class="px-3 py-2 text-gray-900 dark:text-gray-200 text-sm font-medium"> Workspaces </Link>
             <Link :href="route('projects.index')" class="px-3 py-2 text-gray-900 dark:text-gray-200 text-sm font-medium"> Projects </Link>
             <Link :href="route('cards.index')" class="px-3 py-2 text-gray-900 dark:text-gray-200 text-sm font-medium"> Cards </Link>
+            <Link :href="route('fields.index')" class="px-3 py-2 text-gray-900 dark:text-gray-200 text-sm font-medium"> Fields </Link>
+
           </nav>
         </div>
         <div class="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
@@ -71,10 +73,11 @@
                     </div>
                   </div>
                   <div class="mt-3 px-2 space-y-1">
-                    <Link :href="route('dashboard')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Dashboard </Link>
-                    <Link :href="route('workspaces.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Workspaces </Link>
-                    <Link :href="route('projects.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Projects </Link>
-                    <Link :href="route('cards.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Cards </Link>
+                    <Link :onFinish="() => $store.commit('sidebar/close')" :href="route('dashboard')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Dashboard </Link>
+                    <Link :onFinish="() => $store.commit('sidebar/close')" :href="route('workspaces.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Workspaces </Link>
+                    <Link :onFinish="() => $store.commit('sidebar/close')" :href="route('projects.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Projects </Link>
+                    <Link :onFinish="() => $store.commit('sidebar/close')" :href="route('cards.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Cards </Link>
+                    <Link :onFinish="() => $store.commit('sidebar/close')" :href="route('fields.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Fields </Link>
                   </div>
                 </div>
                 <div class="pt-4 pb-2">
