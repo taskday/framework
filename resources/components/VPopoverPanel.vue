@@ -8,13 +8,16 @@
           enter-to-class="transform scale-100 opacity-100"
           leave-active-class="transition duration-75 ease-in"
           leave-from-class="transform scale-100 opacity-100"
-          leave-to-class="transform scale-95 opacity-0">
-          <PopoverPanel>
-            <div
-              class="mt-2 min-w-[12rem] max-w-xs rounded-md shadow-lg py-2 background-200 ring-1 ring-black ring-opacity-5 focus:outline-none max-h-[400px] overflow-auto">
-              <slot></slot>
-            </div>
-          </PopoverPanel>
+          leave-to-class="transform scale-95 opacity-0"
+        >
+          <div>
+            <PopoverPanel>
+              <div
+                class="mt-2 min-w-[12rem] max-w-xs rounded-md shadow-lg py-2 background-200 ring-1 ring-black ring-opacity-5 focus:outline-none max-h-[400px] overflow-auto">
+                <slot></slot>
+              </div>
+            </PopoverPanel>
+          </div>
         </transition>
       </div>
     </teleport>
