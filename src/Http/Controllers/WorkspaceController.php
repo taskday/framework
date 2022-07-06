@@ -110,9 +110,8 @@ class WorkspaceController extends Controller
         return Inertia::render('Workspaces/Edit', [
             'title' => 'Settings of ' . $workspace->title,
             'breadcrumbs' => [
-                ['name' =>  'Dashboard',          'href' => route('dashboard')],
-                ['name' =>  $workspace->title,    'href' => route('workspaces.show', $workspace)],
-                ['name' => 'Settings'],
+                new Breadcrumb('Dashboard', route('dashboard')),
+                new Breadcrumb($workspace->title, route('workspaces.show', $workspace)),
             ],
             'workspace' => $workspace->load(['members', 'projects']),
             'users' => Auth::user()->whereNotIn('id', $workspace->members->pluck('id'))->get()

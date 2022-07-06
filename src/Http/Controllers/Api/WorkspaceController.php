@@ -37,7 +37,7 @@ class WorkspaceController extends Controller
             })
             ->orderBy('title');
 
-        return response()->json($workspaces->get());
+        return response()->json($workspaces->paginate(request('per_page', 10)));
     }
 
     public function show(Request $request, Workspace $workspace)

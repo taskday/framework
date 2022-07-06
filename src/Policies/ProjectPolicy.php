@@ -3,7 +3,6 @@
 namespace Taskday\Policies;
 
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Database\Eloquent\Model;
 use Taskday\Models\Project;
 
 class ProjectPolicy
@@ -17,9 +16,16 @@ class ProjectPolicy
      * @param  Project  $project
      * @return mixed
      */
-    public function view(Model $user, Project $project)
+    public function view($user, Project $project)
     {
-        return $project->ownerIs($user) || $project->hasMember($user) || $project->workspace->team_id == $user->current_team_id;
+        if ($project->ownerIs($user)) {
+            return true;
+        }
+
+
+        if ($project->hasMember($user)) {
+            return true;
+        }
     }
 
     /**
@@ -29,9 +35,15 @@ class ProjectPolicy
      * @param  Project  $project
      * @return mixed
      */
-    public function update(Model $user, Project $project)
+    public function update($user, Project $project)
     {
-        return $project->ownerIs($user) || $project->hasMember($user) || $project->workspace->team_id == $user->current_team_id;
+        if ($project->ownerIs($user)) {
+            return true;
+        }
+
+        if ($project->hasMember($user) && $user->can('update projects')) {
+            return true;
+        }
     }
 
     /**
@@ -41,7 +53,7 @@ class ProjectPolicy
      * @param  Project  $project
      * @return mixed
      */
-    public function delete(Model $user, Project $project)
+    public function delete($user, Project $project)
     {
         return $project->ownerIs($user);
     }
@@ -53,7 +65,7 @@ class ProjectPolicy
      * @param  Project  $project
      * @return mixed
      */
-    public function share(Model $user, Project $project)
+    public function share($user, Project $project)
     {
         return $project->ownerIs($user);
     }
@@ -65,7 +77,7 @@ class ProjectPolicy
      * @param  Project  $project
      * @return mixed
      */
-    public function unshare(Model $user, Project $project)
+    public function unshare($user, Project $project)
     {
         return $project->ownerIs($user);
     }

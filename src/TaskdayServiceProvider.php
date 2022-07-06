@@ -20,6 +20,7 @@ class TaskdayServiceProvider extends ServiceProvider
         Taskday\Models\Workspace::class => Taskday\Policies\WorkspacePolicy::class,
         Taskday\Models\Card::class => Taskday\Policies\CardPolicy::class,
         Taskday\Models\Team::class => Taskday\Policies\TeamPolicy::class,
+        Taskday\Models\Field::class => Taskday\Policies\FieldPolicy::class,
     ];
 
     /**

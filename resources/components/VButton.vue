@@ -36,9 +36,9 @@ export default defineComponent({
     },
     classes(): object {
       return {
-        [`button button-primary`]: this.variant === "primary",
-        [`button button-secondary`]: this.variant === "secondary",
-        [`button button-danger`]: this.variant === "danger",
+        "button button-primary": this.variant === "primary",
+        "button button-secondary": this.variant === "secondary",
+        'button button-danger': this.variant === "danger",
       };
     },
   },

@@ -4,7 +4,6 @@ namespace Taskday\Policies;
 
 use Taskday\Models\Card;
 use Illuminate\Auth\Access\HandlesAuthorization;
-use Illuminate\Database\Eloquent\Model;
 
 class CardPolicy
 {
@@ -17,9 +16,16 @@ class CardPolicy
      * @param  Card  $card
      * @return mixed
      */
-    public function view(Model $user, Card $card)
+    public function view($user, Card $card)
     {
-        return $card->project->ownerIs($user) || $card->project->hasMember($user) || $card->project->workspace->team_id == $user->current_team_id;
+        if ($card->project->ownerIs($user)) {
+            return true;
+        }
+
+
+        if ( $card->project->hasMember($user) ) {
+            return true;
+        }
     }
 
     /**
@@ -29,9 +35,16 @@ class CardPolicy
      * @param  Card  $card
      * @return mixed
      */
-    public function update(Model $user, Card $card)
+    public function update($user, Card $card)
     {
-        return $card->project->ownerIs($user) || $card->project->hasMember($user) || $card->project->workspace->team_id == $user->current_team_id;
+        if ($card->project->ownerIs($user)) {
+            return true;
+        }
+
+
+        if ( $card->project->hasMember($user) ) {
+            return true;
+        }
     }
 
     /**
@@ -41,8 +54,19 @@ class CardPolicy
      * @param  Card  $card
      * @return mixed
      */
-    public function delete(Model $user, Card $card)
+    public function delete($user, Card $card)
     {
-        return $card->project->ownerIs($user) || $card->project->hasMember($user);
+        if ($user->can('delete cards')) {
+            return true;
+        }
+
+        if ($card->project->ownerIs($user)) {
+            return true;
+        }
+
+
+        if ( $card->project->hasMember($user) ) {
+            return true;
+        }
     }
 }

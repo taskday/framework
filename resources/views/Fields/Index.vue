@@ -1,18 +1,6 @@
 <template>
   <VPageHeader>
-    <VContainer>
-      <VBreadcrumb>
-        <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
-          {{ breadcrumb.title }}
-        </VBreadcrumbItem>
-      </VBreadcrumb>
-      <div class="flex items-center justify-between">
-        <VPageTitle>{{ title }}</VPageTitle>
-        <div>
-          <VButton :href="route('fields.create')">Add field</VButton>
-        </div>
-      </div>
-    </VContainer>
+    <VButton :href="route('fields.create')">Add field</VButton>
   </VPageHeader>
   <VContainer class="mt-6">
     <table class="w-full">

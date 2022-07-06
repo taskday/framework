@@ -13,11 +13,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Laravel\Scout\Searchable;
 use NotificationChannels\WebPush\HasPushSubscriptions;
+use Silber\Bouncer\Database\HasRolesAndAbilities;
 
 trait CanManageTaskday
 {
     use Searchable;
     use HasPushSubscriptions;
+    use HasRolesAndAbilities;
 
     /**
      * @return HasMany

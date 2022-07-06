@@ -23,6 +23,7 @@ class FieldFactory extends Factory
     {
         return [
             'title' => $this->faker->word,
+            'handle' => $this->faker->word,
             'type' => 'string',
             'options' => '{}',
         ];

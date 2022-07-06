@@ -1,16 +1,5 @@
 <template>
-  <VPageHeader>
-    <VContainer>
-      <VBreadcrumb>
-        <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
-          {{ breadcrumb.title }}
-        </VBreadcrumbItem>
-      </VBreadcrumb>
-      <div class="flex items-center justify-between">
-        <VPageTitle>Edit {{ field.title }}</VPageTitle>
-      </div>
-    </VContainer>
-  </VPageHeader>
+  <VPageHeader />
   <VContainer>
     <div class="mt-8 space-y-8">
       <VFormSection @submitted="submit">

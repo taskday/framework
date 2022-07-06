@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-use Taskday\Base\Filter;
 
 use Taskday\Models\Card;
 use Taskday\Models\Field;

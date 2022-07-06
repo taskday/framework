@@ -14,8 +14,7 @@
             <Link :href="route('workspaces.index')" class="px-3 py-2 text-gray-900 dark:text-gray-200 text-sm font-medium"> Workspaces </Link>
             <Link :href="route('projects.index')" class="px-3 py-2 text-gray-900 dark:text-gray-200 text-sm font-medium"> Projects </Link>
             <Link :href="route('cards.index')" class="px-3 py-2 text-gray-900 dark:text-gray-200 text-sm font-medium"> Cards </Link>
-            <Link :href="route('fields.index')" class="px-3 py-2 text-gray-900 dark:text-gray-200 text-sm font-medium"> Fields </Link>
-
+            <Link v-if="can('view fields')" :href="route('fields.index')" class="px-3 py-2 text-gray-900 dark:text-gray-200 text-sm font-medium"> Fields </Link>
           </nav>
         </div>
         <div class="flex-1 flex items-center justify-center px-2 lg:ml-6 lg:justify-end">
@@ -77,7 +76,7 @@
                     <Link :onFinish="() => $store.commit('sidebar/close')" :href="route('workspaces.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Workspaces </Link>
                     <Link :onFinish="() => $store.commit('sidebar/close')" :href="route('projects.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Projects </Link>
                     <Link :onFinish="() => $store.commit('sidebar/close')" :href="route('cards.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Cards </Link>
-                    <Link :onFinish="() => $store.commit('sidebar/close')" :href="route('fields.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Fields </Link>
+                    <Link v-if="can('view fields')" :onFinish="() => $store.commit('sidebar/close')" :href="route('fields.index')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200"> Fields </Link>
                   </div>
                 </div>
                 <div class="pt-4 pb-2">
@@ -92,7 +91,7 @@
                   </div>
                   <div class="mt-3 px-2 space-y-1">
                     <Link :onFinish="() => $store.commit('sidebar/close')"  :href="route('profile.show')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200">Your Profile</Link>
-                    <Link :onFinish="() => $store.commit('sidebar/close')" as="button"  method="post" :href="route('logout')" class="block rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200">Sign out</Link>
+                    <Link :onFinish="() => $store.commit('sidebar/close')" as="button"  method="post" :href="route('logout')" class="block w-full rounded-md px-3 py-2 text-base text-gray-900 dark:text-gray-200 font-medium hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-800 dark:hover:text-gray-200">Sign out</Link>
                   </div>
                 </div>
               </div>
@@ -112,7 +111,7 @@
                 </div>
               </div>
             </VPopoverButton>
-            <template #content>
+            <VPopoverPanel>
               <div class="p-2 overflow-x-hidden divide-y">
                 <div v-for="notification in $store.state.notifications.notifications" class="py-4">
                   <VNotification :notification="notification"/>
@@ -123,7 +122,7 @@
                   </div>
                 </div>
               </div>
-            </template>
+            </VPopoverPanel>
           </VPopover>
 
           <!-- Profile dropdown -->

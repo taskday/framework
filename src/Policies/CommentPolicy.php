@@ -1,8 +1,8 @@
 <?php
 
-namespace Performing\Taskday\Policies;
+namespace Taskday\Policies;
 
-use Performing\Taskday\Models\Comment;
+use Taskday\Models\Comment;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,7 +31,9 @@ class CommentPolicy
      */
     public function update(Model $user, Comment $comment)
     {
-        return $comment->ownerIs($user);
+        if ($comment->ownerIs($user)) {
+            return true;
+        }
     }
 
     /**
@@ -43,6 +45,8 @@ class CommentPolicy
      */
     public function delete(Model $user, Comment $comment)
     {
-        return $comment->ownerIs($user);
+        if ($comment->ownerIs($user)) {
+            return true;
+        }
     }
 }

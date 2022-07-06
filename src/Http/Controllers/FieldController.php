@@ -4,7 +4,9 @@ namespace Taskday\Http\Controllers;
 
 use Taskday\Models\Field;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Spatie\Permission\Models\Permission;
 use Taskday\Support\Page\Breadcrumb;
 
 class FieldController extends Controller
@@ -16,6 +18,8 @@ class FieldController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', Field::class);
+
         return Inertia::render('Fields/Index', [
             'title' => 'Fields',
             'breadcrumbs' => [
@@ -35,8 +39,7 @@ class FieldController extends Controller
         return Inertia::render('Fields/Create', [
             'title' => 'New Field',
             'breadcrumbs' => [
-                [ 'name' =>  'Dashboard',                'href' => route('dashboard') ],
-                [ 'name' =>  'Fields' ]
+                new Breadcrumb('Dashboard', route('dashboard')),
             ],
             'fields' => Field::all()
         ]);
@@ -81,8 +84,15 @@ class FieldController extends Controller
      */
     public function edit($id)
     {
+        $field = Field::findOrFail($id);
+
         return Inertia::render('Fields/Edit', [
-            'field' => Field::findOrFail($id)
+            'title' => 'Edit field ' . $field->title,
+            'breadcrumbs' => [
+                new Breadcrumb('Dashboard', route('dashboard')),
+                new Breadcrumb('Fields', route('fields.index')),
+            ],
+            'field' => $field
         ]);
     }
 

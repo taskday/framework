@@ -49,6 +49,9 @@ createInertiaApp({
           getTaskdayField(handle) {
             return window.taskday.fields[handle];
           },
+          can(ability) {
+            return this.$page.props.auth.abilities.includes(ability);
+          }
         },
       })
       .component("Link", Link)

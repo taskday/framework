@@ -1,10 +1,9 @@
 <template>
   <VFormSection>
     <template #title>Fields</template>
-    <template #description
-      >Gallia est omnis divisa in partes tres, quarum. Donec sed odio operae, eu vulputate felis rhoncus. Praeterea iter
-      est quasdam res quas ex communi.</template
-    >
+    <template #description>
+      Add any created field to this project.
+    </template>
     <template #content>
       <div>
         <draggable

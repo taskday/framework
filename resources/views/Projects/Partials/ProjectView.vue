@@ -76,7 +76,7 @@ watch(() => share.value, () => {
       </div>
     </div>
     <div :key="currentView">
-      <component :is="currentView.component" :project="project"></component>
+      <component :key="JSON.stringify(project)" :is="currentView.component" :project="project"></component>
     </div>
   </div>
 </template>

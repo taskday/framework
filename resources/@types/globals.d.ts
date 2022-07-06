@@ -1,3 +1,4 @@
+import Echo from "laravel-echo";
 import { defineComponent } from "vue";
 
 declare global {
@@ -29,7 +30,7 @@ declare global {
 
   interface Window {
     taskday: TaskdayInterface
-    Echo: any
+    Echo: Echo
   }
 }
 

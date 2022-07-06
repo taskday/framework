@@ -123,16 +123,7 @@ class Project extends Model
      */
     public function scopeSharedWithCurrentUser($query)
     {
-        $projects = Project::select('id')
-            ->whereHas('workspace', function ($query) {
-                $query->where('team_id', Auth::user()->current_team_id);
-            })
-            ->pluck('id')
-            ->merge(Auth::user()->sharedProjects->modelKeys())
-            ->unique()
-            ->values();
-
-        $query->whereIn('id', $projects);
+        return $query->whereIn('id', Auth::user()->sharedProjects->modelKeys());
     }
 
     public function parent()

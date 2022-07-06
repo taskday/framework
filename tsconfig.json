@@ -16,9 +16,14 @@
         "types": [
             "vite/client"
         ],
-        "baseUrl": "."
+        "baseUrl": ".",
+        "paths": {
+          "@/*": [
+              "resources/*"
+          ]
+      }
     },
     "include": [
-        "./resources/**/*"
+        "resources/**/*"
     ]
 }

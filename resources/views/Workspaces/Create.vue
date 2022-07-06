@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div class="py-6 bg-white dark:bg-gray-800 shadow">
-      <VContainer>
-        <VPageTitle>{{ title }}</VPageTitle>
-      </VContainer>
-    </div>
+    <VPageHeader />
     <VContainer>
       <div class="mt-8 space-y-8">
         <VFormSection @submitted="submit">

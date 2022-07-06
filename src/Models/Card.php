@@ -263,16 +263,8 @@ class Card extends Model
      */
     public function scopeSharedWithCurrentUser($query)
     {
-        $projects = Card::select('id')
-            ->whereHas('project', function ($project) {
-                $project->sharedWithCurrentUser()->whereHas('workspace', function ($query) {
-                    $query->where('team_id', Auth::user()->current_team_id);
-                });
-            })
-            ->pluck('id')
-            ->unique()
-            ->values();
-
-        $query->whereIn('id', $projects);
+        return $query->whereHas('project', function ($project) {
+            $project->sharedWithCurrentUser();
+        });
     }
 }

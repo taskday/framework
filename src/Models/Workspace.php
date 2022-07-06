@@ -64,9 +64,7 @@ class Workspace extends Model
      */
     public function scopeSharedWithCurrentUser(Builder $query)
     {
-        return $query
-            ->where('team_id', Auth::user()->current_team_id)
-            ->orWhereIn('id', Auth::user()->sharedWorkspaces->modelKeys());
+        return $query->orWhereIn('id', Auth::user()->sharedWorkspaces->modelKeys());
     }
 
     /**

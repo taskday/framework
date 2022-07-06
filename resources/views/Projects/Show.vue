@@ -49,6 +49,8 @@ import { Inertia } from "@inertiajs/inertia";
 import { ref, watch, onMounted, onUnmounted } from "vue";
 import useViews from "./useViews";
 import VButton from "../../components/VButton.vue";
+import { useChannel } from "@/composables/useChannel";
+import { useModels } from "@/composables/useModels";
 
 let props = defineProps<{
   title: String;
@@ -56,15 +58,18 @@ let props = defineProps<{
   project: Project;
 }>();
 
-onMounted(() => {
-  window.Echo.private(`projects.${props.project.id}`).listen(".ProjectUpdatedEvent", function (e, data) {
-    Inertia.get(route("projects.show", props.project), { replace: true });
-  });
+const { models, actions, status, pagination, filters } = useModels<Project, {}>(route('api.cards.index', {
+  projects: [props.project.id]
+}))
+
+useChannel(`projects.${props.project.id}`, {
+  '.CardUpdatedEvent': (e) => actions.syncModels(e.cards),
+  '.CardCreatedEvent': (e) => actions.syncModels(e.cards)
 });
 
-onUnmounted(() => {
-  window.Echo.private(`projects.${props.project.id}`).stopListening(".ProjectUpdatedEvent");
-});
+watch(() => models.data, () => {
+  project.cards = models.data;
+}, { deep: true })
 
 const { currentView, views, updateCurrentView } = useViews(props.project);
 

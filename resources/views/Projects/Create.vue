@@ -1,16 +1,5 @@
 <template>
-  <VPageHeader>
-    <VContainer>
-      <VBreadcrumb>
-        <VBreadcrumbItem v-for="breadcrumb in breadcrumbs" :href="breadcrumb.url">
-          {{ breadcrumb.title }}
-        </VBreadcrumbItem>
-      </VBreadcrumb>
-      <div class="flex items-center justify-between">
-        <VPageTitle>{{ title }}</VPageTitle>
-      </div>
-    </VContainer>
-  </VPageHeader>
+  <VPageHeader />
   <VContainer>
     <div class="py-6 space-y-8">
       <div class="flex flex-col w-full space-y-16">

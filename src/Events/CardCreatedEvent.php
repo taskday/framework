@@ -39,7 +39,7 @@ class CardCreatedEvent
      */
     public function broadcastOn()
     {
-        return new PrivateChannel("App.Models.Card.{$this->cardId}.Events");
+        return new PrivateChannel("cards.any");
     }
 
     public function broadcastWith()

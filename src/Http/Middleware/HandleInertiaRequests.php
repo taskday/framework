@@ -65,13 +65,15 @@ class HandleInertiaRequests extends Middleware
     public function share(Request $request)
     {
         return array_merge(parent::share($request), [
-            'isModal' => (bool) $request->header('X-Inertia-Modal'),
             'csrf_token' => csrf_token(),
-            'user' => Auth::check() ? UserResource::make(Auth::user()) : null,
+            'auth' => Auth::check() ? [
+                'user' => UserResource::make(Auth::user()),
+                'abilities' => Auth::user()->getAbilities()->map->name,
+            ] : [],
             'global' => Auth::check() ? [
                 'workspaces' => Workspace::sharedWithCurrentUser()->get(),
                 'notifications' => Auth::user()->unreadNotifications,
-                'users' => \App\Models\User::all(),
+                'users' => Auth::user()->sharedProjects->flatMap->members->map->user->unique()->values(),
             ] : [],
             'flash' => function () use ($request) {
                 return $request->session()->get('flash');

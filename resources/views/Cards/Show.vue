@@ -14,9 +14,9 @@
     </VConfirm>
   </VPageHeader>
 
-  <VRoom :name="`App.Models.Card.${card.id}`"></VRoom>
+  <VRoom :name="`cards.${card.id}`"></VRoom>
 
-  <div class="h-full px-6">
+  <div class="h-full px-6 mt-8">
     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,56rem),1fr] gap-8">
       <div class="w-full space-y-8 order-1 lg:order-none">
         <div class="w-full order-1 md:order-none">

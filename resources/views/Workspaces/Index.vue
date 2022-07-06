@@ -2,6 +2,9 @@
 import moment from "moment";
 import useFilters from "@/composables/useFilters";
 import ProjectPreview from "@/views/Projects/Partials/ProjectPreview.vue";
+import { useChannel } from "@/composables/useChannel";
+import { onMounted } from "vue";
+import { useModels } from "@/composables/useModels";
 
 const props = defineProps<{
   title: string;
@@ -11,80 +14,91 @@ const props = defineProps<{
   fields: Field[];
 }>();
 
-const { data, isLoading, isFinished, execute, pagination, filters, toggleFilter } = useFilters("api.workspaces.index");
+interface Filters {
+  search: string
+  workspaces: number[]
+  projects: number[]
+  fields: number[]
+}
+
+const { models, actions, status, pagination, filters } = useModels<Project, Filters>(route('api.workspaces.index'))
+
+onMounted(() => actions.fetch());
 </script>
 
 <template>
+  <VPageHeader>
+    <VPopover class="relative">
+      <VPopoverButton>Projects</VPopoverButton>
+      <VPopoverPanel>
+        <div
+          class="px-4 py-1.5 background-200"
+          v-for="project in projects"
+          @click="filters.toggle(project, 'projects')"
+        >
+          <VFormCheckbox label="" :modelValue="filters.data.value.projects.includes(project.id)">
+            {{ project.title }}
+          </VFormCheckbox>
+        </div>
+      </VPopoverPanel>
+    </VPopover>
+    <VPopover class="relative">
+      <VPopoverButton>Workspaces</VPopoverButton>
+      <VPopoverPanel>
+        <div
+          class="px-4 py-1.5 background-200"
+          v-for="workspace in workspaces"
+          @click="filters.toggle(workspace, 'workspaces')"
+        >
+          <VFormCheckbox label="" :modelValue="filters.data.value.workspaces.includes(workspace.id)">
+            {{ workspace.title }}
+          </VFormCheckbox>
+        </div>
+      </VPopoverPanel>
+    </VPopover>
+    <VPopover class="relative">
+      <VPopoverButton>Fields</VPopoverButton>
+      <VPopoverPanel>
+        <div
+          class="px-4 py-1.5 background-200"
+          v-for="field in fields"
+          @click="filters.toggle(field, 'fields')"
+        >
+          <VFormCheckbox label="" :modelValue="filters.data.value.fields.includes(field.id)">
+            {{ field.title }}
+          </VFormCheckbox>
+        </div>
+      </VPopoverPanel>
+    </VPopover>
+  </VPageHeader>
 
-    <VPageHeader>
-      <VPopover class="relative">
-        <VPopoverButton>Projects</VPopoverButton>
-        <template #content>
-          <div
-            class="px-4 py-1.5 background-200"
-            v-for="project in projects"
-            @click="toggleFilter(project, 'projects')"
-          >
-            <VFormCheckbox label="" :modelValue="filters.projects.includes(project.id)">
-              {{ project.title }}
-            </VFormCheckbox>
-          </div>
-        </template>
-      </VPopover>
-      <VPopover class="relative">
-        <VPopoverButton>Workspaces</VPopoverButton>
-        <template #content>
-          <div
-            class="px-4 py-1.5 background-200"
-            v-for="workspace in workspaces"
-            @click="toggleFilter(workspace, 'workspaces')"
-          >
-            <VFormCheckbox label="" :modelValue="filters.workspaces.includes(workspace.id)">
-              {{ workspace.title }}
-            </VFormCheckbox>
-          </div>
-        </template>
-      </VPopover>
-      <VPopover class="relative">
-        <VPopoverButton>Fields</VPopoverButton>
-        <template #content>
-          <div
-            class="px-4 py-1.5 background-200"
-            v-for="field in fields"
-            @click="toggleFilter(field, 'fields')"
-          >
-            <VFormCheckbox label="" :modelValue="filters.fields.includes(field.id)">
-              {{ field.title }}
-            </VFormCheckbox>
-          </div>
-        </template>
-      </VPopover>
-    </VPageHeader>
-    <div class="px-6 flex flex-wrap items-center mt-8 gap-3">
-      <div class="w-full md:w-auto">
-        <VFormInput v-model="filters.search" type="search" placeholder="Search..."></VFormInput>
-      </div>
-      <VButton variant="secondary" v-for="workspace in filters.workspaces" @click="toggleFilter(workspaces.find(w => w.id === workspace), 'workspaces')">
-        <span>&times;</span>
-        <span>{{ workspaces.find(w => w.id === workspace)?.title }}</span>
-      </VButton>
-      <VButton variant="secondary" v-for="project in filters.projects" @click="toggleFilter(projects.find(w => w.id === project), 'projects')">
-        <span>&times;</span>
-        <span>{{ projects.find(w => w.id === project)?.title }}</span>
-      </VButton>
-      <VButton v-for="field in filters.fields" variant="secondary" @click="toggleFilter(fields.find(w => w.id === field), 'fields')">
-        <span>&times;</span>
-        <span>{{ fields.find(w => w.id === field)?.title }}</span>
-      </VButton>
+  <div class="px-6 flex items-center mt-8 gap-3">
+    <div>
+      <VFormInput v-model="filters.data.value.search" type="search" placeholder="Search..."></VFormInput>
     </div>
-    <span class="text-sm block px-6 mt-2 text-gray-600 dark:text-gray-400">
-      <span v-if="isLoading">Loading...</span>
-      <span v-else>Showing {{ data?.data?.length }} results of {{ data?.total }}</span>
-    </span>
+    <VButton variant="secondary" v-for="workspace in filters.data.value.workspaces" @click="filters.toggle(workspaces.find(w => w.id === workspace), 'workspaces')">
+      <span>&times;</span>
+      <span>{{ workspaces.find(w => w.id === workspace)?.title }}</span>
+    </VButton>
+    <VButton variant="secondary" v-for="project in filters.data.value.projects" @click="filters.toggle(projects.find(w => w.id === project), 'projects')">
+      <span>&times;</span>
+      <span>{{ projects.find(w => w.id === project)?.title }}</span>
+    </VButton>
+    <VButton v-for="field in filters.data.value.fields" variant="secondary" @click="filters.toggle(fields.find(w => w.id === field), 'fields')">
+      <span>&times;</span>
+      <span>{{ fields.find(w => w.id === field)?.title }}</span>
+    </VButton>
+  </div>
 
+
+  <VFetchStatus
+    :status="status"
+    :models="models"
+    :pagination="pagination"
+  />
 
   <div class="grid grid-cols-1 gap-10 mt-8">
-    <VCarousel v-for="workspace in data">
+    <VCarousel v-for="workspace in models?.data">
       <template #title>
         <VPageTitle>
           <Link :href="route('workspaces.show', workspace)" class="px-6">
@@ -96,7 +110,7 @@ const { data, isLoading, isFinished, execute, pagination, filters, toggleFilter 
         <ProjectPreview
           class="my-1 w-96 flex shrink-0"
           :project="project"
-          />
+        />
       </div>
     </VCarousel>
   </div>

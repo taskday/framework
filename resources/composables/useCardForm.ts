@@ -1,4 +1,5 @@
 import { useForm } from "@inertiajs/inertia-vue3";
+import axios from "axios";
 
 export default function useCardForm() {
   const form = useForm<{
@@ -20,7 +21,9 @@ export default function useCardForm() {
   }
 
   function update(card: Card) {
-    form.put(route('cards.update', card))
+    axios.put(route('api.cards.update', card), {
+      ...form.data()
+    })
   }
 
   function destroy(card: Card) {

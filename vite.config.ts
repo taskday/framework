@@ -15,9 +15,14 @@ export default defineConfig({
       host: "localhost",
     },
   },
+  test: {
+    include: [
+      './resources/test/*.ts'
+    ]
+  },
   resolve: {
     alias: {
-      // 'vue': 'vue/dist/vue.esm-bundler.js',
+      'vue': 'vue/dist/vue.esm-bundler.js',
       "@": path.resolve(__dirname, "./resources"),
     },
   },

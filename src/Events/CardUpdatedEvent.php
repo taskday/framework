@@ -37,12 +37,16 @@ class CardUpdatedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel("App.Models.Card.{$this->cardId}.Events");
+        return new PrivateChannel("cards.any");
     }
 
     public function broadcastWith()
     {
-        return [ 'fields' => Card::find($this->cardId)->fields ];
+        return [
+            'cards' => Card::with('fields')
+                ->where('id', $this->cardId)
+                ->get()
+        ];
     }
 
     public function broadcastAs()

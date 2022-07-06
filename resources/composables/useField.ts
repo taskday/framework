@@ -1,5 +1,6 @@
 import { useForm } from "@inertiajs/inertia-vue3";
 import { inject } from "vue";
+import axios from 'axios';
 import get from 'lodash/get';
 
 export default function useField() {
@@ -11,13 +12,7 @@ export default function useField() {
   });
 
   const onChange = () => {
-    form.put(route('cards.fields.update', [card?.value, field?.value]), {
-      preserveState: true,
-      preserveScroll: true,
-      onError: (errors) => {
-        console.error(errors);
-      }
-    });
+    axios.put(route('cards.fields.update', [card?.value, field?.value]));
   }
 
   return { state: form, options: field?.value?.options ?? [], onChange }
