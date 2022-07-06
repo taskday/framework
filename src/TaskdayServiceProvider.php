@@ -82,6 +82,10 @@ class TaskdayServiceProvider extends ServiceProvider
                 '19_create_media_table',
                 '20_add_team_id_to_workspaces_table',
                 '21_add_share_uuid_to_projects_table',
+                '21_add_share_uuid_to_projects_table',
+                '22_create_bouncer_tables',
+                '23_create_audits_table',
+                '24_add_id_to_card_field_table',
             ] as $key => $value) {
 
                 $published = collect(glob(database_path('migrations/*')))

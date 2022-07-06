@@ -94,6 +94,8 @@ class CommentController extends Controller
      */
     public function update(Request $request, Card $card, Comment $comment)
     {
+        $this->authorize('update', $comment);
+
         $comment->update(
             $request->validate([
                 'body' => 'nullable|string'
