@@ -49,6 +49,8 @@ class WorkspaceController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Wrokspace::class);
+
         return Inertia::render('Workspaces/Create', [
             'title' => 'New Workspace',
         ]);
@@ -62,6 +64,8 @@ class WorkspaceController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('create', Wrokspace::class);
+
         extract($request->validate([
             'title' => 'required',
             'description' => 'nullable'
@@ -107,6 +111,8 @@ class WorkspaceController extends Controller
      */
     public function edit(Workspace $workspace)
     {
+        $this->authorize('update', $workspace);
+
         return Inertia::render('Workspaces/Edit', [
             'title' => 'Settings of ' . $workspace->title,
             'breadcrumbs' => [
@@ -127,6 +133,8 @@ class WorkspaceController extends Controller
      */
     public function update(Request $request, Workspace $workspace)
     {
+        $this->authorize('update', $workspace);
+
         $data = $request->validate([
             'title' => 'required',
             'description' => 'nullable',
@@ -145,6 +153,8 @@ class WorkspaceController extends Controller
      */
     public function destroy(Request $request, Workspace $workspace)
     {
+        $this->authorize('delete', $workspace);
+
         $workspace->delete();
 
         return redirect()->route('workspaces.index');
@@ -158,6 +168,8 @@ class WorkspaceController extends Controller
      */
     public function updateMembers(Request $request, Workspace $workspace)
     {
+        $this->authorize('update', $workspace);
+
         $data = $request->validate([
             'members' => 'array',
             'deep' => 'nullable'

@@ -2,6 +2,7 @@
 
 namespace Taskday\Policies;
 
+use App\Models\User;
 use Taskday\Models\Workspace;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Database\Eloquent\Model;
@@ -11,39 +12,107 @@ class WorkspacePolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view the workspace.
+     * Determine whether the user can view any posts.
      *
-     * @param  User  $user
-     * @param  Workspace  $workspace
+     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function view(Model $user, Workspace $workspace)
+    public function viewAny(User $user)
     {
-        return $workspace->ownerIs($user) || $workspace->hasMember($user) || $workspace->team_id == $user->current_team_id;
+        //
     }
 
     /**
-     * Determine whether the user can update the workspace.
+     * Determine whether the user can view the post.
      *
-     * @param  User  $user
-     * @param  Workspace  $workspace
+     * @param  \App\Models\User|null $user
+     * @param  Field  $field
      * @return mixed
      */
-    public function update(Model $user, Workspace $workspace)
+    public function view(?User $user, Workspace $workspace)
     {
-        return $workspace->ownerIs($user) || $workspace->hasMember($user) || $workspace->team_id == $user->current_team_id;;
+        if ($workspace->ownerIs($user)) {
+            return true;
+        }
+
+
+        if ($workspace->hasMember($user)) {
+            return true;
+        }
     }
 
     /**
-     * Determine whether the user can delete the workspace.
+     * Determine whether the user can create posts.
      *
-     * @param  User  $user
-     * @param  Workspace  $workspace
+     * @param  \App\Models\User  $user
      * @return mixed
      */
-    public function delete(Model $user, Workspace $workspace)
+    public function create(User $user)
     {
-        return $workspace->ownerIs($user);
+        if ($user->can('create workspace')) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can update the post.
+     *
+     * @param  \App\Models\User  $user
+     * @param  Field  $field
+     * @return mixed
+     */
+    public function update(User $user, Workspace $workspace)
+    {
+        if ($workspace->ownerIs($user)) {
+            return true;
+        }
+
+
+        if ($workspace->hasMember($user) && $user->can('update workspaces')) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can delete the post.
+     *
+     * @param  \App\Models\User  $user
+     * @param  Field  $field
+     * @return mixed
+     */
+    public function delete(User $user, Workspace $workspace)
+    {
+        if ($workspace->ownerIs($user)) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can restore the post.
+     *
+     * @param  \App\Models\User  $user
+     * @param  Field  $field
+     * @return mixed
+     */
+    public function restore(User $user, Workspace $workspace)
+    {
+        if ($workspace->ownerIs($user)) {
+            return true;
+        }
+    }
+
+    /**
+     * Determine whether the user can permanently delete the post.
+     *
+     * @param  \App\Models\User  $user
+     * @param  Field  $field
+     * @return mixed
+     */
+    public function forceDelete(User $user, Workspace $workspace)
+    {
+        if ($workspace->ownerIs($user)) {
+            return true;
+        }
     }
 
     /**
@@ -55,7 +124,9 @@ class WorkspacePolicy
      */
     public function share(Model $user, Workspace $workspace)
     {
-        return $workspace->ownerIs($user);
+        if ($workspace->ownerIs($user)) {
+            return true;
+        }
     }
 
     /**
@@ -67,6 +138,8 @@ class WorkspacePolicy
      */
     public function unshare(Model $user, Workspace $workspace)
     {
-        return $workspace->ownerIs($user);
+        if ($workspace->ownerIs($user)) {
+            return true;
+        }
     }
 }
