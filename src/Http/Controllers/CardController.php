@@ -108,18 +108,6 @@ class CardController extends Controller
             'workspace' => $card->project->workspace,
             'project' => $card->project,
             'card' => $card,
-            'audits' => Audit::query()
-                ->with(['user', 'auditable'])
-                ->where(function ($query)  use ($card) {
-                    $query->where('auditable_type', Card::class)
-                        ->where('auditable_id', [$card->id]);
-                })
-                ->orWhere(function ($query) use ($card) {
-                    $query->where('auditable_type', CardField::class)
-                        ->where('auditable_id', $card->fields->map->pivot->map->id);
-                })
-                ->limit(10)
-                ->get()
         ]);
     }
 
