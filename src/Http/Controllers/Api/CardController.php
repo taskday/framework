@@ -9,7 +9,9 @@ use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Taskday\Actions\UpdateCardAction;
 use Taskday\Base\Filter;
+use Taskday\Http\Requests\UpdateCardRequest;
 use Taskday\Models\Field;
 
 class CardController extends Controller
@@ -98,25 +100,18 @@ class CardController extends Controller
         return response()->json($card);
     }
 
-    public function update(Request $request, Card $card)
-    {
-        $this->authorize('update', $card);
 
-        $data = array_filter($request->validate([
-            'title' => 'nullable',
-            'content' => 'nullable',
-            'order' => 'nullable'
-        ]));
-
-        $fields = $request->validate(['fields' => 'nullable|array'])['fields'];
-
-        foreach ($fields as $key => $value) {
-            $card->setCustom(Field::where('handle', $key)->first(), $value);
-        }
-
-        $card->update($data);
-
-        $card->touch();
+    /**
+     * Update the specified resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function update(
+        UpdateCardRequest $request,
+        UpdateCardAction $action,
+        Card $card,
+    ) {
+        $action->handle($card, $request->validated());
 
         return response()->json($card->fresh());
     }

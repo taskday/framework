@@ -16,18 +16,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Query\Builder;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Event;
 use Laravel\Scout\Searchable;
+use OwenIt\Auditing\Contracts\Auditable;
+use OwenIt\Auditing\Events\AuditCustom;
 use Taskday\Facades\Taskday;
 use Taskday\Support\Page\Breadcrumb;
 
 /**
  * @property Project $project
  */
-class Card extends Model
+class Card extends Model implements Auditable
 {
-    use HasFactory, Searchable, Linkable, Commentable;
+    use HasFactory,
+        Searchable,
+        Linkable,
+        Commentable,
+        \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that aren't mass assignable.
@@ -35,6 +40,16 @@ class Card extends Model
      * @var array
      */
     protected $guarded = [];
+
+    /**
+     * Attributes to include in the Audit.
+     *
+     * @var array
+     */
+    protected $auditInclude = [
+        'title',
+        'content',
+    ];
 
     /**
      * The attributes that aren't mass assignable.
@@ -89,7 +104,7 @@ class Card extends Model
     {
         return $this->belongsToMany(Field::class)
             ->using(CardField::class)
-            ->withPivot('value');
+            ->withPivot(['id', 'value']);
     }
 
     /**

@@ -12,7 +12,9 @@ export default function useField() {
   });
 
   const onChange = () => {
-    axios.put(route('cards.fields.update', [card?.value, field?.value]));
+    axios.put(route('api.cards.fields.update', [card?.value, field?.value]), {
+      ...form.data()
+    });
   }
 
   return { state: form, options: field?.value?.options ?? [], onChange }

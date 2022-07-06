@@ -92,9 +92,15 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Card $card, Comment $comment)
     {
-        //
+        $comment->update(
+            $request->validate([
+                'body' => 'nullable|string'
+            ])
+        );
+
+        return redirect()->back();
     }
 
     /**

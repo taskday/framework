@@ -3,13 +3,6 @@ import axios from "axios";
 import { onMounted, onUnmounted, reactive, ref, provide } from "vue";
 import { useStorage } from "@vueuse/core";
 
-// interface UseModelsConfig {
-//   fetch?: (current?: any) => string,
-//   store?: (current?: any) => string,
-//   update?: (current?: any) => string,
-//   destroy?: (current?: any) => string,
-// }
-
 interface Status {
   isLoading: Boolean;
   isError: Boolean;

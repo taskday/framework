@@ -15,10 +15,17 @@
               <span>commented</span>
               {{ moment(comment.created_at).from(moment(), true) }}
             </div>
+            <button v-if="!value" @click="toggle">Edit</button>
+            <button v-if="value" @click="toggle">Save</button>
           </div>
         </div>
       </template>
-      <div v-html="comment.body" />
+
+      <div v-if="!value && comment?.creator?.name === $page.props.auth.user.name" v-html="comment.body" />
+      <div v-if="value && comment?.creator?.name === $page.props.auth.user.name">
+        <VFormHtmlEditor v-model="comment.body"></VFormHtmlEditor>
+      </div>
+
     </VCard>
   </div>
 </template>
@@ -26,11 +33,25 @@
 <script lang="ts" setup>
 import moment from "moment";
 import VCard from "./VCard.vue";
+import { useToggle } from '@vueuse/core'
+import { PropType, watch } from "vue";
+import useCommentForm from '@/composables/useCommentForm';
 
-defineProps({
+let props = defineProps({
   comment: {
-    type: Object,
+    type: Object as PropType<Comment>,
     required: true,
   }
 })
+
+const { form, update } = useCommentForm()
+const [value, toggle] = useToggle()
+
+watch(() => value.value, () => {
+  if (!value.value) {
+    form.body = props.comment.body;
+    update(props.comment.commentable_id, props.comment)
+  }
+})
+
 </script>

@@ -6,8 +6,11 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
-
+use OwenIt\Auditing\Models\Audit;
+use Taskday\Actions\UpdateCardAction;
+use Taskday\Http\Requests\UpdateCardRequest;
 use Taskday\Models\Card;
+use Taskday\Models\CardField;
 use Taskday\Models\Field;
 use Taskday\Models\Project;
 use Taskday\Models\Workspace;
@@ -91,14 +94,32 @@ class CardController extends Controller
     {
         $this->authorize('view', $card);
 
-        $card->load(['comments.creator', 'fields', 'project.workspace.projects', 'project.fields']);
+        $card->load([
+            'audits.user',
+            'comments.creator',
+            'fields',
+            'project.workspace',
+            'project.fields'
+        ]);
 
         return Inertia::render('Cards/Show', [
             'title' => Str::of($card->title)->replaceMatches('/.*?\//', '')->title(),
             'breadcrumbs' => $card->breadcrumbs,
             'workspace' => $card->project->workspace,
             'project' => $card->project,
-            'card' => $card
+            'card' => $card,
+            'audits' => Audit::query()
+                ->with(['user', 'auditable'])
+                ->where(function ($query)  use ($card) {
+                    $query->where('auditable_type', Card::class)
+                        ->where('auditable_id', [$card->id]);
+                })
+                ->orWhere(function ($query) use ($card) {
+                    $query->where('auditable_type', CardField::class)
+                        ->where('auditable_id', $card->fields->map->pivot->map->id);
+                })
+                ->limit(10)
+                ->get()
         ]);
     }
 
@@ -116,28 +137,14 @@ class CardController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param Workspace $workspace
-     * @param Card $card
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,  Card $card)
-    {
-        $data = array_filter($request->validate([
-            'title' => 'nullable',
-            'content' => 'nullable',
-            'order' => 'nullable'
-        ]));
-
-        $fields = $request->validate(['fields' => 'nullable|array'])['fields'];
-
-        foreach ($fields as $key => $value) {
-            $card->setCustom(Field::where('handle', $key)->first(), $value);
-        }
-
-        $card->update($data);
-
-        $card->touch();
+    public function update(
+        UpdateCardRequest $request,
+        UpdateCardAction $action,
+        Card $card,
+    ) {
+        $action->handle($card, $request->validated());
 
         return redirect()->back();
     }

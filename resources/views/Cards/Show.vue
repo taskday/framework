@@ -24,13 +24,26 @@
             <VFormHtmlEditor v-model="state.content" />
           </VCard>
         </div>
-        <form @submit.prevent="() => store(card)" class="space-y-8 w-full">
-          <VCard>
-            <VFormHtmlEditor placeholder="Add a comment..." :toolbar="false" v-model="comment.body"></VFormHtmlEditor>
-          </VCard>
-          <VButton type="submit">Submit</VButton>
-        </form>
-        <VCommentList :comments="card.comments" />
+        <VTabs>
+          <VTabsList>
+            <VTabsItem>Comments</VTabsItem>
+            <VTabsItem>Activites</VTabsItem>
+          </VTabsList>
+          <VTabsPanels>
+            <VTabsPanel>
+              <form @submit.prevent="() => store(card)" class="space-y-8 w-full">
+                <VCard>
+                  <VFormHtmlEditor placeholder="Add a comment..." :toolbar="false" v-model="comment.body"></VFormHtmlEditor>
+                </VCard>
+                <VButton type="submit">Submit</VButton>
+              </form>
+              <VCommentList class="mt-8" :card="card" :comments="card.comments" />
+            </VTabsPanel>
+            <VTabsPanel>
+
+            </VTabsPanel>
+          </VTabsPanels>
+        </VTabs>
       </div>
       <div class="flex flex-col gap-8">
         <div class="flex items-center gap-2" v-for="field in card.project.fields" :key="field.id">
@@ -54,6 +67,7 @@ const props = defineProps<{
   title: String;
   breadcrumbs: Breadcrumb[];
   card: Card;
+  audits: any[];
 }>();
 
 onMounted(() => {

@@ -4,9 +4,19 @@ namespace Taskday\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class CardField extends Pivot
+class CardField extends Pivot implements Auditable
 {
+    use \OwenIt\Auditing\Auditable;
+
+    /**
+     * Indicates if the IDs are auto-incrementing.
+     *
+     * @var bool
+     */
+    public $incrementing = true;
+
     /**
      * The relations to eager load on every query.
      *

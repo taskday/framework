@@ -7,14 +7,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Taskday\Plugins\CustomField;
 use Database\Factories\FieldFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use OwenIt\Auditing\Contracts\Auditable;
 
 /**
  * @method FieldFactory static factory(...$args)
  * @package Taskday\Models
  */
-class Field extends Model
+class Field extends Model implements Auditable
 {
-    use HasFactory;
+    use HasFactory,
+        \OwenIt\Auditing\Auditable;
 
     /**
      * The attributes that aren't mass assignable.

@@ -9,9 +9,7 @@ use Laravel\Fortify\FortifyServiceProvider;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\JetstreamServiceProvider;
 use Laravel\Sanctum\SanctumServiceProvider;
-use Spatie\Permission\PermissionRegistrar;
-use Spatie\Permission\PermissionServiceProvider;
-use Taskday\Models\Team;
+use Silber\Bouncer\BouncerServiceProvider;
 use Taskday\TaskdayServiceProvider;
 
 class TestCase extends \Orchestra\Testbench\TestCase
@@ -27,7 +25,7 @@ class TestCase extends \Orchestra\Testbench\TestCase
             FortifyServiceProvider::class,
             JetstreamServiceProvider::class,
             SanctumServiceProvider::class,
-            PermissionServiceProvider::class,
+            BouncerServiceProvider::class,
             TaskdayServiceProvider::class,
             InertiaServiceProvider::class,
         ];
@@ -44,8 +42,6 @@ class TestCase extends \Orchestra\Testbench\TestCase
         ]);
 
         Jetstream::useUserModel(\Taskday\Models\User::class);
-
-        app(\Spatie\Permission\PermissionRegistrar::class)->registerPermissions();
 
         foreach(glob(__DIR__ . '/../database/migrations/*.stub') as $path) {
             $migration = include $path;

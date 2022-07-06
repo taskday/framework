@@ -13,8 +13,8 @@ export default function useCardForm() {
     })
   }
 
-  function update(card: Card) {
-    form.post(route('cards.comments.update', card), {
+  function update(card: Card, comment: Comment) {
+    form.put(route('cards.comments.update', [card, comment]), {
       onSuccess: () => {
         form.reset();
       }
