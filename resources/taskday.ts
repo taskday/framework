@@ -48,6 +48,7 @@ import VTabsPanels from "@/components/VTabsPanels.vue";
 import useField from "./composables/useField";
 import useSorter from "./composables/useSorter";
 import useCardForm from "./composables/useCardForm";
+import useCardFieldForm from "./composables/useCardFieldForm";
 
 import PageCardsShow from "./views/Cards/Show.vue";
 
@@ -133,6 +134,7 @@ export {
   useField,
   useSorter,
   useCardForm,
+  useCardFieldForm,
   VAvatar,
   VBreadcrumbs,
   VBreadcrumb,
