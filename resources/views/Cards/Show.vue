@@ -14,8 +14,6 @@
     </VConfirm>
   </VPageHeader>
 
-  <VRoom :name="`cards.${card.id}`"></VRoom>
-
   <div class="h-full px-6 mt-8">
     <div class="grid grid-cols-1 lg:grid-cols-[minmax(0,56rem),1fr] gap-8">
       <div class="w-full space-y-8 order-1 lg:order-none">
@@ -31,24 +29,42 @@
           </VTabsList>
           <VTabsPanels>
             <VTabsPanel>
+              <VCommentList class="mb-8" :card="card" :comments="card.comments" />
               <form @submit.prevent="() => store(card)" class="space-y-8 w-full">
                 <VCard>
                   <VFormHtmlEditor placeholder="Add a comment..." :toolbar="false" v-model="comment.body"></VFormHtmlEditor>
                 </VCard>
+                <VFormInput type="file" @input="comment.attachments.push($event.target.files[0])" />
                 <VButton type="submit">Submit</VButton>
               </form>
-              <VCommentList class="mt-8" :card="card" :comments="card.comments" />
             </VTabsPanel>
             <VTabsPanel>
-
+              <ul class="list-none">
+                <li v-for="audit in audits">
+                    <ul class="px-4 py-2 list-disc">
+                      <li v-for="old,key in audit.old_values">
+                        <strong>{{ audit.user.name }}</strong> {{ audit.event }} {{ key }} from
+                        <span class="font-bold">
+                          <span v-if="key == 'content'" class="ProseMirror" v-html="old"></span>
+                          <span v-else v-text="old"></span>
+                        </span>
+                        to
+                        <span class="font-bold">
+                          <span v-if="key == 'content'" class="ProseMirror" v-html="audit.new_values[key]"></span>
+                          <span v-else v-text="audit.new_values[key]"></span>
+                        </span>
+                      </li>
+                    </ul>
+                </li>
+              </ul>
             </VTabsPanel>
           </VTabsPanels>
         </VTabs>
       </div>
       <div class="flex flex-col gap-8">
-        <div class="flex items-center gap-2" v-for="field in card.project.fields" :key="field.id">
-          <h4 class="font-semibold w-24">{{ field.title }}:</h4>
-          <VFieldWrapper :card="card" :field="field"></VFieldWrapper>
+        <div class="flex items-center gap-2 h-9" v-for="field in card.project.fields" :key="field.id">
+          <h4 class="font-semibold w-24 truncate dark:text-gray-400 text-sm">{{ field.title }}</h4>
+          <VFieldWrapper :cardb="card" :field="field"></VFieldWrapper>
         </div>
       </div>
     </div>

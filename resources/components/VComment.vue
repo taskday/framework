@@ -17,12 +17,16 @@
             </div>
             <button v-if="!value && comment?.creator?.id === $page.props.auth.user.id" @click="toggle">Edit</button>
             <button v-if="value && comment?.creator?.id === $page.props.auth.user.id" @click="toggle">Save</button>
+            <button v-if="comment?.creator?.id === $page.props.auth.user.id" @click="destroy(comment.commentable_id, comment)">Delete</button>
           </div>
         </div>
       </template>
       <div v-if="!value" v-html="comment.body" />
       <div v-if="value && comment?.creator?.id === $page.props.auth.user.id">
         <VFormHtmlEditor v-model="comment.body"></VFormHtmlEditor>
+      </div>
+      <div v-for="media in comment.media" class="mt-1 flex flex-wrap gap-2">
+        <a class="text-blue-500 dark:text-blue-200 underline" :href="media.original_url" download>{{ media.file_name }}</a>
       </div>
     </VCard>
   </div>
@@ -42,7 +46,7 @@ let props = defineProps({
   }
 })
 
-const { form, update } = useCommentForm()
+const { form, update, destroy } = useCommentForm()
 const [value, toggle] = useToggle()
 
 watch(() => value.value, () => {

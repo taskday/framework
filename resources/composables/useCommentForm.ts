@@ -3,6 +3,7 @@ import { useForm } from "@inertiajs/inertia-vue3";
 export default function useCardForm() {
   const form = useForm({
     body: '',
+    attachments: []
   });
 
   function store(card: Card) {
@@ -21,8 +22,8 @@ export default function useCardForm() {
     })
   }
 
-  function destroy(card: Card) {
-    form.post(route('cards.comments.destroy', card), {
+  function destroy(card: Card, comment: Comment) {
+    form.delete(route('cards.comments.destroy', [card, comment]), {
       onSuccess: () => {
         form.reset();
       }
