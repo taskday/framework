@@ -15,17 +15,15 @@
               <span>commented</span>
               {{ moment(comment.created_at).from(moment(), true) }}
             </div>
-            <button v-if="!value" @click="toggle">Edit</button>
-            <button v-if="value" @click="toggle">Save</button>
+            <button v-if="!value && comment?.creator?.id === $page.props.auth.user.id" @click="toggle">Edit</button>
+            <button v-if="value && comment?.creator?.id === $page.props.auth.user.id" @click="toggle">Save</button>
           </div>
         </div>
       </template>
-
-      <div v-if="!value && comment?.creator?.name === $page.props.auth.user.name" v-html="comment.body" />
-      <div v-if="value && comment?.creator?.name === $page.props.auth.user.name">
+      <div v-if="!value" v-html="comment.body" />
+      <div v-if="value && comment?.creator?.id === $page.props.auth.user.id">
         <VFormHtmlEditor v-model="comment.body"></VFormHtmlEditor>
       </div>
-
     </VCard>
   </div>
 </template>
