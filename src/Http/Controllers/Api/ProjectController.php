@@ -2,10 +2,10 @@
 
 namespace Taskday\Http\Controllers\Api;
 
-use Taskday\Http\Controllers\Controller;
-use Taskday\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Taskday\Http\Controllers\Controller;
+use Taskday\Models\Project;
 use Taskday\Models\Workspace;
 
 class ProjectController extends Controller
@@ -45,9 +45,9 @@ class ProjectController extends Controller
         return response()->json( $project );
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Workspace $workspace)
     {
-        $this->authorize('update', );
+        $this->authorize('create', Project::class);
 
         $data = $request->validate([
             'title' => 'required',
@@ -55,7 +55,6 @@ class ProjectController extends Controller
         ]);
 
         $project = Auth::user()->createProject($data['title'], $workspace, $data);
-
 
         return response()->json( $project );
     }

@@ -77,6 +77,10 @@ class Field extends Model implements Auditable
      */
     public function getCustomFieldAttribute(): array
     {
+        if (! $this->type) {
+            return [];
+        }
+
         return Taskday::getFieldByType($this->type)->toArray();
     }
 }

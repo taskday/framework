@@ -7,7 +7,6 @@ import {
   GlobeAltIcon,
   ExternalLinkIcon,
   ViewBoardsIcon,
-  CogIcon,
   ShareIcon,
 } from '@heroicons/vue/outline';
 
@@ -76,7 +75,7 @@ watch(() => share.value, () => {
       </div>
     </div>
     <div :key="currentView">
-      <component :key="JSON.stringify(project)" :is="currentView.component" :project="project"></component>
+      <component :key="Math.random()" :is="currentView.component" :project="project"></component>
     </div>
   </div>
 </template>

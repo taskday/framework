@@ -1,7 +1,9 @@
-import { computed } from 'vue';
+import { computed, shallowRef } from 'vue';
 import { useStorage } from '@vueuse/core';
 
 export default function (project: Project) {
+
+  const currentViewHandle = useStorage(project.id + '_current_view', null);
 
   const views = computed(() => {
     return window.taskday.views.filter(v => {
@@ -12,14 +14,12 @@ export default function (project: Project) {
     })
   });
 
-  const currentViewHandle = useStorage(project.id + '_current_view', null);
-
-  const currentView = computed(() => {
-    return views.value.find(v => v.id == currentViewHandle.value) ?? views.value[0];
-  });
+  const currentView = shallowRef(views.value[0]);
 
   function updateCurrentView(view) {
-    currentViewHandle.value = view.id
+    currentViewHandle.value = view.type ?? view.id
+    console.log(view);
+    currentView.value = view
   }
 
   return { currentView, views, updateCurrentView }

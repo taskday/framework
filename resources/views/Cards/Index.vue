@@ -1,6 +1,6 @@
 
 <script setup lang="ts">
-import { PropType, computed } from "vue";
+import { PropType, computed, onMounted } from "vue";
 import ProjectView from "../Projects/Partials/ProjectView.vue";
 import { useModels } from "@/composables/useModels";
 import { useChannel } from "@/composables/useChannel";
@@ -36,6 +36,14 @@ const { models, status, filters, pagination, actions } = useModels<Card, Filter>
 useChannel('cards.any', {
   '.CardUpdatedEvent': (e) => actions.syncModels(e.cards)
 });
+
+onMounted(() => {
+  actions.fetch();
+
+  filters.data.value['workspaces'] = filters.data.value['workspaces'] || [];
+  filters.data.value['projects'] = filters.data.value['projects'] || [];
+  filters.data.value['fields'] = filters.data.value['fields'] || [];
+})
 
 const fakeProject = computed(() => {
   return {

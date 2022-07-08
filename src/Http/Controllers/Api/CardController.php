@@ -19,20 +19,20 @@ class CardController extends Controller
     public function index(Request $request)
     {
         $cards = Card::query()
-            ->sharedWithCurrentUser();
-            // ->with(['project.workspace', 'fields', 'project.fields'])
-            // ->when($request->has('filters.workspaces'), function ($query) use ($request) {
-            //     $query->whereHas('project', function ($project) use ($request) {
-            //         $project->whereHas('workspace', function ($workspace) use ($request) {
-            //             $workspace->whereIn('id', $request->input('filters.workspaces.*'));
-            //         });
-            //     });
-            // })
-            // ->when($request->has('filters.projects'), function ($query) use ($request) {
-            //     $query->whereHas('project', function ($project) use ($request) {
-            //         $project->whereIn('id', $request->input('filters.projects.*'));
-            //     });
-            // })
+            ->sharedWithCurrentUser()
+            ->with(['project.workspace', 'fields', 'project.fields'])
+            ->when($request->has('filters.workspaces'), function ($query) use ($request) {
+                $query->whereHas('project', function ($project) use ($request) {
+                    $project->whereHas('workspace', function ($workspace) use ($request) {
+                        $workspace->whereIn('id', $request->input('filters.workspaces.*'));
+                    });
+                });
+            })
+            ->when($request->has('filters.projects'), function ($query) use ($request) {
+                $query->whereHas('project', function ($project) use ($request) {
+                    $project->whereIn('id', $request->input('filters.projects.*'));
+                });
+            })
             // ->when($request->has('filters.search'), function ($query) use ($request) {
 
             //     $search = $request->input('filters.search');
@@ -74,15 +74,16 @@ class CardController extends Controller
             //             });
             //         });
             //     }
-            // })->when($request->has('filters.fields'), function ($query) use ($request) {
-            //     foreach($request->input('filters.fields.*') as $filter) {
-            //         $query->whereHas('project', function ($query) use ($filter) {
-            //             $query->whereHas('fields', function ($field) use ($filter) {
-            //                 $field->whereIn('id', [$filter]);
-            //             });
-            //         });
-            //     }
-            // });
+            // })
+            ->when($request->has('filters.fields'), function ($query) use ($request) {
+                foreach($request->input('filters.fields.*') as $filter) {
+                    $query->whereHas('project', function ($query) use ($filter) {
+                        $query->whereHas('fields', function ($field) use ($filter) {
+                            $field->whereIn('id', [$filter]);
+                        });
+                    });
+                }
+            });
 
         return response()->json($cards->paginate(request('per_page', 20)));
     }

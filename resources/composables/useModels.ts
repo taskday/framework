@@ -1,3 +1,4 @@
+import qs from 'qs';
 import _ from "lodash";
 import axios from "axios";
 import { onMounted, onUnmounted, reactive, ref, provide } from "vue";
@@ -29,11 +30,9 @@ export const useModels = <TModel, TFilter>(url: string) => {
   const fetch = () => {
     status.isLoading = true;
     axios
-      .get(url, {
-        params: {
-          filters: filters.data.value
-        }
-      })
+      .get(url  + '?' + qs.stringify({
+        filters: filters.data.value
+      }))
       .then((res) => {
         models.value = res.data;
         status.isLoading = false;

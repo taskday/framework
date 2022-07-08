@@ -36,12 +36,18 @@ const { models, actions, status, pagination, filters } = useModels<Project, Filt
 useChannel('projects.any', {
   '.ProjectUpdatedEvent': (e) => actions.syncModels(e.projects)
 });
+
 useChannel('cards.any', {
   '.CardUpdatedEvent': (e) => actions.syncModels(e.cards),
   '.CardCreatedEvent': (e) => actions.syncModels(e.cards)
 });
 
-onMounted(() => actions.fetch());
+onMounted(() => {
+  actions.fetch()
+  filters.data.value['workspaces'] = filters.data.value['workspaces'] || [];
+  filters.data.value['projects'] = filters.data.value['projects'] || [];
+  filters.data.value['fields'] = filters.data.value['fields'] || [];
+});
 </script>
 
 <template>
@@ -54,7 +60,7 @@ onMounted(() => actions.fetch());
           v-for="project in projects"
           @click="filters.toggle(project, 'projects')"
         >
-          <VFormCheckbox label="" :modelValue="filters.data.value.projects.includes(project.id)">
+          <VFormCheckbox label="" :modelValue="filters.data.value?.projects?.includes(project.id)">
             {{ project.title }}
           </VFormCheckbox>
         </div>
@@ -68,7 +74,7 @@ onMounted(() => actions.fetch());
           v-for="workspace in workspaces"
           @click="filters.toggle(workspace, 'workspaces')"
         >
-          <VFormCheckbox label="" :modelValue="filters.data.value.workspaces.includes(workspace.id)">
+          <VFormCheckbox label="" :modelValue="filters.data.value?.workspaces?.includes(workspace.id)">
             {{ workspace.title }}
           </VFormCheckbox>
         </div>
@@ -82,7 +88,7 @@ onMounted(() => actions.fetch());
           v-for="field in fields"
           @click="filters.toggle(field, 'fields')"
         >
-          <VFormCheckbox label="" :modelValue="filters.data.value.fields.includes(field.id)">
+          <VFormCheckbox label="" :modelValue="filters.data.value?.fields?.includes(field.id)">
             {{ field.title }}
           </VFormCheckbox>
         </div>

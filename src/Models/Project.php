@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Taskday\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;

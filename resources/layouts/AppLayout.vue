@@ -101,7 +101,7 @@
 
         <div class="hidden lg:ml-4 lg:flex lg:items-center">
           <VPopover>
-            <VPopoverButton class="rounded-full h-8 w-8">
+            <VPopoverButton class="rounded-full flex items-center justify-center h-8 w-8 px-0">
               <div class="flex items-center w-6 h-6 justify-center">
                 <div class="relative">
                   <VIcon name="bell"></VIcon>
@@ -127,7 +127,7 @@
 
           <!-- Profile dropdown -->
           <VDropdown class="ml-4 relative flex-shrink-0">
-            <VDropdownButton class="rounded-full w-8 h-8">
+            <VDropdownButton class="rounded-full w-8 h-8 px-0">
               <button type="button" class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
                 <span class="sr-only">Open user menu</span>
                 <VAvatar :user="$page.props.user"></VAvatar>
