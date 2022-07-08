@@ -4,12 +4,10 @@ namespace Taskday\Http\Controllers;
 
 use Taskday\Models\Field;
 use Taskday\Models\Project;
-use Taskday\Models\User;
 use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
-use Taskday\Models\Card;
 use Taskday\Support\Page\Breadcrumb;
 
 
@@ -18,7 +16,7 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index(Request $request)
     {
@@ -46,7 +44,7 @@ class ProjectController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function create(Workspace $workspace, Request $request)
     {
@@ -74,7 +72,7 @@ class ProjectController extends Controller
             'description' => 'nullable'
         ]);
 
-        /** @var User */
+        /** @var \App\Models\User */
         $user = Auth::user();
         $project = $user->createProject($data, $workspace);
 

@@ -10,6 +10,7 @@ use Inertia\Inertia;
 use Inertia\Middleware;
 use Taskday\Http\Resources\UserResource;
 use Taskday\Models\Workspace;
+use Taskday\Facades\Taskday;
 
 class HandleInertiaRequests extends Middleware
 {
@@ -77,7 +78,7 @@ class HandleInertiaRequests extends Middleware
             ] : [],
             'flash' => function () use ($request) {
                 return $request->session()->get('flash');
-            },
+            }
         ]);
     }
 }

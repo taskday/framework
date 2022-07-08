@@ -7,7 +7,7 @@ class AssetController extends Controller
 {
     public function scripts($handle)
     {
-        $plugin = Taskday::plugins()->get($handle);
+        $plugin = app($handle);
 
         $bundle = $plugin->bundle();
 
@@ -24,7 +24,7 @@ class AssetController extends Controller
 
     public function styles($handle)
     {
-        $plugin = Taskday::plugins()->get($handle);
+        $plugin = app($handle);
 
         $bundle = $plugin->bundle();
 

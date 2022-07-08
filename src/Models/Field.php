@@ -8,6 +8,7 @@ use Taskday\Plugins\CustomField;
 use Database\Factories\FieldFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use OwenIt\Auditing\Contracts\Auditable;
+use Taskday\Facades\Taskday;
 
 /**
  * @method FieldFactory static factory(...$args)
@@ -36,6 +37,15 @@ class Field extends Model implements Auditable
     ];
 
     /**
+     * The attributes that should be included in array.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'customField'
+    ];
+
+    /**
      *
      * @return BelongsToMany
      */
@@ -60,5 +70,13 @@ class Field extends Model implements Auditable
     public function scopeHandle($query, string $handle)
     {
         return $query->where('handle', $handle);
+    }
+
+    /**
+     * @return |null
+     */
+    public function getCustomFieldAttribute(): array
+    {
+        return Taskday::getFieldByType($this->type)->toArray();
     }
 }

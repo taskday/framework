@@ -15,25 +15,25 @@ abstract class Plugin
         return null;
     }
 
-    /** @return CustomField[] */
+    /** @return Field[] */
     public function fields(): array
     {
         return [];
     }
 
-    /** @return CustomFilter[] */
+    /** @return Filter[] */
     public function filters(): array
     {
         return [];
     }
 
-    /** @return CustomActions[] */
+    /** @return Action[] */
     public function actions(): array
     {
         return [];
     }
 
-    /** @return CustomView[] */
+    /** @return View[] */
     public function views(): array
     {
         return [];

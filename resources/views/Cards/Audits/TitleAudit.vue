@@ -11,7 +11,11 @@ defineProps<{
 <template>
   <p>
     {{ ' ' }}
-    <span class="text-gray-200 dark:text-gray-400">{{ audit.event }} from</span>
+    <span class="text-gray-200 dark:text-gray-400">{{ audit.event }}</span>
+    {{ ' ' }}
+    <span>{{ name }}</span>
+    {{ ' ' }}
+    <span class="text-gray-200 dark:text-gray-400">from</span>
     {{ ' ' }}
     <span>{{ old }}</span>
     {{ ' ' }}

@@ -34,6 +34,15 @@
     @tag('vendor/taskday/framework/resources/bootstrap.ts')
     @taskday
     @tag('vendor/taskday/framework/resources/main.ts')
+
+    <script>
+        window.addEventListener('taskday:init', () => {
+            let props = {!! \Taskday\Facades\Taskday::views() !!}
+            taskday.views.map(v => {
+                window._.merge(v, props.find(p => p.type == v.type));
+            })
+        })
+    </script>
 </head>
 
 <body class="font-sans antialiased background-500">

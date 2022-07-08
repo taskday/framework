@@ -4,11 +4,17 @@ declare(strict_types=1);
 
 namespace Taskday\Base;
 
-abstract class View
+use Taskday\Base\Concerns\HasType;
+use Illuminate\Contracts\Support\Arrayable;
+
+abstract class View implements Arrayable
 {
-    /**
-     * @var string
-     * @description The name of the view.
-     */
-    public string $name;
+    use HasType;
+
+    public function toArray()
+    {
+        return [
+            'type' => static::type()
+        ];
+    }
 }
