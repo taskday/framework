@@ -21,7 +21,7 @@ class CardController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function index(Request $request)
     {
@@ -116,10 +116,13 @@ class CardController extends Controller
                         ->where('auditable_id', [$card->id]);
                 })
                 ->orWhere(function ($query) use ($card) {
-                    $query->where('auditable_type', CardField::class)
-                        ->where('auditable_id', $card->fields->map->pivot->map->id);
+                    $query
+                        ->with('auditable.field')
+                        ->where('auditable_type', CardField::class)
+                        ->whereIn('auditable_id', $card->fields->map->pivot->map->id->filter()->values());
                 })
-                ->limit(10)
+                ->limit(20)
+                ->latest()
                 ->get()
         ]);
     }
@@ -143,7 +146,7 @@ class CardController extends Controller
     public function update(
         UpdateCardRequest $request,
         UpdateCardAction $action,
-        Card $card,
+        Card $card
     ) {
         $action->handle($card, $request->validated());
 

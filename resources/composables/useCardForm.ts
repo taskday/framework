@@ -21,9 +21,7 @@ export default function useCardForm() {
   }
 
   function update(card: Card) {
-    axios.put(route('api.cards.update', card), {
-      ...form.data()
-    })
+    form.put(route('cards.update', card))
   }
 
   function destroy(card: Card) {

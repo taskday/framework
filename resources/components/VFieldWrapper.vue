@@ -5,7 +5,6 @@
     :field="field"
     :key="field.pivot?.value"
     :card="card"
-    class="h-8 flex items-center justify-center"
   />
 </template>
 

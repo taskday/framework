@@ -1,5 +1,5 @@
 <template>
-  <MenuButton data-dropdown-button class="button button-secondary">
+  <MenuButton data-dropdown-button class="button button-secondary w-full">
       <slot></slot>
   </MenuButton>
 </template>

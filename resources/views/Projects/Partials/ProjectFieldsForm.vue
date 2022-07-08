@@ -6,14 +6,14 @@
     </template>
     <template #content>
       <div>
-        <draggable
+        <div
           class="space-y-4"
-          v-model="project.fields"
+          v-for="element in project.fields"
           :animation="200"
           ghost-class="opacity-50"
           group="tasks"
           itemKey="id">
-          <template #item="{ element }">
+
             <div class="space-y-3">
               <div class="flex rounded items-center justify-between space-x-2 p-2 border">
                 <div>
@@ -29,8 +29,8 @@
                 >
               </div>
             </div>
-          </template>
-        </draggable>
+
+        </div>
 
         <form @submit.prevent="() => update(project, form.field)" class="space-y-6 mt-8">
           <VFormSelect label="Type" v-model="form.field">
@@ -48,7 +48,6 @@
 </template>
 
 <script setup lang="ts">
-import draggable from "vuedraggable";
 import useProjectFieldsForm from "@/composables/useProjectFieldsForm";
 
 defineProps<{ project: Project; fields: Field[]; }>();

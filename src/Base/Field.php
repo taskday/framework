@@ -33,8 +33,8 @@ abstract class Field
     /**
      * Boostrap the component.
      */
-    public function boot()
+    public function getSorter()
     {
-        //
+        return null;
     }
 }

@@ -1,6 +1,6 @@
 <template>
-  <div ref="dropdown">
-    <Menu v-slot="{ open }" as="div" class="flex items-center h-full text-left">
+  <div ref="dropdown" class="h-9">
+    <Menu v-slot="{ open }" as="div" class="flex items-center h-full text-left w-full">
       <slot :open="open" />
     </Menu>
   </div>

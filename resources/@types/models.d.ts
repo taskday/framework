@@ -83,3 +83,15 @@ interface Breadcrumb {
   title: String;
   url?: String;
 }
+
+interface Audit {
+  user: User;
+  event: string;
+  old_values: {
+    [key: string]: string;
+  };
+  new_values: {
+    [key: string]: string;
+  };
+  created_at: string
+}
