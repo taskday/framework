@@ -9,7 +9,7 @@ defineProps<{
 </script>
 
 <template>
-  <p>
+  <span>
     {{ ' ' }}
     <span class="text-gray-200 dark:text-gray-400">{{ audit.event }}</span>
     {{ ' ' }}
@@ -24,5 +24,5 @@ defineProps<{
     <span>{{ audit.new_values[name] }}</span>
     {{ ' ' }}
     <span class="text-gray-200 dark:text-gray-400">{{ moment(audit.created_at).fromNow() }}</span>
-  </p>
+  </span>
 </template>

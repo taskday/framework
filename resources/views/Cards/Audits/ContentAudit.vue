@@ -9,8 +9,8 @@ defineProps<{
 </script>
 
 <template>
-  <p>
+  <span>
     {{ ' ' }}
     <span class="text-gray-200 dark:text-gray-400">{{ audit.event }} the {{ name }} of the card.</span>
-  </p>
+  </span>
 </template>

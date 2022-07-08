@@ -46,9 +46,8 @@
             <VTabsPanel>
               <ul class="list-none">
                 <li v-for="audit in audits">
-                  <ul class="px-4 py-2">
-                    <li v-for="(old, key) in audit.old_values" class="flex items-center text-sm gap-2">
-                      <VAvatar :user="audit.user" size="sm" />
+                  <ul class="px-4 py-2 list-disc">
+                    <li v-for="(old, key) in audit.old_values" class="relative overflow-visible">
                       <span class="font-semibold">{{ audit.user.name }}</span>
                       <component :old="old" :name="key" :audit="audit"  v-if="key == 'title'" :is="TitleAudit"></component>
                       <component :old="old" :name="key" :audit="audit"  v-if="key == 'content'" :is="ContentAudit"></component>
