@@ -6,9 +6,6 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Queue\SerializesModels;
 use Taskday\Models\Comment;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Builder;
 
 class CommentCreatedEvent implements ShouldBroadcast
 {
@@ -38,7 +35,7 @@ class CommentCreatedEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new PrivateChannel("App.Models.Comments.{$this->cardId}.Events");
+        return new PrivateChannel("App.Models.Comments.{$this->commentId}.Events");
     }
 
     /**
@@ -48,7 +45,7 @@ class CommentCreatedEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         return [
-            'comment' => Comment::with('creator')->find($this->cardId)
+            'comment' => Comment::with('creator')->find($this->commentId)
         ];
     }
 

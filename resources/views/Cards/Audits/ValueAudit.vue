@@ -15,22 +15,24 @@ defineProps<{
     {{ ' ' }}
     <span>{{ audit.auditable.field.title }}</span>
     {{ ' ' }}
-    <span class="text-gray-200 dark:text-gray-400">from</span>
-    {{ ' ' }}
-    <span>
-      <VFieldWrapper
-        :readonly="true"
-        :value="old"
-        :field="audit.auditable.field"
-      ></VFieldWrapper>
-    </span>
-    {{ ' ' }}
+    <template v-if="audit.old_values[name]">
+      <span class="text-gray-200 dark:text-gray-400">from</span>
+      {{ ' ' }}
+      <span>
+        <VFieldWrapper
+          :readonly="true"
+          :value="audit.old_values[name]"
+          :field="audit.auditable.field"
+        ></VFieldWrapper>
+      </span>
+      {{ ' ' }}
+    </template>
     <span class="text-gray-200 dark:text-gray-400">to</span>
     {{ ' ' }}
     <span>
       <VFieldWrapper
         :readonly="true"
-        :value="audit.new_values[name]"
+        :value="old"
         :field="audit.auditable.field"
       ></VFieldWrapper>
     </span>

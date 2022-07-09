@@ -24,6 +24,7 @@ export default function useCardForm() {
 
   function destroy(card: Card, comment: Comment) {
     form.delete(route('cards.comments.destroy', [card, comment]), {
+      preserveScroll: true,
       onSuccess: () => {
         form.reset();
       }

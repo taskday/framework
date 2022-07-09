@@ -7,22 +7,12 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Taskday\Observers\CardObserver;
 use Taskday\Models\Card;
+use Illuminate\Support\Facades\Event;
+use Taskday\Models\Comment;
+use Taskday\Observers\CommentObserver;
 
 class TaskdayServiceProvider extends ServiceProvider
 {
-    /**
-     * The policy mappings for the application.
-     *
-     * @var array<class-string, class-string>
-     */
-    protected $policies = [
-        Taskday\Models\Project::class => Taskday\Policies\ProjectPolicy::class,
-        Taskday\Models\Workspace::class => Taskday\Policies\WorkspacePolicy::class,
-        Taskday\Models\Card::class => Taskday\Policies\CardPolicy::class,
-        Taskday\Models\Team::class => Taskday\Policies\TeamPolicy::class,
-        Taskday\Models\Field::class => Taskday\Policies\FieldPolicy::class,
-    ];
-
     /**
      * We register all the services we need.
      *
@@ -45,16 +35,22 @@ class TaskdayServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'taskday');
 
         $this->registerBladeDirectives();
-        $this->registerPolicies();
-        $this->registerRoutes();
         $this->registerViews();
         $this->registerMigrations();
         $this->registerObservers();
     }
 
-    public function registerObservers()
+    protected function registerListeners()
+    {
+        foreach ($this->listeners as $event => $listener) {
+            Event::listen($event, [$listener, 'handle']);
+        }
+    }
+
+    protected function registerObservers()
     {
         Card::observe(CardObserver::class);
+        Comment::observe(CommentObserver::class);
     }
 
     public function registerViews(): void

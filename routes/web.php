@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use Taskday\Http\Controllers;
+use Illuminate\Support\Facades\Mail;
+use Taskday\Mail\Message;
 
 /*
 |--------------------------------------------------------------------------

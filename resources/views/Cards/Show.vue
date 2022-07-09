@@ -2,12 +2,12 @@
   <div class="h-full max-w-6xl mx-auto">
     <VPageHeader>
       <template #title>
-        <VFormEdit v-model="state.title">
+        <VFormEdit v-model="state.title" class="font-bold [&_*]:text-2xl">
           <VPageTitle>{{ state.title }}</VPageTitle>
         </VFormEdit>
       </template>
       <div class="text-gray-700 dark:text-gray-400 flex items-center" v-show="state.recentlySuccessful">Saved.</div>
-      <VButton variant="primary" v-if="state.isDirty || !state.processing" @click.prevent="() => update(card)">
+      <VButton variant="primary" v-show="state.isDirty || !state.processing" @click.prevent="() => update(card)">
         Save
       </VButton>
       <VConfirm class="w-full" title="Are you sure?" :onConfirm="submit">
@@ -47,12 +47,14 @@
               <ul class="list-none">
                 <li v-for="audit in audits">
                   <ul class="px-4 py-2 list-disc">
-                    <li v-for="(old, key) in audit.old_values" class="relative overflow-visible">
-                      <span class="font-semibold">{{ audit.user.name }}</span>
-                      <component :old="old" :name="key" :audit="audit"  v-if="key == 'title'" :is="TitleAudit"></component>
-                      <component :old="old" :name="key" :audit="audit"  v-if="key == 'content'" :is="ContentAudit"></component>
-                      <component :old="old" :name="key" :audit="audit"  v-if="key == 'value'" :is="ValueAudit"></component>
-                    </li>
+                    <template v-for="(value, key) in audit.new_values">
+                      <li v-if="['title', 'content', 'value'].includes(key)"  class="relative overflow-visible">
+                        <span class="font-semibold">{{ audit.user.name }}</span>
+                        <component :old="value" :name="key" :audit="audit"  v-if="key == 'title'" :is="TitleAudit"></component>
+                        <component :old="value" :name="key" :audit="audit"  v-if="key == 'content'" :is="ContentAudit"></component>
+                        <component :old="value" :name="key" :audit="audit"  v-if="key == 'value'" :is="ValueAudit"></component>
+                      </li>
+                    </template>
                   </ul>
                 </li>
               </ul>

@@ -70,7 +70,7 @@ class CardController extends Controller
         ]);
 
         $card = $project->cards()->create([
-            'title' => $data['title'],
+            'title' => strip_tags($data['title']),
             'user_id' => Auth::id()
         ]);
 

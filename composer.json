@@ -48,7 +48,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Taskday\\TaskdayServiceProvider"
+                "Taskday\\TaskdayServiceProvider",
+                "Taskday\\Providers\\AuthServiceProvider",
+                "Taskday\\Providers\\RouteServiceProvider",
+                "Taskday\\Providers\\EventServiceProvider"
             ]
         }
     }

@@ -12,6 +12,8 @@ class UpdateCardAction
 {
     public function handle(Card $card, array|Collection $data = [])
     {
+        $data['title'] = strip_tags($data['title']);
+
         $card->update($data);
 
         $card->touch();
