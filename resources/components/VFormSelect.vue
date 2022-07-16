@@ -2,7 +2,7 @@
   <label class="block w-full">
     <span v-if="label" class="block mb-1 text-gray-700 dark:text-gray-300">{{ label }}</span>
     <select
-      class="input"
+      class="input w-auto pr-8"
       v-bind="$attrs"
       :value="modelValue"
       @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"

@@ -21,7 +21,7 @@ class ProjectController extends Controller
                 });
             })
             ->when($request->has('filters.projects'), function ($query) use ($request) {
-                $query->whereIn('id', $request->input('filters.projects.*'));
+                $query->whereIn('id', [$request->input('filters.projects')]);
             })
             ->when($request->has('filters.search') && !empty($request->input('filters.search')), function ($query) use ($request) {
                 $query->where(function ($query) use ($request) {

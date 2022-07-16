@@ -18,7 +18,8 @@ class Taskday
     /**
      * Taskday Constructor.
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->plugins = new PluginCollection();
     }
 
@@ -26,14 +27,12 @@ class Taskday
      * Register field class with corresponding
      * key type string.
      *
-     * @param string $key
-     * @param string $class
      * @return void
-     * @throws Exception
+     * @throws \Exception
      */
     public function register(Plugin $plugin)
     {
-        if (! is_subclass_of($plugin, Plugin::class) ) {
+        if (! is_subclass_of($plugin, Plugin::class)) {
             throw new \Exception('plugin must be an instance of ' . Plugin::class);
         }
 
@@ -51,6 +50,11 @@ class Taskday
             app()->singleton($view::type(), fn () => $view);
         }
 
+        foreach ($plugin->filters() as $filter) {
+            $filter->boot();
+            app()->singleton($filter::type(), fn () => $filter);
+        }
+
         $this->plugins[] = $plugin->handle;
     }
 
@@ -58,7 +62,7 @@ class Taskday
     /**
      * Get all registered fields.
      *
-     * @return PluginCollection
+     * @return Collection<class-string<Plugin>>
      */
     public function plugins()
     {
@@ -88,13 +92,24 @@ class Taskday
     }
 
     /**
+     * Get all the registered filters.
+     *
+     */
+    public function filters(): Collection
+    {
+        return collect($this->plugins()->flatMap->filters())->map(function ($view) {
+            return app($view::type());
+        });
+    }
+
+    /**
      * Return the registed fields that has the given type.
      *
      */
     public function getFieldByType(string $type): ?\Taskday\Base\Field
     {
         return collect($this->plugins()->flatMap->fields())
-            ->filter(function(\Taskday\Base\Field $field) use ($type) {
+            ->filter(function (\Taskday\Base\Field $field) use ($type) {
                 return $field::type() == $type;
             })
             ->first();
@@ -107,7 +122,20 @@ class Taskday
     public function getViewByType(string $type): ?\Taskday\Base\View
     {
         return $this->views()
-            ->filter(function(\Taskday\Base\View $field) use ($type) {
+            ->filter(function (\Taskday\Base\View $field) use ($type) {
+                return $field::type() == $type;
+            })
+            ->first();
+    }
+
+    /**
+     * Return the registed fields that has the given type.
+     *
+     */
+    public function getFilterByType(string $type): ?\Taskday\Base\View
+    {
+        return $this->filters()
+            ->filter(function (\Taskday\Base\View $field) use ($type) {
                 return $field::type() == $type;
             })
             ->first();

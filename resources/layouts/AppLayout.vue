@@ -192,7 +192,7 @@
     </div>
   </header>
 
-  <main class="py-10">
+  <main class="py-6">
     <slot></slot>
   </main>
 </div>

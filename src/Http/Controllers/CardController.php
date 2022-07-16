@@ -15,6 +15,7 @@ use Taskday\Models\Field;
 use Taskday\Models\Project;
 use Taskday\Models\Workspace;
 use Taskday\Support\Page\Breadcrumb;
+use Taskday\Facades\Taskday;
 
 class CardController extends Controller
 {
@@ -30,6 +31,7 @@ class CardController extends Controller
             'breadcrumbs' => [
                 new Breadcrumb('Dashboard', route('dashboard')),
             ],
+            'filters' => Taskday::filters(),
             'fields' => Field::query()
                 ->orderBy('title')
                 ->get(),

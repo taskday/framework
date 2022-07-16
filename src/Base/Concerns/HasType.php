@@ -13,6 +13,6 @@ trait HasType
     {
         $name = (new \ReflectionClass(static::class))->getShortName();
 
-        return str($name)->snake()->explode('_')->first();
+        return collect(str($name)->snake()->explode('_'))->slice(0, -1)->join('-');
     }
 }

@@ -1,6 +1,5 @@
-
 <script setup lang="ts">
-import { PropType, computed, onMounted } from "vue";
+import { PropType, computed, onMounted, ref, watch } from "vue";
 import ProjectView from "../Projects/Partials/ProjectView.vue";
 import { useModels } from "@/composables/useModels";
 import { useChannel } from "@/composables/useChannel";
@@ -14,117 +13,60 @@ const props = defineProps({
     type: Array as PropType<Field[]>,
     required: true,
   },
-  projects: {
-    type: Object as PropType<Project[]>,
-    required: true,
-  },
-  workspaces: {
-    type: Array as PropType<Workspace[]>,
-    required: true,
+  filters: {
+    type: Array as PropType<Filter[]>
   }
 });
 
-interface Filter {
-  search: string;
-  workspaces: number[],
-  projects: number[],
-  fields: number[],
-}
+const { models, status, params, pagination, actions } = useModels<Card, Filter>(route("api.cards.index"));
 
-const { models, status, filters, pagination, actions } = useModels<Card, Filter>(route('api.cards.index'));
-
-useChannel('cards.any', {
-  '.CardUpdatedEvent': (e) => actions.syncModels(e.cards)
+useChannel("cards.any", {
+  ".CardUpdatedEvent": (e) => actions.syncModels(e.cards),
 });
 
-onMounted(() => {
+watch(() => params.params.rules, () => {
   actions.fetch();
-
-  filters.data.value['workspaces'] = filters.data.value['workspaces'] || [];
-  filters.data.value['projects'] = filters.data.value['projects'] || [];
-  filters.data.value['fields'] = filters.data.value['fields'] || [];
-})
+}, { deep: true })
 
 const fakeProject = computed(() => {
   return {
     id: null,
     title: null,
     description: null,
-    fields: props.fields.filter(f => filters.data.value?.fields?.includes(f.id)),
-    cards: status.isLoading || status.isError ? []  : (models?.value?.data ?? [])
-  }
-})
+    fields: props.fields.filter(f => params.params.rules.map(crit => crit.column).includes(f.handle)),
+    cards: status.isLoading || status.isError ? [] : models?.value?.data ?? [],
+  };
+});
 </script>
 
 <template>
-  <VPageHeader>
-    <VPopover class="relative">
-      <VPopoverButton>Projects</VPopoverButton>
-      <VPopoverPanel>
-        <div
-          class="px-4 py-1.5 background-200"
-          v-for="project in projects"
-          @click="filters.toggle(project, 'projects')"
-        >
-          <VFormCheckbox label="" :modelValue="filters.data.value?.projects.includes(project.id)">
-            {{ project.title }}
-          </VFormCheckbox>
-        </div>
-      </VPopoverPanel>
-    </VPopover>
-    <VPopover class="relative">
-      <VPopoverButton>Workspaces</VPopoverButton>
-      <VPopoverPanel>
-        <div
-          class="px-4 py-1.5 background-200"
-          v-for="workspace in workspaces"
-          @click="filters.toggle(workspace, 'workspaces')"
-        >
-          <VFormCheckbox label="" :modelValue="filters.data.value?.workspaces.includes(workspace.id)">
-            {{ workspace.title }}
-          </VFormCheckbox>
-        </div>
-      </VPopoverPanel>
-    </VPopover>
-    <VPopover class="relative">
-      <VPopoverButton>Fields</VPopoverButton>
-      <VPopoverPanel>
-        <div
-          class="px-4 py-1.5 background-200"
-          v-for="field in fields"
-          @click="filters.toggle(field, 'fields')"
-        >
-          <VFormCheckbox label="" :modelValue="filters.data.value.fields?.includes(field.id)">
-            {{ field.title }}
-          </VFormCheckbox>
-        </div>
-      </VPopoverPanel>
-    </VPopover>
-  </VPageHeader>
+  <VPageHeader />
 
-  <div class="px-6 flex flex-wrap items-center mt-8 gap-3">
-    <div >
-      <VFormInput v-model="filters.data.value.search" type="search" placeholder="Search..."></VFormInput>
+  <div class="px-6">
+    <VPopover>
+      <VPopoverButton>
+        <VIcon name="filters"></VIcon>
+        <span>Filters</span>
+      </VPopoverButton>
+      <VPopoverPanel align="bottom-start">
+        <div class="py-1">
+          <div v-for="filter in filters" class="px-4 py-2 hover:background-100" @click="params.add(filter)">
+            {{ filter.name }}
+          </div>
+        </div>
+      </VPopoverPanel>
+    </VPopover>
+
+    <div class="flex flex-wrap gap-2 mt-4">
+      <VFilter
+        v-for="filter in params.params.rules"
+        :filter="filter"
+        @remove="params.remove(filter.id)"
+      />
     </div>
-    <VButton variant="secondary" v-for="workspace in filters.data.value.workspaces" @click="filters.toggle(workspaces.find(w => w.id === workspace), 'workspaces')">
-      <span>&times;</span>
-      <span>{{ workspaces.find(w => w.id === workspace)?.title }}</span>
-    </VButton>
-    <VButton variant="secondary" v-for="project in filters.data.value.projects" @click="filters.toggle(projects.find(w => w.id === project), 'projects')">
-      <span>&times;</span>
-      <span>{{ projects.find(w => w.id === project)?.title }}</span>
-    </VButton>
-    <VButton v-for="field in filters.data.value.fields" variant="secondary" @click="filters.toggle(fields.find(w => w.id === field), 'fields')">
-      <span>&times;</span>
-      <span>{{ fields.find(w => w.id === field)?.title }}</span>
-    </VButton>
   </div>
 
-  <VFetchStatus
-    :status="status"
-    :models="models"
-    :pagination="pagination"
-  />
+  <VFetchStatus :status="status" :models="models" :pagination="pagination" />
 
   <div class="h-full" v-if="!status.isError">
     <div class="grid grid-cols-1 gap-8 py-8">
@@ -132,4 +74,3 @@ const fakeProject = computed(() => {
     </div>
   </div>
 </template>
-

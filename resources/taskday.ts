@@ -57,16 +57,12 @@ class Taskday implements TaskdayInterface {
   version = '0.1.0';
 
   readonly fields = {};
-
-  readonly filters = {};
-
   readonly options = {};
-
   readonly actions = {};
 
-  public views = [];
-
-  public widgets = {};
+  public filters: { [key: string]: string } = {};
+  public views: any[] = [];
+  public widgets: any[] = [];
 
   private instance;
 
@@ -79,9 +75,11 @@ class Taskday implements TaskdayInterface {
     this.instance.component(`${namespace}-field`, component);
   }
 
-  registerFilter(namespace, component) {
-    this.filters[namespace] = component;
-    this.instance.component(`${namespace}-filter`, component);
+  registerFilter(namespace, filters: any[]) {
+    filters.forEach(filter => {
+      this.filters[filter.type] = filter
+      this.instance.component(`${namespace}-filter`, filter)
+    })
   }
 
   registerOptions(namespace, component) {
@@ -110,7 +108,7 @@ class Taskday implements TaskdayInterface {
     if (components.field) {
       this.registerField(namespace, components.field);
     }
-    if (components.filter) {
+    if (components.filters) {
       this.registerFilter(namespace, components.filter);
     }
     if (components.options) {

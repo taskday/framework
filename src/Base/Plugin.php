@@ -10,7 +10,7 @@ abstract class Plugin
 
     public string $description;
 
-    function bundle(): ?AssetBundle
+    public function bundle(): ?AssetBundle
     {
         return null;
     }

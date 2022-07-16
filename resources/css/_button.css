@@ -17,7 +17,7 @@
 .input {
   @apply
   w-full rounded-md shadow-sm
-  px-6 h-9
+  px-3 h-9
   sm:text-sm
   border border-gray-200 dark:border-gray-800
   focus:outline-none
@@ -32,7 +32,7 @@
   @apply
     inline-flex items-center
     rounded-md shadow-sm
-    px-6 h-9
+    px-3 h-9
     text-sm font-semibold
     [&>span+span]:pl-2
     focus:outline-none
@@ -40,7 +40,6 @@
     focus:border-blue-500/[.65] dark:focus:border-blue-400/[.60]
     focus:ring-offset-blue-400/[.60] focus:ring-blue-300/[.45]
     dark:focus:ring-offset-blue-300/[.50] dark:focus:ring-blue-200/[.40];
-
 }
 
 .button-primary {

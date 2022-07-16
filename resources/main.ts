@@ -7,6 +7,9 @@ import { Taskday } from "@/taskday";
 import Layout from "@/layouts/AppLayout.vue";
 import store from "@/store/index";
 
+import WorkspaceFilter from '@/filters/WorkspaceFilter.vue';
+import ProjectFilter from '@/filters/ProjectFilter.vue';
+
 createInertiaApp({
   resolve: async (name) => {
     let [part1, part2] = name.split("/");
@@ -27,6 +30,13 @@ createInertiaApp({
     const instance = createApp({ render: () => h(app, props) });
 
     window.Taskday = window.taskday = new Taskday(instance);
+
+    window.taskday.registerFilter('workspace-filter', [
+      { type: 'workspace-filter', component: WorkspaceFilter }
+    ]);
+    window.taskday.registerFilter('project-filter', [
+      { type: 'project-filter', component: ProjectFilter }
+    ]);
 
     document.dispatchEvent(
       new CustomEvent("taskday:init", {

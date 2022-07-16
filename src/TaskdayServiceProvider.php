@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\ServiceProvider;
 use Taskday\Observers\CardObserver;
 use Taskday\Models\Card;
-use Illuminate\Support\Facades\Event;
 use Taskday\Models\Comment;
 use Taskday\Observers\CommentObserver;
+use Taskday\Models\Scopes\Filters\ProjectFilterScope;
 
 class TaskdayServiceProvider extends ServiceProvider
 {
@@ -32,19 +32,22 @@ class TaskdayServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'taskday');
+        $this->mergeConfigFrom(__DIR__ . '/../config/config.php', 'taskday');
 
         $this->registerBladeDirectives();
         $this->registerViews();
         $this->registerMigrations();
         $this->registerObservers();
-    }
 
-    protected function registerListeners()
-    {
-        foreach ($this->listeners as $event => $listener) {
-            Event::listen($event, [$listener, 'handle']);
-        }
+        \Taskday\Facades\Taskday::register(new class extends \Taskday\Base\Plugin
+        {
+            public string $handle = 'projects';
+
+            function filters(): array
+            {
+                return [new ProjectFilterScope()];
+            }
+        });
     }
 
     protected function registerObservers()
@@ -55,7 +58,7 @@ class TaskdayServiceProvider extends ServiceProvider
 
     public function registerViews(): void
     {
-        $this->loadViewsFrom(__DIR__.'/../resources/views', 'taskday');
+        $this->loadViewsFrom(__DIR__ . '/../resources/views', 'taskday');
     }
 
     public function registerMigrations(): void
@@ -82,8 +85,7 @@ class TaskdayServiceProvider extends ServiceProvider
                 '22_create_bouncer_tables',
                 '23_create_audits_table',
                 '24_add_id_to_card_field_table',
-            ] as $key => $value) {
-
+                ] as $key => $value) {
                 $published = collect(glob(database_path('migrations/*')))
                     ->filter(function ($path) use ($value) {
                         return str_contains($path, substr($value, 3));
@@ -94,11 +96,11 @@ class TaskdayServiceProvider extends ServiceProvider
                     $name = substr($value, 3);
 
                     $this->publishes([
-                        __DIR__ . "/../database/migrations/$value.php.stub" => database_path('migrations/' . date('Y_m_d_His', time() + $key) . "_$name.php"),
+                        __DIR__ . "/../database/migrations/$value.php.stub" => database_path('migrations/' . date('Y_m_d_His', (time() + $key)) . "_$name.php"),
                     ], 'taskday-migrations');
                 }
             }
-          }
+        }
     }
 
     public function registerRoutes(string $prefix = ''): void

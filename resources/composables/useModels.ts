@@ -1,8 +1,9 @@
 import qs from 'qs';
 import _ from "lodash";
 import axios from "axios";
-import { onMounted, onUnmounted, reactive, ref, provide } from "vue";
+import { onMounted, reactive, ref, provide } from "vue";
 import { useStorage } from "@vueuse/core";
+import useFilter from './useFilters2';
 
 interface Status {
   isLoading: Boolean;
@@ -10,7 +11,7 @@ interface Status {
   isUpdating: number[];
 }
 
-export const useModels = <TModel, TFilter>(url: string) => {
+export const useModels = <TModel, TFilter>(url: string, key: string = 'filters') => {
   const models = ref<Pagination<TModel & { id: number }>>();
 
   const status = reactive<Status>({
@@ -25,13 +26,23 @@ export const useModels = <TModel, TFilter>(url: string) => {
     fetch();
   });
 
-  const args = useStorage<TFilter>("filters", {});
+  const args = useStorage<TFilter>(key, {});
 
   const fetch = () => {
     status.isLoading = true;
+    status.isError = false;
     axios
       .get(url  + '?' + qs.stringify({
-        filters: filters.data.value
+        filters: params.params.rules.map((filter) => {
+          let copy =  { ...filter };
+          delete copy.options
+          delete copy.operators
+          delete copy.columns
+          copy.column = copy.column ?? '';
+          copy.value = copy.value ?? '';
+          copy.operator = copy.operator ?? '=';
+          return copy;
+        })
       }))
       .then((res) => {
         models.value = res.data;
@@ -69,18 +80,7 @@ export const useModels = <TModel, TFilter>(url: string) => {
     },
   };
 
-  const filters = {
-    data: args,
-    toggle: (model: any, key: string) => {
-      if (args.value[key]?.includes(model.id)) {
-        args.value[key] = args.value[key].filter((id) => id !== model.id);
-      } else {
-        args.value[key] = [...(args.value[key] ?? []), model.id];
-      }
-
-      fetch();
-    },
-  };
+  const params = useFilter();
 
   function setIsUpdating(id) {
     status.isUpdating.push(id);
@@ -100,5 +100,5 @@ export const useModels = <TModel, TFilter>(url: string) => {
     }
   }
 
-  return { models, actions: { fetch, syncModels }, status, filters, pagination };
+  return { models, actions: { fetch, syncModels }, status, params, pagination };
 };

@@ -8,6 +8,19 @@ interface User {
   profile_photo_url: string;
 }
 
+interface Filter {
+  id: string|number,
+  handle: string,
+  operator: string
+  value: string
+  operators: string,
+  columns: string,
+}
+interface FilterGroup {
+  id: string|number,
+  operator: string,
+  rules: Array<Filter|FilterGroup>
+}
 
 interface Member<T> {
   id: string

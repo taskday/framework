@@ -2,18 +2,51 @@
 
 namespace Taskday\Base;
 
-class Filter
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Scope;
+use Taskday\Base\Concerns\HasType;
+use Illuminate\Contracts\Support\Arrayable;
+
+abstract class Filter implements Scope, Arrayable
 {
-    const IS_EQUAL = '=';
+    use HasType;
 
-    const IS_NOT_EQUAL = '<>';
+    protected $name;
 
-    const IS_GREATER_THAN = '>';
+    /**
+     * Configure the filter
+     */
+    public function boot(): void
+    {
+        //
+    }
 
-    const IS_LESS_THAN = '<';
+    /**
+     * Return the possible columns to use with this filter.
+     *
+     * @return Array<Operator>
+     */
+    abstract public function columns(): array;
 
-    const CONTAINS = 'in';
+    /**
+     * Return the possible operators to use with this filter.
+     *
+     * @return Array<Operator>
+     */
+    abstract public function operators(): array;
 
-    const NOT_CONTAINS = 'notin';
 
+    /**
+     * Return an array of this filter.
+     */
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name ?? static::type(),
+            'type' => static::type(),
+            'columns' => $this->columns(),
+            'operators' => $this->operators(),
+            'options' => []
+        ];
+    }
 }
