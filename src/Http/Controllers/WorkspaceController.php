@@ -2,13 +2,12 @@
 
 namespace Taskday\Http\Controllers;
 
-use Taskday\Models\Workspace;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Taskday\Models\Field;
 use Taskday\Models\Project;
-use Taskday\Models\User;
+use Taskday\Models\Workspace;
 use Taskday\Support\Page\Breadcrumb;
 
 class WorkspaceController extends Controller
@@ -49,7 +48,7 @@ class WorkspaceController extends Controller
      */
     public function create()
     {
-        $this->authorize('create', Wrokspace::class);
+        $this->authorize('create', Workspace::class);
 
         return Inertia::render('Workspaces/Create', [
             'title' => 'New Workspace',
@@ -64,7 +63,7 @@ class WorkspaceController extends Controller
      */
     public function store(Request $request)
     {
-        $this->authorize('create', Wrokspace::class);
+        $this->authorize('create', Workspace::class);
 
         extract($request->validate([
             'title' => 'required',
@@ -83,7 +82,7 @@ class WorkspaceController extends Controller
      * Display the specified resource.
      *
      * @param Workspace $workspace
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function show(Workspace $workspace, Request $request)
     {
@@ -107,7 +106,7 @@ class WorkspaceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function edit(Workspace $workspace)
     {
@@ -129,7 +128,7 @@ class WorkspaceController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return \Inertia\Response
      */
     public function update(Request $request, Workspace $workspace)
     {
