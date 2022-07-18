@@ -15,7 +15,12 @@ const { models, actions, status, pagination, params } = useModels<Project, Filte
 </script>
 
 <template>
-  <VPageHeader />
+  <VPageHeader>
+    <VButton :href="route('workspaces.create')">
+      <VIcon name="plus" />
+      <span>New Workspace</span>
+    </VButton>
+  </VPageHeader>
 
   <VFetchStatus
     :status="status"
