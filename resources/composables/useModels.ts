@@ -26,8 +26,6 @@ export const useModels = <TModel, TFilter>(url: string, key: string = 'filters')
     fetch();
   });
 
-  const args = useStorage<TFilter>(key, {});
-
   const fetch = () => {
     status.isLoading = true;
     status.isError = false;

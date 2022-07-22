@@ -31,11 +31,12 @@ const { models, actions, status, pagination, params } = useModels<Project, Filte
   <div class="grid grid-cols-1 gap-10 mt-8">
     <VCarousel v-for="workspace in models?.data">
       <template #title>
-        <VPageTitle>
-          <Link :href="route('workspaces.show', workspace)" class="px-6">
-            {{ workspace.title }}
+        <h2 class="text-lg font-bold hover:underline px-6">
+          <Link :href="route('workspaces.show', workspace)" class="inline-flex items-center space-x-2">
+            <span>{{ workspace.title }}</span>
+            <VIcon name="link" size="sm"></VIcon>
           </Link>
-        </VPageTitle>
+        </h2>
       </template>
       <div class="flex shrink-0 h-full gap-6 px-6" v-for="project in workspace.projects">
         <ProjectPreview

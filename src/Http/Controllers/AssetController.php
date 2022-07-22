@@ -3,6 +3,7 @@
 namespace Taskday\Http\Controllers;
 
 use Taskday\Facades\Taskday;
+
 class AssetController extends Controller
 {
     public function scripts($handle)
@@ -10,6 +11,8 @@ class AssetController extends Controller
         $plugin = app($handle);
 
         $bundle = $plugin->bundle();
+
+        if (! $bundle) return;
 
         $path = $bundle->scripts()[0];
 
@@ -28,9 +31,11 @@ class AssetController extends Controller
 
         $bundle = $plugin->bundle();
 
+        if (! $bundle) return;
+
         $path = $bundle->styles()[0] ?? null;
 
-        if(is_null($path)) {
+        if (is_null($path)) {
             return response('', 200);
         }
 
@@ -41,5 +46,6 @@ class AssetController extends Controller
                 'Content-Type' => 'text/css',
             ]
         )->setLastModified(\DateTime::createFromFormat('U', (string) filemtime($path)));
+
     }
 }

@@ -12,7 +12,7 @@ defineProps({
 
 <template>
   <header>
-    <VContainer class="flex pb-6 gap-4 items-center justify-between">
+    <VContainer class="flex gap-4 items-center justify-between">
       <div class="flex-1 min-w-0">
         <h1 v-if="!$slots.title" class="text-2xl font-bold leading-7 sm:truncate">{{ $page.props.title ?? title }}</h1>
         <slot name="title"></slot>

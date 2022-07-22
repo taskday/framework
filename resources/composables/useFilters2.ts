@@ -1,5 +1,6 @@
-import { reactive, ref } from 'vue';
+import { reactive, onMounted, watch } from 'vue';
 import _ from 'lodash';
+import { useStorage } from '@vueuse/core';
 
 export default function useFilter () {
   const params = reactive<{
@@ -7,6 +8,16 @@ export default function useFilter () {
   }>({
     rules: [],
   });
+
+  const storage = useStorage<{ rules: any[] }>('filters', { rules: [] });
+
+  onMounted(() => {
+    params.rules = storage.value.rules;
+  })
+
+  watch(() => params.rules, () => {
+    storage.value.rules = params.rules;
+  })
 
   function add(filter) {
     filter.id = Math.random();

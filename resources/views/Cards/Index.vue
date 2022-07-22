@@ -42,7 +42,7 @@ const fakeProject = computed(() => {
 <template>
   <VPageHeader />
 
-  <div class="px-6">
+  <div class="px-6 pt-6 flex items-center gap-3">
     <VPopover>
       <VPopoverButton>
         <VIcon name="filters"></VIcon>
@@ -56,14 +56,17 @@ const fakeProject = computed(() => {
         </div>
       </VPopoverPanel>
     </VPopover>
+    <VButton @click="actions.fetch()">
+      Apply
+    </VButton>
+  </div>
 
-    <div class="flex flex-wrap gap-2 mt-4">
-      <VFilter
-        v-for="filter in params.params.rules"
-        :filter="filter"
-        @remove="params.remove(filter.id)"
-      />
-    </div>
+  <div class="flex flex-wrap gap-2 px-6">
+    <VFilter
+      v-for="filter in params.params.rules"
+      :filter="filter"
+      @remove="params.remove(filter.id)"
+    />
   </div>
 
   <VFetchStatus :status="status" :models="models" :pagination="pagination" />

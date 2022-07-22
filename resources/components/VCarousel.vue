@@ -8,7 +8,7 @@ import { ref, reactive, onMounted, watch } from "vue";
     <div class="relative">
       <div class="overflow-hidden">
         <div class="overflow-x-auto snap-x snap-mandatory relative">
-          <div class="w-full inline-flex align-top py-8 [&>*]:snap-start [&>*]:shrink-0">
+          <div class="w-full inline-flex align-top py-4 [&>*]:snap-start [&>*]:shrink-0">
             <slot></slot>
           </div>
         </div>

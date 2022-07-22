@@ -1,5 +1,5 @@
 <template>
-  <TabPanels class="h-full flex-grow">
+  <TabPanels class="h-full w-full flex-grow">
     <slot/>
   </TabPanels>
 </template>
