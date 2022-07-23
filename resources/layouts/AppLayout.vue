@@ -1,22 +1,17 @@
 <template>
   <div>
     <TransitionRoot as="template" :show="store.state.sidebar.isOpen">
-      <Dialog as="div" class="relative z-40 md:hidden" @close="store.commit('sidebar/close')">
+      <Dialog as="div" class="relative z-40 md:hidden" >
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
-          <div class="fixed inset-0 bg-gray-600 dark:bg-gray-200 bg-opacity-75" />
+          <div class="fixed inset-0 bg-gray-600 dark:bg-gray-400 bg-opacity-10" />
         </TransitionChild>
 
         <div class="fixed inset-0 flex z-40">
+          <div class="flex-shrink-0 absolute inset-0 " aria-hidden="true" @click="store.commit('sidebar/close')">
+            <!-- Dummy element to force sidebar to shrink to fit close icon -->
+          </div>
           <TransitionChild as="template" enter="transition ease-in-out duration-300 transform" enter-from="-translate-x-full" enter-to="translate-x-0" leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0" leave-to="-translate-x-full">
             <DialogPanel class="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 background-200">
-              <TransitionChild as="template" enter="ease-in-out duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="ease-in-out duration-300" leave-from="opacity-100" leave-to="opacity-0">
-                <div class="absolute top-0 right-0 -mr-12 pt-2">
-                  <button type="button" class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white" @click="store.commit('sidebar/close')">
-                    <span class="sr-only">Close sidebar</span>
-                    <XIcon class="h-6 w-6 text-white" aria-hidden="true" />
-                  </button>
-                </div>
-              </TransitionChild>
               <div class="flex-shrink-0 flex items-center px-4">
                 <VLogo />
               </div>
@@ -32,15 +27,12 @@
               </div>
             </DialogPanel>
           </TransitionChild>
-          <div class="flex-shrink-0 w-14" aria-hidden="true">
-            <!-- Dummy element to force sidebar to shrink to fit close icon -->
-          </div>
         </div>
       </Dialog>
     </TransitionRoot>
 
     <!-- Static sidebar for desktop -->
-    <div class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
+    <div v-show="store.state.sidebar.isOpen"  class="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
       <!-- Sidebar component, swap this element with another sidebar if you like -->
       <div class="flex flex-col flex-grow border-r border-gray-400 dark:border-gray-600 background-400 overflow-y-auto">
         <div class="flex items-center flex-shrink-0 px-4 h-16 border-b">
@@ -58,9 +50,9 @@
         </div>
       </div>
     </div>
-    <div class="md:pl-64 flex flex-col flex-1">
+    <div class="flex flex-col flex-1" :class="{ 'md:pl-64': store.state.sidebar.isOpen  }">
       <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 background-400 shadow">
-        <button type="button" class="px-4 border-r border-gray-400 dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden" @click="store.commit('sidebar/toggle')">
+        <button type="button" class="px-4 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" @click="() => store.commit('sidebar/toggle')">
           <span class="sr-only">Open sidebar</span>
           <MenuAlt2Icon class="h-6 w-6" aria-hidden="true" />
         </button>
@@ -124,6 +116,9 @@
       </div>
 
       <main class="flex-1">
+        <div class="px-6 pt-6">
+          <VBreadcrumbs :items="$page.props.breadcrumbs"></VBreadcrumbs>
+        </div>
         <div class="py-6">
           <div class="">
             <!-- Replace with your content -->
@@ -165,7 +160,7 @@
 
   import { SearchIcon } from '@heroicons/vue/solid'
   import { useStore } from 'vuex';
-import WorkspacesList from './Partials/WorkspacesList.vue';
+  import WorkspacesList from './Partials/WorkspacesList.vue';
 
   const navigation = [
     { name: 'Dashboard', href: route('dashboard'), icon: HomeIcon, current: route().current('dashboard') },

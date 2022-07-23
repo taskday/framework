@@ -14,6 +14,10 @@ const props = defineProps({
   project: {
     type: Object as PropType<Project>,
     required: true,
+  },
+  settings: {
+    type: Boolean,
+    default: true,
   }
 })
 
@@ -44,7 +48,7 @@ watch(() => share.value, () => {
         <VTabsPanels>
           <VTabsPanel v-for="view in views">
             <div class="flex flex-col w-full">
-              <div v-if="project.id" class="flex items-center justify-end gap-2 px-6 mb-4">
+              <div v-if="project.id && settings" class="flex items-center justify-end gap-2 px-6 mb-4">
                 <VButton variant="secondary" :href="route('projects.edit', project)">
                   <VIcon name="cog"></VIcon>
                   <span>Settings</span>

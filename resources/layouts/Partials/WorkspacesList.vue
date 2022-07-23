@@ -10,11 +10,14 @@ onMounted(() => actions.fetch());
 
 <template>
   <div>
-    <Disclosure v-for="workspace in models?.data" :key="Math.random()">
-      <DisclosureButton class="p-2 text-sm" :class="{
+    <Disclosure v-slot="{ open }" v-for="workspace in models?.data" :key="Math.random()">
+      <DisclosureButton class="p-2 text-sm flex justify-between w-full" :class="{
         'text-blue-400 dark:text-blue-300': route().current('workspaces.show', workspace)
       }">
-        # <Link :onFinish="$forceUpdate" :href="route('workspaces.show', workspace)">{{ workspace.title }}</Link>
+        <Link class="flex-1 text-left" :onFinish="$forceUpdate" :href="route('workspaces.show', workspace)"># {{ workspace.title }}</Link>
+        <span class="px-2">
+          <VIcon name="chevron-down" :class="{ '[&>svg]:transform [&>svg]:rotate-180': open }" class="h-3 w-3 opacity-50"></VIcon>
+        </span>
       </DisclosureButton>
       <DisclosurePanel class="border-l ml-2 background-200">
         <nav class="space-y-1 py-1" aria-label="Sidebar">

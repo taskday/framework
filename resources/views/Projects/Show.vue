@@ -1,11 +1,5 @@
 <template>
-
   <VPageHeader>
-    <VFormList :options="views" v-slot="{ item }" @change="updateCurrentView">
-      <ViewBoardsIcon class="h-6 w-6 mr-2" />
-      <span>{{ item.title }}</span>
-    </VFormList>
-
     <VButton variant="secondary" :href="route('projects.edit', props.project)">
       <VIcon name="settings"/>
       <span>Settings</span>
@@ -37,9 +31,7 @@
     </VDropdown>
   </VPageHeader>
 
-  <div class="mt-8" :key="currentView">
-    <component :is="currentView.component" :project="project"></component>
-  </div>
+  <ProjectView :project="project" :settings="false" />
 </template>
 
 <script setup lang="ts">
@@ -51,6 +43,7 @@ import useViews from "./useViews";
 import VButton from "../../components/VButton.vue";
 import { useChannel } from "@/composables/useChannel";
 import { useModels } from "@/composables/useModels";
+import ProjectView from "./Partials/ProjectView.vue";
 
 let props = defineProps<{
   title: String;
