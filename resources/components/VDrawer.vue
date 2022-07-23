@@ -42,34 +42,20 @@
                       leave-from="opacity-100"
                       leave-to="opacity-0"
                     >
-                      <div class="absolute top-0 left-0 -ml-8 pt-4 pr-2 flex sm:-ml-10 sm:pr-4">
+                      <div class="absolute z-50 top-0 left-0 -ml-8 pt-4 pr-2 flex sm:-ml-10 sm:pr-4">
                         <button
                           @click="closeModal"
-                          class="rounded-md text-gray-800 hover:text-gray-600 dark:hover:text-white focus:outline-none focus:ring-1 focus:ring-gray-800 dark:focus:ring-white"
+                          class="rounded focus:outline-none focus:ring-1 focus:ring-gray-800 dark:focus:ring-gray-400"
                         >
                           <span class="sr-only">Close panel</span>
                           <!-- Heroicon name: outline/x -->
-                          <svg
-                            class="h-6 w-6"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            aria-hidden="true"
-                          >
-                            <path
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                              stroke-width="2"
-                              d="M6 18L18 6M6 6l12 12"
-                            />
-                          </svg>
+                          <VIcon name="x" class="stroke-current text-gray-800 hover:text-gray-400 dark:text-gray-400 dark:hover:text-gray-300" />
                         </button>
                       </div>
                     </TransitionChild>
 
                     <div
-                      class="h-full flex flex-col bg-gray-100 dark:bg-gray-900 shadow-xl overflow-y-scroll"
+                      class="h-full flex flex-col bg-gray-100 dark:bg-gray-900 shadow-xl overflow-y-scroll py-8"
                     >
                       <div v-if="title" class="px-4 sm:px-6">
                         <VPageTitle class="text-lg font-medium" id="slide-over-title">{{ title }}</VPageTitle>

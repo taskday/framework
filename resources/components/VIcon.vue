@@ -1,25 +1,15 @@
-<template>
-  <span ref="span"></span>
-</template>
-
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, h } from 'vue';
 
 export default defineComponent({
   props: {
     name: {
       type: String,
-      required: true
+      required: true,
     },
-    size: {
-      default: "normal",
-    },
-    modifier: {
-      default: null,
-    },
-    fixAlign: {
-      default: true,
-    },
+  },
+  data() {
+    return { icon: null, placeholder: null }
   },
   mounted() {
     this.fetchSvgInline('/icons/outline/' + this.name + '.svg')
@@ -35,22 +25,21 @@ export default defineComponent({
             return;
           }
 
-          const span = this.$refs.span as HTMLElement;
+          let element = document.createElement('div');
+          element.innerHTML = svgStr;
 
-          span.innerHTML = svgStr;
-
-          const inlineSvg = span.getElementsByTagName("svg")[0];
-
-          if (this.size == "sm") {
-            inlineSvg.setAttribute("class", 'h-3 w-3 fill-current'); // IE doesn't support classList on SVGs
-          } else {
-            inlineSvg.setAttribute("class", 'h-4 w-4 fill-current'); // IE doesn't support classList on SVGs
-          }
+          this.$refs.placeholder.replaceWith(element.firstElementChild);
         })
         .catch(() => {
           // image.classList.add("not-inline");
         });
     },
-  },
+  }
 });
 </script>
+
+<template>
+  <span class="h-4 w-4 fill-current">
+    <span ref="placeholder"></span>
+  </span>
+</template>

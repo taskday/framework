@@ -1,5 +1,5 @@
 <template>
-  <div class="h-full max-w-6xl mx-auto">
+  <div class="max-w-6xl mx-auto">
     <VPageHeader>
       <template #title>
         <VFormEdit v-model="state.title" class="font-bold [&_*]:text-2xl">
