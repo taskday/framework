@@ -57,14 +57,21 @@ export const useModels = <TModel, TFilter>(url: string, key: string = 'filters')
       if (models.value?.next_page_url) {
         status.isLoading = true;
         axios
-          .get(models.value.next_page_url, {
-            params: {
-              filters: filters.data.value
-            }
-          })
+          .get(models.value.next_page_url + '&' + qs.stringify({
+            filters: params.params.rules.map((filter) => {
+              let copy =  { ...filter };
+              delete copy.options
+              delete copy.operators
+              delete copy.columns
+              copy.column = copy.column ?? '';
+              copy.value = copy.value ?? '';
+              copy.operator = copy.operator ?? '=';
+              return copy;
+            })
+          }))
           .then((res) => {
             if (models.value) {
-              let data = _.uniq([...(models.value?.data ?? []), ...res.data.data], 'id');
+              let data = _.unionBy(models.value?.data ?? [], res.data.data, 'id');
               models.value = res.data;
               models.value.data = data;
             }
