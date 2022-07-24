@@ -50,7 +50,7 @@
         </div>
       </div>
     </div>
-    <div class="flex flex-col flex-1" :class="{ 'md:pl-64': store.state.sidebar.isOpen  }">
+    <div class="flex flex-col flex-1 overflow-y-auto h-screen" :class="{ 'md:pl-64': store.state.sidebar.isOpen  }">
       <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 background-400 shadow">
         <button type="button" class="px-4 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" @click="() => store.commit('sidebar/toggle')">
           <span class="sr-only">Open sidebar</span>
