@@ -17,7 +17,7 @@ const { models, actions, status, pagination, params } = useModels<Project, Filte
 <template>
   <VPageHeader>
     <VButton :href="route('workspaces.create')">
-      <VIcon name="plus" />
+      <VIcon name="plus" class="h-4 w-4" />
       <span>New Workspace</span>
     </VButton>
   </VPageHeader>
@@ -34,7 +34,7 @@ const { models, actions, status, pagination, params } = useModels<Project, Filte
         <h2 class="text-lg font-bold hover:underline px-6">
           <Link :href="route('workspaces.show', workspace)" class="inline-flex items-center space-x-2">
             <span>{{ workspace.title }}</span>
-            <VIcon name="link" size="sm"></VIcon>
+            <VIcon name="link" class="h-4 w-4 stroke-current"></VIcon>
           </Link>
         </h2>
       </template>

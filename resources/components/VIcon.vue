@@ -28,7 +28,7 @@ export default defineComponent({
           let element = document.createElement('div');
           element.innerHTML = svgStr;
 
-          this.$refs.placeholder.replaceWith(element.firstElementChild);
+          this.$refs.placeholder.innerHTML = element.firstElementChild?.innerHTML;
         })
         .catch(() => {
           // image.classList.add("not-inline");
@@ -39,7 +39,6 @@ export default defineComponent({
 </script>
 
 <template>
-  <span class="h-4 w-4 fill-current">
-    <span ref="placeholder"></span>
-  </span>
+  <svg ref="placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+  </svg>
 </template>

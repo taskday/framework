@@ -1,7 +1,7 @@
 <template>
   <div>
     <TransitionRoot as="template" :show="store.state.sidebar.isOpen">
-      <Dialog as="div" class="relative z-40 md:hidden" >
+      <Popover as="div" class="relative z-40 md:hidden" >
         <TransitionChild as="template" enter="transition-opacity ease-linear duration-300" enter-from="opacity-0" enter-to="opacity-100" leave="transition-opacity ease-linear duration-300" leave-from="opacity-100" leave-to="opacity-0">
           <div class="fixed inset-0 bg-gray-600 dark:bg-gray-400 bg-opacity-10" />
         </TransitionChild>
@@ -11,7 +11,7 @@
             <!-- Dummy element to force sidebar to shrink to fit close icon -->
           </div>
           <TransitionChild as="template" enter="transition ease-in-out duration-300 transform" enter-from="-translate-x-full" enter-to="translate-x-0" leave="transition ease-in-out duration-300 transform" leave-from="translate-x-0" leave-to="-translate-x-full">
-            <DialogPanel class="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 background-200">
+            <div class="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 background-200">
               <div class="flex-shrink-0 flex items-center px-4">
                 <VLogo />
               </div>
@@ -25,10 +25,10 @@
                   <WorkspacesList />
                 </nav>
               </div>
-            </DialogPanel>
+            </div>
           </TransitionChild>
         </div>
-      </Dialog>
+      </Popover>
     </TransitionRoot>
 
     <!-- Static sidebar for desktop -->
@@ -41,7 +41,7 @@
         <div class="mt-5 flex-grow flex flex-col">
           <nav class="flex-1 px-2 pb-4">
             <Link v-for="item in navigation" :key="item.name" :href="item.href" :class="[item.current ? '' : '', 'group flex items-center px-2 py-2 text-sm font-medium rounded-md']">
-              <component :is="item.icon" :class="[item.current ? '' : '', 'mr-3 mb-1 flex-shrink-0 h-6 w-6']" aria-hidden="true" />
+              <VIcon :name="item.icon" :class="[item.current ? '' : '', 'mr-3 mb-1 flex-shrink-0 h-5 w-5']" aria-hidden="true" />
               {{ item.name }}
             </Link>
             <hr class="border-b my-4 border-gray-400 dark:border-gray-600">
@@ -50,11 +50,12 @@
         </div>
       </div>
     </div>
+
     <div class="flex flex-col flex-1 overflow-y-auto h-screen" :class="{ 'md:pl-64': store.state.sidebar.isOpen  }">
       <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 background-400 shadow">
         <button type="button" class="px-4 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" @click="() => store.commit('sidebar/toggle')">
           <span class="sr-only">Open sidebar</span>
-          <MenuAlt2Icon class="h-6 w-6" aria-hidden="true" />
+          <VIcon name="sidebar-open" class="h-5 w-5" aria-hidden="true" />
         </button>
         <div class="flex-1 px-4 flex justify-between">
           <div class="flex-1 flex items-center">
@@ -68,7 +69,7 @@
                 <VPopoverButton class="rounded-full flex items-center justify-center h-8 w-8 px-0">
                   <div class="flex items-center w-6 h-6 justify-center">
                     <div class="relative">
-                      <VIcon name="bell"></VIcon>
+                      <VIcon name="bell" class="h-4 w-4"></VIcon>
                       <span
                         v-if="$store.state.notifications.notifications.length > 0"
                         class="rounded-full bg-red-500 text-white font-semibold flex items-center justify-center h-2 w-2 absolute top-0 right-0"></span>
@@ -132,53 +133,34 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
 
-  import {
-    Dialog,
-    DialogPanel,
-    Menu,
-    MenuButton,
-    MenuItem,
-    MenuItems,
-    TransitionChild,
-    TransitionRoot,
-  } from '@headlessui/vue'
+import {
+  Popover,
+  TransitionChild,
+  TransitionRoot,
+} from '@headlessui/vue'
 
-  import {
-    BellIcon,
-    CalendarIcon,
-    ChartBarIcon,
-    FolderIcon,
-    HomeIcon,
-    InboxIcon,
-    DocumentTextIcon,
-    MenuAlt2Icon,
-    UsersIcon,
-    XIcon,
-  } from '@heroicons/vue/outline'
+import { useStore } from 'vuex';
+import WorkspacesList from './Partials/WorkspacesList.vue';
 
-  import { SearchIcon } from '@heroicons/vue/solid'
-  import { useStore } from 'vuex';
-  import WorkspacesList from './Partials/WorkspacesList.vue';
+const navigation = [
+  { name: 'Dashboard', href: route('dashboard'), icon: 'home', current: route().current('dashboard') },
+  { name: 'Workspaces', href: route('workspaces.index'), icon: 'users', current: route().current('workspaces.index') },
+  { name: 'Projects', href: route('projects.index'), icon: 'folder', current: route().current('projects.index') },
+  { name: 'Cards', href: route('cards.index'), icon: 'files', current: route().current('cards.index') },
+]
 
-  const navigation = [
-    { name: 'Dashboard', href: route('dashboard'), icon: HomeIcon, current: route().current('dashboard') },
-    { name: 'Workspaces', href: route('workspaces.index'), icon: UsersIcon, current: route().current('workspaces.index') },
-    { name: 'Projects', href: route('projects.index'), icon: FolderIcon, current: route().current('projects.index') },
-    { name: 'Cards', href: route('cards.index'), icon: DocumentTextIcon, current: route().current('cards.index') },
-  ]
+const userNavigation = [
+  { name: 'Your Profile', href: '#' },
+  { name: 'Settings', href: '#' },
+  { name: 'Sign out', href: '#' },
+]
 
-  const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
-  ]
+const store = useStore();
 
-  const store = useStore();
-
-  onMounted(() => {
-    store.dispatch('notifications/fetch')
-    store.dispatch('notifications/listen')
-  })
+onMounted(() => {
+  store.dispatch('notifications/fetch')
+  store.dispatch('notifications/listen')
+})
 </script>

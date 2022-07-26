@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <div class="">
+    <div class="text-gray-700 dark:text-gray-100">
       <div v-if="toolbar && editor" class="flex flex-wrap mb-4 -mx-2">
         <div class="p-2">
           <button
@@ -8,7 +8,7 @@
             @click="editor.chain().focus().insertTable().run()"
             :class="{ 'is-active': editor.isActive('bold') }"
           >
-            <VIcon size="sm" name="table" />
+            <VIcon class="w-4 h-4" name="table" />
           </button>
         </div>
         <div class="p-2">
@@ -17,7 +17,7 @@
             @click="editor.chain().focus().addColumnAfter().run()"
             :class="{ 'is-active': editor.isActive('bold') }"
           >
-            <VIcon size="sm" name="plus" />
+            <VIcon class="w-4 h-4" name="plus" />
           </button>
         </div>
         <div class="p-2">
@@ -26,7 +26,7 @@
             @click="editor.chain().focus().toggleBold().run()"
             :class="{ 'is-active': editor.isActive('bold') }"
           >
-            <VIcon size="sm" name="bold" />
+            <VIcon class="w-4 h-4" name="bold" />
           </button>
         </div>
         <div class="p-2">
@@ -35,7 +35,7 @@
             @click="editor.chain().focus().toggleItalic().run()"
             :class="{ 'is-active': editor.isActive('italic') }"
           >
-            <VIcon size="sm" name="italic" />
+            <VIcon class="w-4 h-4" name="italic" />
           </button>
         </div>
         <div class="p-2">
@@ -44,7 +44,7 @@
             @click="editor.chain().focus().toggleStrike().run()"
             :class="{ 'is-active': editor.isActive('strike') }"
           >
-            <VIcon size="sm" name="strikethrough" />
+            <VIcon class="w-4 h-4" name="strikethrough" />
           </button>
         </div>
         <div class="p-2">
@@ -53,7 +53,7 @@
             @click="editor.chain().focus().setParagraph().run()"
             :class="{ 'is-active': editor.isActive('paragraph') }"
           >
-            <VIcon size="sm" name="paragraph" />
+            <VIcon class="w-4 h-4" name="paragraph" />
           </button>
         </div>
         <div class="p-2">
@@ -83,7 +83,7 @@
             @click="editor.chain().focus().toggleBulletList().run()"
             :class="{ 'is-active': editor.isActive('bulletList') }"
           >
-            <VIcon size="sm" name="list-ul" />
+            <VIcon class="w-4 h-4" name="list-ul" />
           </button>
         </div>
         <div class="p-2">
@@ -92,7 +92,7 @@
             @click="editor.chain().focus().toggleOrderedList().run()"
             :class="{ 'is-active': editor.isActive('orderedList') }"
           >
-            <VIcon size="sm" name="list-ol" />
+            <VIcon class="w-4 h-4" name="list-ol" />
           </button>
         </div>
         <div class="p-2">
@@ -101,7 +101,7 @@
             @click="editor.chain().focus().toggleTaskList().run()"
             :class="{ 'is-active': editor.isActive('taskList') }"
           >
-            <VIcon size="sm" name="check" />
+            <VIcon class="w-4 h-4" name="check" />
           </button>
         </div>
         <div class="p-2">
@@ -110,7 +110,7 @@
             @click="editor.chain().focus().toggleCodeBlock().run()"
             :class="{ 'is-active': editor.isActive('codeBlock') }"
           >
-            <VIcon size="sm" name="code" />
+            <VIcon class="w-4 h-4" name="code" />
           </button>
         </div>
         <div class="p-2">
@@ -118,7 +118,7 @@
             class="flex items-center justify-center bg-gray-100 rounded dark:bg-gray-700 h-7 w-7"
             @click="editor.chain().focus().undo().run()"
           >
-            <VIcon size="sm" name="undo" />
+            <VIcon class="w-4 h-4" name="undo" />
           </button>
         </div>
         <div class="p-2">
@@ -126,7 +126,7 @@
             class="flex items-center justify-center bg-gray-100 rounded dark:bg-gray-700 h-7 w-7"
             @click="editor.chain().focus().redo().run()"
           >
-            <VIcon size="sm" name="redo" />
+            <VIcon class="w-4 h-4" name="redo" />
           </button>
         </div>
       </div>

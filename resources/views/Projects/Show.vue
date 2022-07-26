@@ -1,7 +1,7 @@
 <template>
   <VPageHeader>
     <VButton variant="secondary" :href="route('projects.edit', props.project)">
-      <VIcon name="settings"/>
+      <VIcon name="settings" class="h-4 w-4" />
       <span>Settings</span>
     </VButton>
 

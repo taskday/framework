@@ -1,7 +1,7 @@
 <template>
   <VPageHeader>
     <VButton :href="route('workspaces.projects.create', workspace)">
-      <VIcon name="plus" />
+      <VIcon name="plus" class="h-4 w-4" />
       <span>New project</span>
     </VButton>
 

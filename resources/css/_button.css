@@ -34,7 +34,7 @@
     rounded-md shadow-sm
     px-3 h-9
     text-sm font-semibold
-    [&>span+span]:pl-2
+    [&>svg+span]:pl-2
     focus:outline-none
     focus:ring-1 focus:ring-offset-1
     focus:border-blue-500/[.65] dark:focus:border-blue-400/[.60]

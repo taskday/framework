@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import _ from "lodash";
-import { onMounted, PropType } from "vue";
+import { PropType } from "vue";
 import ProjectView from "./Partials/ProjectView.vue";
 import { useModels } from "@/composables/useModels";
 import { useChannel } from "@/composables/useChannel";
 
-const props = defineProps({
+defineProps({
   title: String,
   breadcrumbs: {
     type: Object as PropType<Breadcrumb[]>,
